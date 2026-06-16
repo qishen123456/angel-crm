@@ -1,0 +1,965 @@
+{
+  "appName": "ANGEL",
+  "appSubName": "GLOBAL SALES CRM",
+  "shellTitle": "Global Sales CRM",
+  "shellTagline": "AngelCRM frontend rebuild",
+  "systemAdmin": "System Admin",
+  "logout": "Sign out",
+  "newButton": "+ New",
+  "languageLabel": "English",
+  "currentDate": "Jun 16 Tue",
+  "menu": [
+    {
+      "key": "home",
+      "label": "Home",
+      "items": [
+        {
+          "key": "/app/today",
+          "label": "Today"
+        },
+        {
+          "key": "/app/dashboard",
+          "label": "Dashboard"
+        },
+        {
+          "key": "/app/workqueue",
+          "label": "Work Queue",
+          "badge": 2
+        },
+        {
+          "key": "/app/attendance",
+          "label": "Attendance"
+        }
+      ]
+    },
+    {
+      "key": "marketing",
+      "label": "Marketing",
+      "items": [
+        {
+          "key": "/app/campaigns",
+          "label": "Campaigns"
+        },
+        {
+          "key": "/app/leads",
+          "label": "Leads"
+        }
+      ]
+    },
+    {
+      "key": "retail",
+      "label": "Retail",
+      "items": [
+        {
+          "key": "/app/retail",
+          "label": "Retail Ops"
+        }
+      ]
+    },
+    {
+      "key": "accounts",
+      "label": "Accounts & Contacts",
+      "items": [
+        {
+          "key": "/app/accounts",
+          "label": "Accounts",
+          "badge": 2
+        },
+        {
+          "key": "/app/pool",
+          "label": "Pool"
+        },
+        {
+          "key": "/app/contacts",
+          "label": "Contacts"
+        },
+        {
+          "key": "/app/end-users",
+          "label": "End Users"
+        }
+      ]
+    },
+    {
+      "key": "sales",
+      "label": "Sales Flow",
+      "items": [
+        {
+          "key": "/app/pipeline",
+          "label": "Pipeline",
+          "badge": 3
+        },
+        {
+          "key": "/app/log-activity",
+          "label": "Log Activity"
+        },
+        {
+          "key": "/app/project-updates",
+          "label": "Project Updates"
+        }
+      ]
+    },
+    {
+      "key": "orders",
+      "label": "Contracts & Orders",
+      "items": [
+        {
+          "key": "/app/contracts",
+          "label": "Contracts"
+        },
+        {
+          "key": "/app/orders",
+          "label": "Orders"
+        },
+        {
+          "key": "/app/invoices",
+          "label": "Invoices"
+        },
+        {
+          "key": "/app/payments",
+          "label": "Payments"
+        }
+      ]
+    },
+    {
+      "key": "catalog",
+      "label": "Catalog",
+      "items": [
+        {
+          "key": "/app/products",
+          "label": "Products"
+        }
+      ]
+    },
+    {
+      "key": "reports",
+      "label": "Reports",
+      "items": [
+        {
+          "key": "/app/country-reports",
+          "label": "Country Reports"
+        },
+        {
+          "key": "/app/report",
+          "label": "Executive Report"
+        }
+      ]
+    },
+    {
+      "key": "admin",
+      "label": "Admin",
+      "items": [
+        {
+          "key": "/app/import",
+          "label": "Import Data"
+        },
+        {
+          "key": "/app/invite",
+          "label": "Invite User"
+        },
+        {
+          "key": "/app/team",
+          "label": "Team"
+        },
+        {
+          "key": "/app/settings",
+          "label": "Settings"
+        }
+      ]
+    }
+  ],
+  "pages": {
+    "today": "Today",
+    "dashboard": "Dashboard",
+    "workqueue": "Work Queue",
+    "attendance": "Attendance",
+    "campaigns": "Campaigns",
+    "leads": "Leads",
+    "retail": "Retail Ops",
+    "accounts": "Accounts",
+    "pool": "Pool",
+    "contacts": "Contacts",
+    "endUsers": "End Users",
+    "pipeline": "Pipeline",
+    "logActivity": "Log Activity",
+    "projectUpdates": "Project Updates",
+    "contracts": "Contracts",
+    "orders": "Orders",
+    "invoices": "Invoices",
+    "payments": "Payments",
+    "products": "Products",
+    "countryReports": "Country Reports",
+    "executiveReport": "Executive Report",
+    "import": "Import Data",
+    "invite": "Invite User",
+    "team": "Team",
+    "settings": "Settings",
+    "accountDetail": "Account Detail"
+  },
+  "common": {
+    "search": "Search",
+    "searchPlaceholder": "Search by name or code...",
+    "create": "New",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "delete": "Delete",
+    "actions": "Actions",
+    "view": "View",
+    "status": "Status",
+    "all": "All",
+    "loading": "Loading...",
+    "noData": "No data",
+    "confirm": "Confirm",
+    "successCreate": "Created successfully",
+    "successUpdate": "Updated successfully",
+    "successDelete": "Deleted successfully",
+    "successSave": "Saved successfully",
+    "successAssign": "Assigned",
+    "successClaim": "Claimed",
+    "successImport": "Import task submitted",
+    "successInvite": "Invitation sent",
+    "devToast": "Feature under development",
+    "required": "Required",
+    "date": "Date",
+    "amount": "Amount",
+    "note": "Notes",
+    "close": "Close",
+    "name": "Name",
+    "market": "Market",
+    "target": "Target",
+    "actual": "Actual",
+    "progress": "Progress",
+    "category": "Category",
+    "price": "Unit price",
+    "stock": "Stock"
+  },
+  "login": {
+    "title": "Sign in to ANGEL CRM",
+    "subtitle": "AHT Global Sales · Internal Workspace",
+    "sso": "Sign in with Feishu SSO",
+    "divider": "or",
+    "email": "Work email",
+    "emailPlaceholder": "you@angel.cn",
+    "password": "Password",
+    "passwordPlaceholder": "Enter password",
+    "forgot": "Forgot password?",
+    "tips": "Demo: any email + password \"demo2026\"",
+    "submit": "Sign in →"
+  },
+  "accounts": {
+    "title": "Accounts",
+    "subtitle": "Manage accounts, annual targets and contract status.",
+    "statusAll": "All",
+    "statusActive": "Active",
+    "statusExpiring": "Expiring",
+    "statusExpired": "Expired",
+    "marketAll": "All",
+    "target": "Annual target",
+    "owner": "Owner",
+    "createTitle": "New Account",
+    "formName": "Account name",
+    "formCode": "Account code",
+    "formMarket": "Market",
+    "formOwner": "Owner",
+    "formType": "Business type",
+    "formTarget": "Annual target (USD)",
+    "formNotes": "Resources & opportunity notes"
+  },
+  "orders": {
+    "title": "Orders",
+    "subtitle": "Orders, PI, collection plans, fulfillment and after-sales.",
+    "viewBusiness": "Business",
+    "viewFinance": "Finance",
+    "viewSupply": "Supply Chain",
+    "statusAll": "All",
+    "colOrderNo": "Order No",
+    "colPiNo": "PI No",
+    "colAccount": "Account",
+    "colRequester": "Requester",
+    "colItems": "Items",
+    "colSubtotal": "Subtotal",
+    "colType": "Type",
+    "colKind": "Kind",
+    "colPo": "PO",
+    "colStatus": "Status",
+    "colCreated": "Created",
+    "createTitle": "New Order",
+    "drawerLines": "Order lines",
+    "drawerShipment": "Shipments & Customs",
+    "drawerAttachments": "Attachments & Payments"
+  },
+  "today": {
+    "greeting": "Good afternoon, ",
+    "admin": "System Admin",
+    "greetingMorning": "Good morning, ",
+    "greetingNoon": "Good noon, ",
+    "greetingAfternoon": "Good afternoon, ",
+    "greetingEvening": "Good evening, ",
+    "subtitle": "You have {count} items to handle today.",
+    "targetAchievement": "Target Achievement",
+    "targetSubtitle": "Core KPI = Shipped & Cleared.",
+    "shippedClearedTag": "Shipped & Cleared",
+    "monthly": "Monthly",
+    "quarterly": "Quarterly",
+    "yearly": "Yearly",
+    "achieved": "achieved",
+    "todayReport": "Daily Report",
+    "daysUnsubmitted": "Unsubmitted for {count} days",
+    "reportHint": "Write daily report to keep team updated.",
+    "streak": "Streak {count} days",
+    "writeReport": "Write Report",
+    "viewFunnel": "View Funnel",
+    "funnelDesc": "Open kanban to view active opportunities.",
+    "teamEvents": "Team Events (Last 3 Days)",
+    "todo": "To-do",
+    "reportSubmitted": "今日日报已提交",
+    "reportSavedHint": "日报已保存，可随时点击右侧按钮查看或修改。",
+    "viewReport": "查看日报",
+    "streakDays": "已连续{count}天提交",
+    "reportSaveSuccess": "日报已保存",
+    "followUps": "今日待跟进",
+    "alertLevel": {
+      "urgent": "紧急",
+      "high": "高"
+    },
+    "alertText": {
+      "hkHospitalityDiscount": "HK Hospitality 集团总部要求 15% 一次性 discount 作为框架协议条件，涉及 5 年合作金额 $3.8M。当前我们的折扣权限是 8%，需 CSO 决策。",
+      "marinaBayContract": "Marina Bay 合同 22 天后到期，客户 CFO Olivia 要求增加「3 年内任意 1 次免费更换主件」条款，涉及成本约 $80k。需法务和高管决策是否接受。"
+    },
+    "todoTitle": {
+      "noFollowUp": "无跟进",
+      "expiring": "即将到期",
+      "reminder": "提醒"
+    },
+    "todoText": {
+      "hkHospitalityNoFollowUp": "HK Hospitality Corp — 已 28 天未更新",
+      "gentingNoFollowUp": "Genting Group — 已 25 天未更新",
+      "bangkokMallNoFollowUp": "Bangkok Mall Group — 已 31 天未更新",
+      "marinaBayExpiring": "Marina Bay Sands 合同 21 天后到期",
+      "soekarnoExpiring": "Soekarno Retail Distribution 合同 5 天后到期",
+      "rafflesEndUserInfo": "请收集 Raffles Hospitality 的终端用户信息（赢单后 95 天）"
+    },
+    "followUpStage": {
+      "proposal": "方案",
+      "contact": "联系"
+    },
+    "followUpTask": {
+      "mgmPricingPushback": "Follow up on pricing pushback",
+      "rafflesCatalogue": "Send F&B catalogue + reference list"
+    }
+  },
+  "settings": {
+    "tabs": {
+      "brand": "Brand",
+      "market": "Markets",
+      "department": "Departments",
+      "roles": "Roles & Permissions",
+      "targets": "Annual Targets",
+      "templates": "Document Templates",
+      "notifications": "Notifications",
+      "audit": "Audit Logs",
+      "account": "Account"
+    },
+    "title": "Settings",
+    "subtitle": "Manage brand, markets, departments, roles and system configuration.",
+    "brand": {
+      "logoRules": "LOGO Usage",
+      "vi": "Use dark logo on ≤40% grey backgrounds; white logo on >40%.",
+      "sidebar": "Sidebar (dark)",
+      "headerLogin": "Header / Login (light)",
+      "brandColors": "Brand Colors",
+      "typography": "Typography",
+      "en": "English",
+      "zh": "Chinese"
+    },
+    "market": {
+      "code": "Market Code",
+      "name": "Name",
+      "flag": "Flag"
+    },
+    "department": {
+      "name": "Department",
+      "headcount": "Headcount"
+    },
+    "roles": {
+      "role": "Role",
+      "accounts": "Accounts",
+      "orders": "Orders",
+      "contracts": "Contracts",
+      "reports": "Reports",
+      "settings": "Settings"
+    },
+    "targets": {
+      "market": "Market",
+      "year": "Year",
+      "revenueTarget": "Revenue Target (USD)",
+      "kpiTarget": "KPI Target (USD)",
+      "strategicTarget": "Strategic Target (Units)"
+    },
+    "templates": {
+      "type": "Type",
+      "name": "Name",
+      "description": "Description",
+      "fileName": "File Name",
+      "enabled": "Enabled"
+    },
+    "notifications": {
+      "email": "Email Notifications",
+      "contractExpiry": "Contract Expiry Alert",
+      "orderStatus": "Order Status Change",
+      "dailyReport": "Daily Report Reminder"
+    },
+    "audit": {
+      "time": "Time",
+      "user": "User",
+      "action": "Action",
+      "target": "Target"
+    },
+    "account": {
+      "displayName": "Display Name",
+      "email": "Email",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password"
+    }
+  },
+  "createMenu": {
+    "account": "New Account",
+    "contact": "New Contact",
+    "opportunity": "New Opportunity",
+    "order": "New Order",
+    "lead": "New Lead",
+    "campaign": "New Campaign",
+    "activity": "Log Activity"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Track global markets, pipeline, orders and AR health in real time.",
+    "annualTarget": "Annual Revenue Target",
+    "kpiRate": "KPI Achievement",
+    "pipeline": "Pipeline",
+    "monthlyWins": "Monthly Wins",
+    "fullYear": "FY2026",
+    "shippedCleared": "Shipped & Cleared",
+    "weightedForecast": "Weighted forecast",
+    "ordersCount": "orders",
+    "marketTarget": "Market Annual Target Achievement",
+    "arAging": "AR Aging",
+    "salesFunnel": "Sales Funnel",
+    "topOpps": "Top Opportunities",
+    "oppName": "Opportunity",
+    "account": "Account",
+    "amount": "Amount",
+    "stage": "Stage",
+    "probability": "Probability",
+    "retailKpi": "Retail KPI",
+    "monthlySo": "Monthly SO Units",
+    "strategicUnits": "Strategic Units",
+    "netNewStores": "Net New Stores",
+    "sellThrough": "Sell-through",
+    "recentOrders": "Recent Orders",
+    "orderNo": "Order No",
+    "status": "Status",
+    "countUnit": "",
+    "accountPool": "Account Opportunity Pool",
+    "accountPoolDesc": "Summary of account opportunities, resources and next moves.",
+    "peoplePerformance": "People Performance",
+    "salesBehavior": "Sales Behavior",
+    "productOrders": "Products & Orders",
+    "recentWins": "Recent Wins",
+    "contact": "Contact",
+    "calls": "Calls",
+    "visits": "Visits",
+    "trials": "Trials",
+    "ytdRevenue": "YTD Revenue",
+    "achievement": "Achievement",
+    "ytdOrders": "YTD Orders",
+    "productName": "Product",
+    "soldUnits": "Sold Units",
+    "ordersQty": "Order Qty",
+    "activeCustomers": "Active Customers",
+    "overallSales": "Overall Sales Result",
+    "coreKpi": "Shipped & Cleared - Core KPI",
+    "kpiTag": "KPI",
+    "shippedYtd": "Shipped & Cleared YTD",
+    "target": "Target",
+    "gapToTarget": "Gap to target",
+    "gapSub": "Gap to annual KPI target",
+    "uncollected": "Shipped uncollected",
+    "uncollectedSub": "Shipped but not collected",
+    "collected": "Shipped collected",
+    "collectedSub": "Shipped and collected",
+    "totalWon": "Total won",
+    "winRate": "Win rate",
+    "openOpps": "Open opps",
+    "pendingOrders": "Pending orders",
+    "contractExpiry": "Contract expiry (90d)",
+    "contractOk": "No contracts expiring in 90 days.",
+    "weightedFunnel": "Weighted Funnel",
+    "stageProspect": "Prospect",
+    "stageQualify": "Qualify",
+    "stageProposal": "Proposal",
+    "stageNegotiate": "Negotiate",
+    "stageClosed": "Closed won",
+    "caseStudy": "Case Study",
+    "caseStudies": "Case studies",
+    "ytdSo": "YTD SO units",
+    "soUnits": "SO units",
+    "netNew": "Net new",
+    "activityTypes": {
+      "email": "邮件",
+      "phone": "电话",
+      "meeting": "会议",
+      "visit": "拜访",
+      "wechat": "微信",
+      "other": "其他"
+    }
+  },
+  "pipeline": {
+    "title": "Pipeline",
+    "subtitle": "Kanban view of all active opportunities.",
+    "newOpp": "New Opportunity"
+  },
+  "campaigns": {
+    "title": "Campaigns",
+    "subtitle": "Track campaign spend, lead conversion and ROI.",
+    "create": "New Campaign",
+    "searchPlaceholder": "Search by name or code...",
+    "totalBudget": "Total Budget",
+    "totalSpend": "Spent",
+    "totalLeads": "Total Leads",
+    "converted": "Converted",
+    "pipeline": "Pipeline",
+    "code": "Code",
+    "name": "Campaign",
+    "type": "Type",
+    "status": "Status",
+    "budget": "Budget",
+    "leads": "Leads",
+    "convertedCount": "Converted",
+    "oppValue": "Opportunity Value",
+    "roi": "ROI",
+    "owner": "Owner",
+    "action": "Actions",
+    "detail": "Detail",
+    "leadsTitle": "Campaign Leads",
+    "contactName": "Name",
+    "company": "Company",
+    "estValue": "Est. Value"
+  },
+  "leads": {
+    "title": "Leads",
+    "subtitle": "Manage leads from campaigns, referrals and other channels.",
+    "create": "New Lead",
+    "searchPlaceholder": "Search by name or company...",
+    "newLeads": "New",
+    "contacted": "Contacted",
+    "qualified": "Qualified",
+    "converted": "Converted",
+    "name": "Name",
+    "jobTitle": "Title",
+    "company": "Company",
+    "source": "Source",
+    "campaign": "Campaign",
+    "rating": "Rating",
+    "estValue": "Est. Value",
+    "status": "Status",
+    "owner": "Owner",
+    "lastContact": "Last Contact",
+    "convert": "Convert",
+    "convertTitle": "Convert lead to account/opportunity",
+    "accountCode": "Account Code",
+    "accountName": "Account Name",
+    "market": "Market",
+    "productLine": "Product Line",
+    "oppStage": "Opportunity Stage"
+  },
+  "accountDetail": {
+    "back": "Back to accounts",
+    "edit": "Edit Account",
+    "newOpp": "New Opportunity",
+    "cumulativeSales": "Cumulative Sales",
+    "cumulativeReceipts": "Cumulative Receipts",
+    "receivable": "Receivable",
+    "activeOpps": "Active Opps",
+    "won": "Won",
+    "creditLimit": "Credit Limit",
+    "tabs": {
+      "overview": "Overview",
+      "contacts": "Contacts",
+      "opportunities": "Opportunities",
+      "contracts": "Contracts",
+      "orders": "Orders",
+      "payments": "Payments",
+      "activities": "Activities",
+      "campaigns": "Campaigns",
+      "documents": "Documents"
+    },
+    "form": {
+      "name": "客户名称",
+      "code": "客户代码",
+      "market": "市场",
+      "owner": "负责人",
+      "annualTarget": "年度目标 (USD)",
+      "opportunityNotes": "商机深掘",
+      "oppName": "商机名称",
+      "oppNamePlaceholder": "输入商机名称",
+      "estimatedAmount": "预计金额 (USD)",
+      "winRate": "赢率 (%)",
+      "stage": "阶段",
+      "expectedClose": "预计结单",
+      "expectedClosePlaceholder": "2026-06-30"
+    },
+    "card": {
+      "opportunityMining": "商机深掘",
+      "annualTargetProgress": "年度目标进度",
+      "profile": "客户档案",
+      "keyContacts": "主要联系人"
+    },
+    "profile": {
+      "country": "客户所在国家",
+      "market": "市场",
+      "company": "归属公司",
+      "paymentTerms": "付款条款",
+      "creditLimit": "信用额度",
+      "annualTarget": "年度目标",
+      "ytdSales": "YTD 销售额",
+      "owner": "负责人"
+    },
+    "b2bInProgress": "商用 (B2B) · 推进中",
+    "customerResources": "客户资源",
+    "deepDiveDirection": "深化方向",
+    "add": "添加",
+    "col": {
+      "name": "姓名",
+      "title": "职位",
+      "email": "邮箱",
+      "phone": "电话",
+      "primaryContact": "主要联系人",
+      "yes": "是",
+      "oppName": "商机名称",
+      "amount": "金额",
+      "stage": "阶段",
+      "winRate": "赢率",
+      "expectedClose": "预计结单",
+      "contractNumber": "合同编号",
+      "type": "类型",
+      "status": "状态",
+      "expiryDate": "到期日",
+      "orderNumber": "订单号",
+      "piNumber": "PI 号",
+      "orderType": "类型",
+      "createdAt": "创建时间",
+      "receivedAt": "到账时间",
+      "currency": "币种",
+      "method": "方式",
+      "time": "时间",
+      "content": "内容",
+      "recorder": "记录人",
+      "campaignCode": "活动编号",
+      "campaignName": "活动名称",
+      "convertedAmount": "转化金额",
+      "fileName": "文件名",
+      "uploadDate": "上传日期"
+    },
+    "docType": {
+      "po": "采购订单",
+      "receipt": "收款确认书"
+    }
+  },
+  "contacts": {
+    "title": "Contacts",
+    "subtitle": "Manage account contacts, titles and contact info.",
+    "create": "New Contact",
+    "searchPlaceholder": "Search by name or company...",
+    "name": "Name",
+    "jobTitle": "Title",
+    "account": "Account",
+    "email": "Email",
+    "phone": "Phone",
+    "primary": "Primary",
+    "yes": "Yes",
+    "no": "-",
+    "detail": "Contact Detail"
+  },
+  "contracts": {
+    "title": "Contracts",
+    "subtitle": "Manage contract lifecycle, expiry alerts and collection progress.",
+    "create": "New Contract",
+    "alert": "Alert: {count} contracts expire within 30 days",
+    "code": "Contract No",
+    "account": "Account",
+    "name": "Name",
+    "type": "Type",
+    "status": "Status",
+    "entity": "Entity",
+    "amount": "Amount",
+    "collectionProgress": "Collection Progress",
+    "paymentStatus": "Payment Status",
+    "expiry": "Expiry",
+    "detail": "Contract Detail"
+  },
+  "payments": {
+    "title": "Payments",
+    "subtitle": "Register and confirm customer payments linked to orders and contracts.",
+    "create": "Register Payment",
+    "receivedAt": "Received At",
+    "account": "Account",
+    "order": "Order",
+    "amount": "Amount",
+    "currency": "Currency",
+    "registrar": "Registrar",
+    "method": "Method",
+    "status": "Status",
+    "detail": "Payment Detail"
+  },
+  "products": {
+    "title": "Products",
+    "subtitle": "Manage SKU, product line, specs, price and inventory.",
+    "create": "New Product",
+    "searchPlaceholder": "Search SKU or product name...",
+    "sku": "SKU",
+    "name": "Name",
+    "category": "Category",
+    "productLine": "Product Line",
+    "spec": "Spec",
+    "unitPrice": "Unit Price",
+    "leadTime": "Lead Time",
+    "stock": "Stock",
+    "status": "Status"
+  },
+  "workqueue": {
+    "title": "My Work Queue",
+    "role": "Your role",
+    "subtitle": "Central place for tasks and approvals.",
+    "cards": {
+      "orderOps": "Order Ops To-do",
+      "supply": "Supply Chain To-do",
+      "finance": "Finance To-do"
+    },
+    "sections": {
+      "orderOps": "Order Operations",
+      "orderOpsDesc": "Orders needing PI or PO follow-up.",
+      "supply": "Supply Chain",
+      "supplyDesc": "Orders waiting for outbound or customs clearance.",
+      "paymentVerification": "Finance - Payment Verification",
+      "paymentVerificationDesc": "Payments pending finance confirmation.",
+      "collectionTracking": "Finance - Collection Tracking",
+      "collectionTrackingDesc": "Receivables due within 14 days or overdue."
+    },
+    "table": {
+      "orderNo": "Order No",
+      "account": "Account",
+      "subtotal": "Subtotal",
+      "status": "Status",
+      "action": "Action",
+      "createdAt": "Created",
+      "receivedAt": "Received",
+      "amount": "Amount",
+      "financeConfirm": "Finance Confirm",
+      "dueDate": "Due Date",
+      "planAmount": "Planned",
+      "open": "Open",
+      "noData": "All clear, no pending items."
+    }
+  },
+  "pool": {
+    "title": "Pool",
+    "subtitle": "Unowned accounts available to claim.",
+    "assign": "Assign to me",
+    "claim": "Claim",
+    "code": "Account Code",
+    "name": "Account Name",
+    "market": "Market",
+    "type": "Type",
+    "status": "Status",
+    "target": "Annual Target",
+    "action": "Actions"
+  },
+  "endUsers": {
+    "title": "End Users",
+    "subtitle": "Track end-user installations and service records.",
+    "create": "New End User",
+    "searchPlaceholder": "Search end users...",
+    "name": "End User Name",
+    "account": "Account",
+    "location": "Location",
+    "installs": "Installs",
+    "installDate": "Install Date",
+    "lastService": "Last Service"
+  },
+  "team": {
+    "title": "Team",
+    "subtitle": "Manage team members, departments, roles and status.",
+    "invite": "Invite Member",
+    "searchPlaceholder": "Search by name or email...",
+    "name": "Name",
+    "email": "Email",
+    "department": "Department",
+    "role": "Role",
+    "market": "Market",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "countryReports": {
+    "title": "Country Reports",
+    "subtitle": "Track annual targets, KPI and receipts by market.",
+    "region": "Region",
+    "annualTask": "Annual Task",
+    "monthlyTarget": "Monthly Target",
+    "kpi": "KPI",
+    "actualReceipt": "Actual Receipt",
+    "progress": "Progress"
+  },
+  "executiveReport": {
+    "title": "Executive Report",
+    "subtitle": "Executive summary of performance, markets and top opportunities.",
+    "overall": "Overall Performance",
+    "marketProgress": "Market Progress",
+    "topOpps": "Top Opportunities",
+    "category": "Category / Strategic",
+    "annualTarget": "Annual Revenue Target",
+    "ytdRevenue": "YTD Revenue",
+    "achievement": "Achievement",
+    "ytdOrders": "YTD Orders",
+    "account": "Account",
+    "amount": "Amount",
+    "stage": "Stage",
+    "probability": "Probability",
+    "categoryName": "Category",
+    "units": "Units"
+  },
+  "retail": {
+    "title": "Retail Ops",
+    "subtitle": "Track SO units, strategic units, net new stores and sell-through.",
+    "entry": "Enter Monthly Data",
+    "ytdSo": "YTD SO Units",
+    "strategic": "Strategic Units",
+    "netNew": "Net New Stores",
+    "sellThrough": "Avg Sell-through",
+    "monthlyData": "Monthly Retail Data",
+    "month": "Month",
+    "overseasSo": "Overseas SO Units",
+    "strategicUnits": "Strategic Units",
+    "netNewStores": "Net New Stores",
+    "activities": "Activities",
+    "notes": "Notes"
+  },
+  "projectUpdates": {
+    "title": "Project Updates",
+    "subtitle": "Track site survey, installation and acceptance milestones.",
+    "log": "Log Progress",
+    "project": "Project",
+    "account": "Account",
+    "stage": "Stage",
+    "installed": "Installed",
+    "recorder": "Recorder",
+    "date": "Date",
+    "notes": "Notes"
+  },
+  "importPage": {
+    "title": "Import Data",
+    "subtitle": "Bulk import accounts, contacts or orders via CSV / Excel.",
+    "upload": "Upload CSV / Excel",
+    "drag": "Click or drag files here",
+    "hint": "Supports .csv / .xlsx, max 5000 rows per upload",
+    "start": "Start Import"
+  },
+  "invite": {
+    "title": "Invite User",
+    "subtitle": "Invite a new member and assign role and market.",
+    "email": "Email",
+    "name": "Name",
+    "role": "Role",
+    "market": "Market",
+    "send": "Send Invite"
+  },
+  "attendance": {
+    "title": "Attendance",
+    "subtitle": "Daily clock-in / clock-out and field visit registration.",
+    "status": "Current status",
+    "checkedIn": "Checked in",
+    "notCheckedIn": "Not checked in",
+    "location": "Location",
+    "note": "Note",
+    "placeholder": "Note if visiting clients today...",
+    "punchIn": "Clock in",
+    "punchOut": "Clock out",
+    "records": "Today records",
+    "type": "Type",
+    "time": "Time"
+  },
+  "logActivity": {
+    "title": "Log Activity",
+    "subtitle": "Log every interaction with accounts and opportunities.",
+    "account": "Account",
+    "opportunity": "Opportunity",
+    "type": "Type",
+    "content": "Content",
+    "reminder": "Next reminder",
+    "save": "Save activity",
+    "recentRecords": "Recent activities",
+    "accountPlaceholder": "Select account",
+    "oppPlaceholder": "Select opportunity",
+    "contentPlaceholder": "Enter activity details..."
+  },
+  "invoices": {
+    "title": "Invoices",
+    "subtitle": "Manage invoice applications, review and issue status.",
+    "pendingReview": "Pending review",
+    "pendingIssue": "Pending issue",
+    "issuedThisMonth": "Issued this month",
+    "no": "Invoice no.",
+    "account": "Account",
+    "order": "Order",
+    "amount": "Amount",
+    "status": "Status",
+    "applicant": "Applicant",
+    "createdAt": "Created at",
+    "invoiceTitle": "Invoice title",
+    "taxId": "Tax ID",
+    "statusPendingReview": "Pending review",
+    "statusPendingIssue": "Pending issue",
+    "statusIssued": "Issued",
+    "statusRejected": "Rejected"
+  },
+  "dailyReport": {
+    "title": "今日日报",
+    "hint": "保持简短 – 3 分钟搞定。让经理了解你今天做了什么、明天准备做什么。",
+    "workTitle": "今日工作(逐条记录,每条一件事) *",
+    "workPlaceholder": "例如:拜访 Marina Bay,推进到方案报价阶段",
+    "planTitle": "明日计划(逐条记录,每条一件事) *",
+    "planPlaceholder": "例如:跟进 Raffles 报价",
+    "paymentTitle": "回款进展(可选,可加多条)",
+    "paymentPlaceholder": "例如:Marina Bay 第二期款 $50k 已到账",
+    "problemTitle": "遇到的问题(可选,可加多条 – 会通知上级)",
+    "problemPlaceholder": "例如:客户卡在采购审批,需要协助加速",
+    "addRow": "再加一条",
+    "delete": "删除",
+    "followupTitle": "今日客户跟进",
+    "followupDesc": "在这里登记你今天接触过的客户 —— 不用再单独到每条商机里逐一录入，系统会自动把它们写入对应商机的跟进记录。",
+    "followupEmpty": "今天还没登记客户跟进。点击下方「+ 添加跟进」记录一次电话/微信/拜访/方案。",
+    "followupPlaceholder": "例如:电话拜访 Marina Bay,确认方案需求",
+    "followupAdd": "+ + 添加一条客户跟进",
+    "issueTitle": "重大事项 / 需协助跟进(可加多条)",
+    "issueDesc": "今天有什么需要领导或其他部门关注、拍板、协调的事项？一天可能有多件 —— 例如：大单卡审批 / 客户高层投诉 / 跨部门资源调度 / 集团政策征询。填写后会同步显示在 Today 页面，相关方可立即看到并跟进。",
+    "issueEmpty": "今天没有需要上报的事项。如有，点击下方「+ 添加」",
+    "issuePlaceholder": "例如:HK Hospitality 15% discount 需 CSO 拍板",
+    "issueAdd": "+ + 新增一条事项",
+    "moodTitle": "今日心情",
+    "mood": {
+      "sad": "难过/生气",
+      "upset": "委屈",
+      "neutral": "平淡",
+      "happy": "开心",
+      "excited": "大笑/兴奋"
+    },
+    "cancel": "取消",
+    "save": "保存日报",
+    "error": {
+      "workRequired": "请至少填写一项今日工作",
+      "planRequired": "请至少填写一项明日计划"
+    }
+  }
+}
