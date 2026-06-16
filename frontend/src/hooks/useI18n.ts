@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import type { LocaleKey } from '../locales'
-import type { LocaleBundle } from '../i18n'
+import type { LocaleBundle } from '../locales/types'
 
 export function useI18n() {
   const { t: translate, i18n } = useTranslation()

@@ -111,10 +111,18 @@ export function DashboardPage() {
     active: Math.floor(Math.random() * 8 + 2),
   }))
 
-  const activityTypes = ['邮件', '电话', '会议', '拜访', '微信', '其他']
-  const activityCounts = activityTypes.map((type) => ({
-    type,
-    count: activities.filter((a) => a.type === type).length,
+  const activityTypeMap = [
+    { key: 'email', value: '邮件' },
+    { key: 'phone', value: '电话' },
+    { key: 'meeting', value: '会议' },
+    { key: 'visit', value: '拜访' },
+    { key: 'wechat', value: '微信' },
+    { key: 'other', value: '其他' },
+  ]
+  const activityCounts = activityTypeMap.map(({ key, value }) => ({
+    key,
+    type: t(`dashboard.activityTypes.${key}`),
+    count: activities.filter((a) => a.type === value).length,
   }))
 
   const productRows = products.slice(0, 4).map((p) => ({

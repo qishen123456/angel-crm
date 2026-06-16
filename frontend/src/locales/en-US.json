@@ -505,7 +505,15 @@
     "caseStudies": "Case studies",
     "ytdSo": "YTD SO units",
     "soUnits": "SO units",
-    "netNew": "Net new"
+    "netNew": "Net new",
+    "activityTypes": {
+      "email": "邮件",
+      "phone": "电话",
+      "meeting": "会议",
+      "visit": "拜访",
+      "wechat": "微信",
+      "other": "其他"
+    }
   },
   "pipeline": {
     "title": "Pipeline",
@@ -586,6 +594,77 @@
       "activities": "Activities",
       "campaigns": "Campaigns",
       "documents": "Documents"
+    },
+    "form": {
+      "name": "客户名称",
+      "code": "客户代码",
+      "market": "市场",
+      "owner": "负责人",
+      "annualTarget": "年度目标 (USD)",
+      "opportunityNotes": "商机深掘",
+      "oppName": "商机名称",
+      "oppNamePlaceholder": "输入商机名称",
+      "estimatedAmount": "预计金额 (USD)",
+      "winRate": "赢率 (%)",
+      "stage": "阶段",
+      "expectedClose": "预计结单",
+      "expectedClosePlaceholder": "2026-06-30"
+    },
+    "card": {
+      "opportunityMining": "商机深掘",
+      "annualTargetProgress": "年度目标进度",
+      "profile": "客户档案",
+      "keyContacts": "主要联系人"
+    },
+    "profile": {
+      "country": "客户所在国家",
+      "market": "市场",
+      "company": "归属公司",
+      "paymentTerms": "付款条款",
+      "creditLimit": "信用额度",
+      "annualTarget": "年度目标",
+      "ytdSales": "YTD 销售额",
+      "owner": "负责人"
+    },
+    "b2bInProgress": "商用 (B2B) · 推进中",
+    "customerResources": "客户资源",
+    "deepDiveDirection": "深化方向",
+    "add": "添加",
+    "col": {
+      "name": "姓名",
+      "title": "职位",
+      "email": "邮箱",
+      "phone": "电话",
+      "primaryContact": "主要联系人",
+      "yes": "是",
+      "oppName": "商机名称",
+      "amount": "金额",
+      "stage": "阶段",
+      "winRate": "赢率",
+      "expectedClose": "预计结单",
+      "contractNumber": "合同编号",
+      "type": "类型",
+      "status": "状态",
+      "expiryDate": "到期日",
+      "orderNumber": "订单号",
+      "piNumber": "PI 号",
+      "orderType": "类型",
+      "createdAt": "创建时间",
+      "receivedAt": "到账时间",
+      "currency": "币种",
+      "method": "方式",
+      "time": "时间",
+      "content": "内容",
+      "recorder": "记录人",
+      "campaignCode": "活动编号",
+      "campaignName": "活动名称",
+      "convertedAmount": "转化金额",
+      "fileName": "文件名",
+      "uploadDate": "上传日期"
+    },
+    "docType": {
+      "po": "采购订单",
+      "receipt": "收款确认书"
     }
   },
   "contacts": {
