@@ -7,18 +7,10 @@ import { accounts, activities, getAccountById, getUserById, opportunities } from
 
 const { Text } = Typography
 
-const activityTypesZh = ['邮件', '电话', '会议', '拜访', '微信', '其他']
-const activityTypesEn = ['Email', 'Call', 'Meeting', 'Visit', 'WeChat', 'Other']
-const activityTypesFr = ['Email', 'Appel', 'Reunion', 'Visite', 'WeChat', 'Autre']
-
-const typeMap: Record<string, string[]> = {
-  zh: activityTypesZh,
-  en: activityTypesEn,
-  fr: activityTypesFr,
-}
+const activityTypes = ['email', 'phone', 'meeting', 'visit', 'wechat', 'other', 'finance']
 
 export function LogActivityPage() {
-  const { t, locale } = useI18n()
+  const { t } = useI18n()
   const { success } = useGlobalMessage()
   const [form] = Form.useForm()
   const [list, setList] = useState(activities)
@@ -57,8 +49,8 @@ export function LogActivityPage() {
           <Form.Item label={t('logActivity.opportunity')} name="opportunityId">
             <Select placeholder={t('logActivity.oppPlaceholder')} options={opportunities.map((o) => ({ value: o.id, label: o.name }))} />
           </Form.Item>
-          <Form.Item label={t('logActivity.type')} name="type" initialValue={typeMap[locale][0]}>
-            <Select options={typeMap[locale].map((v) => ({ value: v, label: v }))} />
+          <Form.Item label={t('logActivity.type')} name="type" initialValue={activityTypes[0]}>
+            <Select options={activityTypes.map((v) => ({ value: v, label: t(`labels.activityType.${v}`) }))} />
           </Form.Item>
           <Form.Item label={t('logActivity.content')} name="content" rules={[{ required: true, message: t('common.required') }]}>
             <Input.TextArea rows={4} placeholder={t('logActivity.contentPlaceholder')} />
@@ -79,7 +71,7 @@ export function LogActivityPage() {
             <List.Item>
               <div style={{ width: '100%' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-                  <Tag color="blue">{item.type}</Tag>
+                  <Tag color="blue">{t(`labels.activityType.${item.type}`)}</Tag>
                   <Text strong>{getAccountById(item.accountId)?.name}</Text>
                   <Text className="text-muted" style={{ fontSize: 12 }}>
                     {item.createdAt} · {getUserById(item.createdById)?.name}

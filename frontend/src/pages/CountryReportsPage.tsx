@@ -3,11 +3,11 @@ import { useState } from 'react'
 import { useI18n } from '../hooks/useI18n'
 import { annualTargets, markets } from '../mocks/crmData'
 
-const periodKeys = [
-  { key: 'year', label: '年度' },
-  { key: 'q2', label: 'Q2' },
-  { key: 'june', label: '6月' },
-  { key: 'week', label: '本周' },
+const periodKeys = (t: (k: string) => string) => [
+  { key: 'year', label: t('countryReports.periodYear') },
+  { key: 'q2', label: t('countryReports.periodQ2') },
+  { key: 'june', label: t('countryReports.periodJune') },
+  { key: 'week', label: t('countryReports.periodWeek') },
 ]
 
 export function CountryReportsPage() {
@@ -19,7 +19,7 @@ export function CountryReportsPage() {
     const actual = target ? Math.round(target.revenueTargetUsd * 0.35) : 0
     const percent = target ? Math.round((actual / target.revenueTargetUsd) * 100) : 0
     return {
-      region: `${m.flag} ${m.name}`,
+      region: `${m.flag} ${m.code}`,
       fullYearTask: `$${(target?.revenueTargetUsd ?? 0).toLocaleString()}`,
       monthTarget: `$${Math.round((target?.revenueTargetUsd ?? 0) / 12).toLocaleString()}`,
       kpi: `$${(target?.kpiTargetUsd ?? 0).toLocaleString()}`,
@@ -38,7 +38,7 @@ export function CountryReportsPage() {
       </div>
 
       <Card>
-        <Tabs activeKey={period} onChange={setPeriod} items={periodKeys.map((p) => ({ key: p.key, label: p.label }))} />
+        <Tabs activeKey={period} onChange={setPeriod} items={periodKeys(t).map((p) => ({ key: p.key, label: p.label }))} />
         <Table
           dataSource={data}
           rowKey="region"

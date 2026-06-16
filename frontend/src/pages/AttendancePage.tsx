@@ -18,17 +18,7 @@ const initialRecords: PunchRecord[] = [
   { id: 'p1', type: 'in', time: '2026-06-16 09:02', location: 'AHT Singapore Office', note: '' },
 ]
 
-const localeMap: Record<string, string> = {
-  zh: 'zh-CN',
-  en: 'en-US',
-  fr: 'fr-FR',
-}
 
-const weekdays: Record<string, string[]> = {
-  zh: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
-  en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-  fr: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
-}
 
 export function AttendancePage() {
   const { t, locale } = useI18n()
@@ -65,7 +55,7 @@ export function AttendancePage() {
       </div>
 
       <Card style={{ maxWidth: 560, marginBottom: 20 }}>
-        <Title level={4}>{new Date().toLocaleDateString(localeMap[locale])} {weekdays[locale][new Date().getDay()]}</Title>
+        <Title level={4}>{new Date().toLocaleDateString(locale)} · {new Intl.DateTimeFormat(locale, { weekday: 'long' }).format(new Date())}</Title>
         <Text className="text-secondary">
           {t('attendance.status')}：
           <Tag color={lastType === 'in' ? 'success' : 'default'}>

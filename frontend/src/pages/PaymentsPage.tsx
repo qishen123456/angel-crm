@@ -6,7 +6,7 @@ import { useGlobalMessage } from '../hooks/useGlobalMessage'
 import { useI18n } from '../hooks/useI18n'
 import { accounts, formatCurrency, getAccountById, getUserById, orders, payments, statusTone } from '../mocks/crmData'
 
-const paymentMethods = ['银行转账', '信用证', '支票', 'PayPal', 'Stripe']
+const paymentMethods = ['wire', 'lc', 'check', 'paypal', 'stripe']
 
 export function PaymentsPage() {
   const { t } = useI18n()
@@ -38,8 +38,8 @@ export function PaymentsPage() {
             { title: t('payments.amount'), dataIndex: 'amountUsd', render: (v) => formatCurrency(v) },
             { title: t('payments.currency'), dataIndex: 'currency' },
             { title: t('payments.registrar'), dataIndex: 'registeredById', render: (id) => getUserById(id)?.name },
-            { title: t('payments.method'), dataIndex: 'method' },
-            { title: t('payments.status'), dataIndex: 'status', render: (v) => <span className={`pill pill-${statusTone(v)}`}>{v}</span> },
+            { title: t('payments.method'), dataIndex: 'method', render: (v) => t(`labels.paymentMethod.${v}`) },
+            { title: t('payments.status'), dataIndex: 'status', render: (v) => <span className={`pill pill-${statusTone(v)}`}>{t(`labels.paymentStatus.${v}`)}</span> },
             {
               title: t('common.actions'),
               key: 'action',
@@ -70,7 +70,7 @@ export function PaymentsPage() {
             <Select options={['USD', 'CNY', 'EUR', 'SGD', 'HKD'].map((v) => ({ value: v, label: v }))} />
           </Form.Item>
           <Form.Item label={t('payments.method')}>
-            <Select options={paymentMethods.map((v) => ({ value: v, label: v }))} />
+            <Select options={paymentMethods.map((v) => ({ value: v, label: t(`labels.paymentMethod.${v}`) }))} />
           </Form.Item>
           <Form.Item label={t('payments.receivedAt')}><DatePicker style={{ width: '100%' }} /></Form.Item>
         </Form>
@@ -90,8 +90,8 @@ export function PaymentsPage() {
             <Form.Item label={t('payments.order')}><Input readOnly value={selected.orderId} /></Form.Item>
             <Form.Item label={t('payments.amount')}><Input readOnly value={formatCurrency(selected.amountUsd)} /></Form.Item>
             <Form.Item label={t('payments.currency')}><Input readOnly value={selected.currency} /></Form.Item>
-            <Form.Item label={t('payments.method')}><Input readOnly value={selected.method} /></Form.Item>
-            <Form.Item label={t('payments.status')}><Input readOnly value={selected.status} /></Form.Item>
+            <Form.Item label={t('payments.method')}><Input readOnly value={t(`labels.paymentMethod.${selected.method}`)} /></Form.Item>
+            <Form.Item label={t('payments.status')}><Input readOnly value={t(`labels.paymentStatus.${selected.status}`)} /></Form.Item>
           </Form>
         )}
       </Modal>

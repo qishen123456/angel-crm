@@ -6,8 +6,8 @@ import { useGlobalMessage } from '../hooks/useGlobalMessage'
 import { useI18n } from '../hooks/useI18n'
 import { accounts, contracts, formatCurrency, getAccountById, statusTone } from '../mocks/crmData'
 
-const contractTypes = ['框架合同', '单笔合同', '补充协议']
-const contractStatuses = ['有效', '即将到期', '已到期']
+const contractTypes = ['annualFramework', 'supplyAgreement', 'distributionAgreement']
+const contractStatuses = ['active', 'expiring', 'expired']
 
 export function ContractsPage() {
   const { t } = useI18n()
@@ -17,7 +17,7 @@ export function ContractsPage() {
   const [detailOpen, setDetailOpen] = useState(false)
   const [selected, setSelected] = useState<typeof contracts[0] | null>(null)
 
-  const expiringSoon = useMemo(() => contracts.filter((c) => c.status === '即将到期').length, [])
+  const expiringSoon = useMemo(() => contracts.filter((c) => c.status === 'expiring').length, [])
 
   return (
     <div className="crm-page">
@@ -46,12 +46,12 @@ export function ContractsPage() {
             { title: t('contracts.code'), dataIndex: 'contractNumber' },
             { title: t('contracts.account'), dataIndex: 'accountId', render: (id) => getAccountById(id)?.name },
             { title: t('contracts.name'), dataIndex: 'name' },
-            { title: t('contracts.type'), dataIndex: 'type' },
-            { title: t('contracts.status'), dataIndex: 'status', render: (v) => <span className={`pill pill-${statusTone(v)}`}>{v}</span> },
+            { title: t('contracts.type'), dataIndex: 'type', render: (v) => t(`labels.contractType.${v}`) },
+            { title: t('contracts.status'), dataIndex: 'status', render: (v) => <span className={`pill pill-${statusTone(v)}`}>{t(`labels.contractStatus.${v}`)}</span> },
             { title: t('contracts.entity'), dataIndex: 'signEntity' },
             { title: t('contracts.amount'), dataIndex: 'amountUsd', render: (v) => formatCurrency(v) },
             { title: t('contracts.collectionProgress'), dataIndex: 'paymentProgress' },
-            { title: t('contracts.paymentStatus'), dataIndex: 'paymentStatus' },
+            { title: t('contracts.paymentStatus'), dataIndex: 'paymentStatus', render: (v) => t(`labels.paymentStatus.${v}`) },
             { title: t('contracts.expiry'), dataIndex: 'expiryDate' },
             {
               title: t('common.actions'),
@@ -77,10 +77,10 @@ export function ContractsPage() {
             <Select options={accounts.map((a) => ({ value: a.id, label: a.name }))} />
           </Form.Item>
           <Form.Item label={t('contracts.type')}>
-            <Select options={contractTypes.map((v) => ({ value: v, label: v }))} />
+            <Select options={contractTypes.map((v) => ({ value: v, label: t(`labels.contractType.${v}`) }))} />
           </Form.Item>
           <Form.Item label={t('contracts.status')}>
-            <Select options={contractStatuses.map((v) => ({ value: v, label: v }))} />
+            <Select options={contractStatuses.map((v) => ({ value: v, label: t(`labels.contractStatus.${v}`) }))} />
           </Form.Item>
           <Form.Item label={t('contracts.amount')}><Input prefix="$" /></Form.Item>
           <Form.Item label={t('contracts.expiry')}><DatePicker style={{ width: '100%' }} /></Form.Item>
@@ -98,8 +98,8 @@ export function ContractsPage() {
           <Form layout="vertical">
             <Form.Item label={t('contracts.name')}><Input readOnly value={selected.name} /></Form.Item>
             <Form.Item label={t('contracts.account')}><Input readOnly value={getAccountById(selected.accountId)?.name} /></Form.Item>
-            <Form.Item label={t('contracts.type')}><Input readOnly value={selected.type} /></Form.Item>
-            <Form.Item label={t('contracts.status')}><Input readOnly value={selected.status} /></Form.Item>
+            <Form.Item label={t('contracts.type')}><Input readOnly value={t(`labels.contractType.${selected.type}`)} /></Form.Item>
+            <Form.Item label={t('contracts.status')}><Input readOnly value={t(`labels.contractStatus.${selected.status}`)} /></Form.Item>
             <Form.Item label={t('contracts.amount')}><Input readOnly value={formatCurrency(selected.amountUsd)} /></Form.Item>
             <Form.Item label={t('contracts.expiry')}><Input readOnly value={selected.expiryDate} /></Form.Item>
           </Form>

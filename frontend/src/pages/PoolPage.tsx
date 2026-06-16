@@ -30,7 +30,7 @@ export function PoolPage() {
             { title: t('pool.name'), dataIndex: 'name' },
             { title: t('pool.market'), dataIndex: 'market', render: (v) => <span>{flagForMarket(v)} {v}</span> },
             { title: t('pool.type'), dataIndex: 'businessType' },
-            { title: t('pool.status'), dataIndex: 'contractStatus', render: (v) => <span className={`pill pill-${statusTone(v)}`}>{v}</span> },
+            { title: t('pool.status'), dataIndex: 'contractStatus', render: (v) => <span className={`pill pill-${statusTone(v)}`}>{t(`labels.contractStatus.${v}`)}</span> },
             { title: t('pool.target'), dataIndex: 'annualTargetUsd', render: (v) => `$${v.toLocaleString()}` },
             { title: t('pool.action'), key: 'action', render: () => <Button type="text" onClick={() => success(t('common.successClaim'))}>{t('pool.claim')}</Button> },
           ]}

@@ -231,7 +231,11 @@
     "progress": "进度",
     "category": "类别",
     "price": "单价",
-    "stock": "库存"
+    "stock": "库存",
+    "qty": "数量",
+    "unit": "单价",
+    "lineTotal": "小计",
+    "selectProduct": "请选择产品"
   },
   "login": {
     "title": "登录 ANGEL CRM",
@@ -263,7 +267,8 @@
     "formOwner": "负责人",
     "formType": "业务类型",
     "formTarget": "年度目标 (USD)",
-    "formNotes": "客户资源 / 商机深掘"
+    "formNotes": "客户资源 / 商机深掘",
+    "expiresOn": "到期 {{date}}"
   },
   "orders": {
     "title": "订单中心",
@@ -286,7 +291,13 @@
     "createTitle": "新建订单",
     "drawerLines": "订单明细",
     "drawerShipment": "发货批次 & 报关",
-    "drawerAttachments": "附件 & 回款"
+    "drawerAttachments": "附件 & 回款",
+    "drawerSku": "SKU",
+    "drawerProduct": "产品",
+    "drawerQty": "数量",
+    "drawerUnit": "单价",
+    "drawerLineTotal": "行合计",
+    "drawerSubtotal": "小计"
   },
   "today": {
     "greeting": "下午好，",
@@ -370,7 +381,9 @@
       "brandColors": "品牌色彩",
       "typography": "字体",
       "en": "英文",
-      "zh": "中文"
+      "zh": "中文",
+      "zhFont": "方正兰亭黑 / 苹方",
+      "zhSample": "安吉尔 全球销售 CRM"
     },
     "market": {
       "code": "市场代码",
@@ -765,7 +778,9 @@
       "dueDate": "到期日期",
       "planAmount": "计划收款",
       "open": "打开",
-      "noData": "全部清理完毕，没有待办。"
+      "noData": "全部清理完毕，没有待办。",
+      "confirmPayment": "确认付款",
+      "remindCustomer": "提醒客户"
     }
   },
   "pool": {
@@ -815,7 +830,11 @@
     "monthlyTarget": "月目标",
     "kpi": "KPI",
     "actualReceipt": "实际收款",
-    "progress": "进度"
+    "progress": "进度",
+    "periodYear": "年度",
+    "periodQ2": "Q2",
+    "periodJune": "6月",
+    "periodWeek": "本周"
   },
   "executiveReport": {
     "title": "高管报告",
@@ -966,5 +985,132 @@
       "workRequired": "请至少填写一项今日工作",
       "planRequired": "请至少填写一项明日计划"
     }
-  }
+  },
+  "labels": {
+    "orderStatus": {
+      "pendingPI": "待开具 PI",
+      "piIssued": "PI 已开具",
+      "shipped": "已发货",
+      "completed": "已完成"
+    },
+    "orderType": {
+      "preWin": "Pre-win",
+      "firstOrder": "首单",
+      "reorder": "翻单"
+    },
+    "orderKind": {
+      "bulk": "大货订单",
+      "sample": "样机订单",
+      "reorder": "返单"
+    },
+    "poStatus": {
+      "received": "PO ✓",
+      "pending": "PO 待收"
+    },
+    "contractStatus": {
+      "signed": "已签订",
+      "active": "有效",
+      "expiring": "即将到期",
+      "expired": "已到期"
+    },
+    "contractType": {
+      "annualFramework": "年度框架",
+      "supplyAgreement": "供应协议",
+      "distributionAgreement": "经销协议"
+    },
+    "paymentStatus": {
+      "confirmed": "已确认",
+      "receivable": "应收",
+      "partial": "部分到账",
+      "normal": "正常",
+      "overdueRisk": "逾期风险"
+    },
+    "oppStage": {
+      "prospect": "初步接触",
+      "qualify": "需求确认",
+      "proposal": "方案报价",
+      "negotiate": "谈判中",
+      "closedWon": "已赢单"
+    },
+    "campaignType": {
+      "tradeshow": "展会",
+      "paidAds": "付费广告",
+      "webinar": "网络研讨会",
+      "referral": "转介绍"
+    },
+    "campaignStatus": {
+      "active": "进行中",
+      "completed": "已完成"
+    },
+    "leadSource": {
+      "campaign": "市场活动",
+      "offlineEvent": "线下活动",
+      "website": "官网",
+      "referral": "转介绍",
+      "tradeshow": "展会",
+      "social": "社交媒体",
+      "other": "其他"
+    },
+    "leadStatus": {
+      "new": "新线索",
+      "contacted": "已联系",
+      "qualified": "已确认意向",
+      "converted": "已转化"
+    },
+    "productCategory": {
+      "commercial": "商用",
+      "residential": "家用",
+      "industrial": "工业",
+      "strategic": "战略品"
+    },
+    "productStatus": {
+      "onSale": "在售",
+      "discontinued": "停产",
+      "rnd": "研发中"
+    },
+    "activityType": {
+      "finance": "财务",
+      "email": "邮件",
+      "phone": "电话",
+      "meeting": "会议",
+      "visit": "拜访",
+      "wechat": "微信",
+      "other": "其他"
+    },
+    "projectStage": {
+      "survey": "现场勘测",
+      "install": "安装",
+      "commissioning": "调试验收"
+    },
+    "paymentMethod": {
+      "wire": "银行转账",
+      "lc": "信用证",
+      "check": "支票",
+      "paypal": "PayPal",
+      "stripe": "Stripe"
+    },
+    "collectionStatus": {
+      "due": "即将到期",
+      "overdue": "已逾期"
+    },
+    "productLine": {
+      "commercial": "商用",
+      "retail": "零售",
+      "industrial": "工业",
+      "public": "公共场景"
+    },
+    "readWrite": "读写",
+    "businessType": {
+      "commercial": "商用",
+      "retail": "零售",
+      "industrial": "工业",
+      "public": "公共场景"
+    }
+  },
+  "placeholderPage": {
+    "subtitle": "该页面正在持续完善中。",
+    "comingSoon": "敬请期待",
+    "description": "当前为高保真复刻过渡页，后续将补充完整交互与数据。"
+  },
+  "adminAvatar": "管理"
 }

@@ -4,8 +4,8 @@
   "shellTitle": "Global Sales CRM",
   "shellTagline": "AngelCRM 前端高保真重建",
   "systemAdmin": "系統管理員",
-  "logout": "退出登錄",
-  "newButton": "+ 新建",
+  "logout": "登出",
+  "newButton": "+ 新增",
   "languageLabel": "中文",
   "currentDate": "6月16日 週二",
   "menu": [
@@ -23,7 +23,7 @@
         },
         {
           "key": "/app/workqueue",
-          "label": "待辦工作臺",
+          "label": "待辦工作枱",
           "badge": 2
         },
         {
@@ -58,7 +58,7 @@
     },
     {
       "key": "accounts",
-      "label": "客戶 & 聯繫人",
+      "label": "客戶 & 聯絡人",
       "items": [
         {
           "key": "/app/accounts",
@@ -71,7 +71,7 @@
         },
         {
           "key": "/app/contacts",
-          "label": "聯繫人"
+          "label": "聯絡人"
         },
         {
           "key": "/app/end-users",
@@ -100,11 +100,11 @@
     },
     {
       "key": "orders",
-      "label": "合同 & 訂單",
+      "label": "合約 & 訂單",
       "items": [
         {
           "key": "/app/contracts",
-          "label": "合同"
+          "label": "合約"
         },
         {
           "key": "/app/orders",
@@ -162,7 +162,7 @@
         },
         {
           "key": "/app/settings",
-          "label": "設置"
+          "label": "設定"
         }
       ]
     }
@@ -170,19 +170,19 @@
   "pages": {
     "today": "今日",
     "dashboard": "數據看板",
-    "workqueue": "待辦工作臺",
+    "workqueue": "待辦工作枱",
     "attendance": "考勤打卡",
     "campaigns": "市場活動",
     "leads": "銷售線索",
     "retail": "零售運營",
     "accounts": "客戶列表",
     "pool": "公海",
-    "contacts": "聯繫人",
+    "contacts": "聯絡人",
     "endUsers": "終端用戶",
     "pipeline": "銷售漏斗",
     "logActivity": "記錄跟進",
     "projectUpdates": "項目進度",
-    "contracts": "合同",
+    "contracts": "合約",
     "orders": "訂單中心",
     "invoices": "開票申請",
     "payments": "支付登記",
@@ -192,14 +192,14 @@
     "import": "數據導入",
     "invite": "邀請用戶",
     "team": "團隊管理",
-    "settings": "系統設置"
+    "settings": "系統設定"
   },
   "common": {
-    "search": "搜索",
-    "searchPlaceholder": "搜索客戶名稱、代碼...",
-    "create": "新建",
+    "search": "搜尋",
+    "searchPlaceholder": "搜尋客戶名稱、代碼...",
+    "create": "新增",
     "edit": "編輯",
-    "save": "保存",
+    "save": "儲存",
     "cancel": "取消",
     "submit": "提交",
     "delete": "刪除",
@@ -207,13 +207,13 @@
     "view": "查看",
     "status": "狀態",
     "all": "全部",
-    "loading": "加載中...",
+    "loading": "載入中...",
     "noData": "暫無數據",
     "confirm": "確認",
-    "successCreate": "創建成功",
+    "successCreate": "建立成功",
     "successUpdate": "更新成功",
     "successDelete": "刪除成功",
-    "successSave": "保存成功",
+    "successSave": "儲存成功",
     "successAssign": "已分配",
     "successClaim": "已認領",
     "successImport": "導入任務已提交",
@@ -231,24 +231,28 @@
     "progress": "進度",
     "category": "類別",
     "price": "單價",
-    "stock": "庫存"
+    "stock": "庫存",
+    "qty": "數量",
+    "unit": "單價",
+    "lineTotal": "小計",
+    "selectProduct": "請選擇產品"
   },
   "login": {
-    "title": "登錄 ANGEL CRM",
-    "subtitle": "AHT 全球業務管理部 · 內部工作臺",
-    "sso": "使用飛書 SSO 登錄",
+    "title": "登入 ANGEL CRM",
+    "subtitle": "AHT 全球業務管理部 · 內部工作枱",
+    "sso": "使用飛書 SSO 登入",
     "divider": "或",
-    "email": "工作郵箱",
+    "email": "工作電郵",
     "emailPlaceholder": "you@angel.cn",
     "password": "密碼",
     "passwordPlaceholder": "請輸入密碼",
     "forgot": "忘記密碼?",
-    "tips": "演示：任意已設置郵箱 + 密碼 \"demo2026\"",
-    "submit": "登錄 →"
+    "tips": "演示：任意已設置電郵 + 密碼 \"demo2026\"",
+    "submit": "登入 →"
   },
   "accounts": {
     "title": "客戶列表",
-    "subtitle": "管理所有客戶、年度目標與合同狀態。",
+    "subtitle": "管理所有客戶、年度目標與合約狀態。",
     "statusAll": "全部",
     "statusActive": "有效",
     "statusExpiring": "即將到期",
@@ -256,14 +260,15 @@
     "marketAll": "全部",
     "target": "年度目標",
     "owner": "負責人",
-    "createTitle": "新建客戶",
+    "createTitle": "新增客戶",
     "formName": "客戶名稱",
     "formCode": "客戶代碼",
     "formMarket": "市場",
     "formOwner": "負責人",
     "formType": "業務類型",
     "formTarget": "年度目標 (USD)",
-    "formNotes": "客戶資源 / 商機深掘"
+    "formNotes": "客戶資源 / 商機深掘",
+    "expiresOn": "到期 {{date}}"
   },
   "orders": {
     "title": "訂單中心",
@@ -282,11 +287,17 @@
     "colKind": "訂單種類",
     "colPo": "PO 憑證",
     "colStatus": "狀態",
-    "colCreated": "創建時間",
-    "createTitle": "新建訂單",
+    "colCreated": "建立時間",
+    "createTitle": "新增訂單",
     "drawerLines": "訂單明細",
     "drawerShipment": "發貨批次 & 報關",
-    "drawerAttachments": "附件 & 回款"
+    "drawerAttachments": "附件 & 回款",
+    "drawerSku": "SKU",
+    "drawerProduct": "產品",
+    "drawerQty": "數量",
+    "drawerUnit": "單價",
+    "drawerLineTotal": "行合計",
+    "drawerSubtotal": "小計"
   },
   "today": {
     "greeting": "下午好，",
@@ -312,36 +323,36 @@
     "funnelDesc": "打開看板查看所有活躍商機",
     "teamEvents": "團隊重大事項（近 3 天）",
     "todo": "待處理",
-    "reportSubmitted": "今日日报已提交",
-    "reportSavedHint": "日报已保存，可随时点击右侧按钮查看或修改。",
-    "viewReport": "查看日报",
-    "streakDays": "已连续{count}天提交",
-    "reportSaveSuccess": "日报已保存",
-    "followUps": "今日待跟进",
+    "reportSubmitted": "今日日報已提交",
+    "reportSavedHint": "日報已儲存，可隨時點擊右側按鈕查看或修改。",
+    "viewReport": "查看日報",
+    "streakDays": "已連續{count}天提交",
+    "reportSaveSuccess": "日報已儲存",
+    "followUps": "今日待跟進",
     "alertLevel": {
-      "urgent": "紧急",
+      "urgent": "緊急",
       "high": "高"
     },
     "alertText": {
-      "hkHospitalityDiscount": "HK Hospitality 集团总部要求 15% 一次性 discount 作为框架协议条件，涉及 5 年合作金额 $3.8M。当前我们的折扣权限是 8%，需 CSO 决策。",
-      "marinaBayContract": "Marina Bay 合同 22 天后到期，客户 CFO Olivia 要求增加「3 年内任意 1 次免费更换主件」条款，涉及成本约 $80k。需法务和高管决策是否接受。"
+      "hkHospitalityDiscount": "HK Hospitality 集團總部要求 15% 一次性 discount 作為框架協議條件，涉及 5 年合作金額 $3.8M。目前我們的折扣權限是 8%，需 CSO 決策。",
+      "marinaBayContract": "Marina Bay 合約 22 天後到期，客戶 CFO Olivia 要求增加「3 年內任意 1 次免費更換主件」條款，涉及成本約 $80k。需法務和高管決策是否接受。"
     },
     "todoTitle": {
-      "noFollowUp": "无跟进",
-      "expiring": "即将到期",
+      "noFollowUp": "無跟進",
+      "expiring": "即將到期",
       "reminder": "提醒"
     },
     "todoText": {
       "hkHospitalityNoFollowUp": "HK Hospitality Corp — 已 28 天未更新",
       "gentingNoFollowUp": "Genting Group — 已 25 天未更新",
       "bangkokMallNoFollowUp": "Bangkok Mall Group — 已 31 天未更新",
-      "marinaBayExpiring": "Marina Bay Sands 合同 21 天后到期",
-      "soekarnoExpiring": "Soekarno Retail Distribution 合同 5 天后到期",
-      "rafflesEndUserInfo": "请收集 Raffles Hospitality 的终端用户信息（赢单后 95 天）"
+      "marinaBayExpiring": "Marina Bay Sands 合約 21 天後到期",
+      "soekarnoExpiring": "Soekarno Retail Distribution 合約 5 天後到期",
+      "rafflesEndUserInfo": "請收集 Raffles Hospitality 的終端用戶資訊（贏單後 95 天）"
     },
     "followUpStage": {
       "proposal": "方案",
-      "contact": "联系"
+      "contact": "聯絡"
     },
     "followUpTask": {
       "mgmPricingPushback": "Follow up on pricing pushback",
@@ -355,22 +366,24 @@
       "department": "部門",
       "roles": "角色與權限",
       "targets": "年度目標",
-      "templates": "文檔模板",
+      "templates": "文件範本",
       "notifications": "通知",
       "audit": "審計日誌",
-      "account": "賬戶"
+      "account": "帳戶"
     },
-    "title": "設置",
+    "title": "設定",
     "subtitle": "管理品牌、市場、部門、權限與系統配置。",
     "brand": {
       "logoRules": "LOGO 使用規則",
       "vi": "VI 規範：背景灰度 ≤40% 使用深色 logo；>40% 使用白色 logo。",
       "sidebar": "側邊欄（深色背景）",
-      "headerLogin": "頂欄 / 登錄頁（淺色背景）",
+      "headerLogin": "頂欄 / 登入頁（淺色背景）",
       "brandColors": "品牌色彩",
       "typography": "字體",
       "en": "英文",
-      "zh": "中文"
+      "zh": "中文",
+      "zhFont": "方正蘭亭黑 / 蘋方",
+      "zhSample": "安吉爾 全球銷售 CRM"
     },
     "market": {
       "code": "市場代碼",
@@ -385,9 +398,9 @@
       "role": "角色",
       "accounts": "客戶",
       "orders": "訂單",
-      "contracts": "合同",
+      "contracts": "合約",
       "reports": "報表",
-      "settings": "設置"
+      "settings": "設定"
     },
     "targets": {
       "market": "市場",
@@ -400,12 +413,12 @@
       "type": "類型",
       "name": "名稱",
       "description": "描述",
-      "fileName": "文件名",
+      "fileName": "檔案名稱",
       "enabled": "啟用"
     },
     "notifications": {
-      "email": "郵件通知",
-      "contractExpiry": "合同到期提醒",
+      "email": "電郵通知",
+      "contractExpiry": "合約到期提醒",
       "orderStatus": "訂單狀態變更",
       "dailyReport": "日報提醒"
     },
@@ -417,18 +430,18 @@
     },
     "account": {
       "displayName": "顯示名稱",
-      "email": "郵箱",
-      "currentPassword": "當前密碼",
+      "email": "電郵",
+      "currentPassword": "目前密碼",
       "newPassword": "新密碼"
     }
   },
   "createMenu": {
-    "account": "新建客戶",
-    "contact": "新建聯繫人",
-    "opportunity": "新建商機",
-    "order": "新建訂單",
-    "lead": "新建線索",
-    "campaign": "新建市場活動",
+    "account": "新增客戶",
+    "contact": "新增聯絡人",
+    "opportunity": "新增商機",
+    "order": "新增訂單",
+    "lead": "新增線索",
+    "campaign": "新增市場活動",
     "activity": "記錄跟進"
   },
   "dashboard": {
@@ -466,7 +479,7 @@
     "salesBehavior": "銷售行為分析",
     "productOrders": "產品與訂單",
     "recentWins": "近期贏單",
-    "contact": "聯繫",
+    "contact": "聯絡",
     "calls": "電話",
     "visits": "拜訪",
     "trials": "試機",
@@ -492,8 +505,8 @@
     "winRate": "贏單率",
     "openOpps": "無跟進商機",
     "pendingOrders": "待處理訂單",
-    "contractExpiry": "合同到期監控(90天)",
-    "contractOk": "未來 90 天內無合同到期 — 安心。",
+    "contractExpiry": "合約到期監控(90天)",
+    "contractOk": "未來 90 天內無合約到期 — 安心。",
     "weightedFunnel": "加權漏斗（按階段）",
     "stageProspect": "初步接觸",
     "stageQualify": "需求確認",
@@ -506,10 +519,10 @@
     "soUnits": "海外 SO 臺數",
     "netNew": "淨增",
     "activityTypes": {
-      "email": "邮件",
-      "phone": "电话",
-      "meeting": "会议",
-      "visit": "拜访",
+      "email": "電郵",
+      "phone": "電話",
+      "meeting": "會議",
+      "visit": "拜訪",
       "wechat": "微信",
       "other": "其他"
     }
@@ -517,13 +530,13 @@
   "pipeline": {
     "title": "銷售漏斗",
     "subtitle": "看板視圖管理所有活躍商機。",
-    "newOpp": "新建商機"
+    "newOpp": "新增商機"
   },
   "campaigns": {
     "title": "市場活動",
     "subtitle": "追蹤市場活動投入、線索轉化與 ROI。",
-    "create": "新建活動",
-    "searchPlaceholder": "搜索活動名稱、編號...",
+    "create": "新增活動",
+    "searchPlaceholder": "搜尋活動名稱、編號...",
     "totalBudget": "總預算",
     "totalSpend": "已花費",
     "totalLeads": "線索總數",
@@ -549,10 +562,10 @@
   "leads": {
     "title": "銷售線索",
     "subtitle": "管理從市場活動、轉介紹等渠道獲取的銷售線索。",
-    "create": "新建線索",
-    "searchPlaceholder": "搜索姓名、公司...",
+    "create": "新增線索",
+    "searchPlaceholder": "搜尋姓名、公司...",
     "newLeads": "新線索",
-    "contacted": "已聯繫",
+    "contacted": "已聯絡",
     "qualified": "已確認意向",
     "converted": "已轉化",
     "name": "姓名",
@@ -564,7 +577,7 @@
     "estValue": "預估金額",
     "status": "狀態",
     "owner": "負責人",
-    "lastContact": "最近聯繫",
+    "lastContact": "最近聯絡",
     "convert": "轉化",
     "convertTitle": "轉化線索為客戶/商機",
     "accountCode": "客戶代碼",
@@ -576,7 +589,7 @@
   "accountDetail": {
     "back": "返回客戶列表",
     "edit": "編輯客戶",
-    "newOpp": "新建商機",
+    "newOpp": "新增商機",
     "cumulativeSales": "累計銷售額",
     "cumulativeReceipts": "累計回款",
     "receivable": "應收餘額",
@@ -585,114 +598,114 @@
     "creditLimit": "信用額度",
     "tabs": {
       "overview": "概覽",
-      "contacts": "聯繫人",
+      "contacts": "聯絡人",
       "opportunities": "商機",
-      "contracts": "合同",
+      "contracts": "合約",
       "orders": "訂單",
       "payments": "回款",
       "activities": "跟進記錄",
       "campaigns": "市場活動",
-      "documents": "文檔附件"
+      "documents": "文件附件"
     },
     "form": {
-      "name": "客户名称",
-      "code": "客户代码",
-      "market": "市场",
-      "owner": "负责人",
-      "annualTarget": "年度目标 (USD)",
-      "opportunityNotes": "商机深掘",
-      "oppName": "商机名称",
-      "oppNamePlaceholder": "输入商机名称",
-      "estimatedAmount": "预计金额 (USD)",
-      "winRate": "赢率 (%)",
-      "stage": "阶段",
-      "expectedClose": "预计结单",
+      "name": "客戶名稱",
+      "code": "客戶代碼",
+      "market": "市場",
+      "owner": "負責人",
+      "annualTarget": "年度目標 (USD)",
+      "opportunityNotes": "商機深掘",
+      "oppName": "商機名稱",
+      "oppNamePlaceholder": "輸入商機名稱",
+      "estimatedAmount": "預計金額 (USD)",
+      "winRate": "贏率 (%)",
+      "stage": "階段",
+      "expectedClose": "預計結單",
       "expectedClosePlaceholder": "2026-06-30"
     },
     "card": {
-      "opportunityMining": "商机深掘",
-      "annualTargetProgress": "年度目标进度",
-      "profile": "客户档案",
-      "keyContacts": "主要联系人"
+      "opportunityMining": "商機深掘",
+      "annualTargetProgress": "年度目標進度",
+      "profile": "客戶檔案",
+      "keyContacts": "主要聯絡人"
     },
     "profile": {
-      "country": "客户所在国家",
-      "market": "市场",
-      "company": "归属公司",
-      "paymentTerms": "付款条款",
-      "creditLimit": "信用额度",
-      "annualTarget": "年度目标",
-      "ytdSales": "YTD 销售额",
-      "owner": "负责人"
+      "country": "客戶所在國家",
+      "market": "市場",
+      "company": "歸屬公司",
+      "paymentTerms": "付款條款",
+      "creditLimit": "信用額度",
+      "annualTarget": "年度目標",
+      "ytdSales": "YTD 銷售額",
+      "owner": "負責人"
     },
-    "b2bInProgress": "商用 (B2B) · 推进中",
-    "customerResources": "客户资源",
+    "b2bInProgress": "商用 (B2B) · 推進中",
+    "customerResources": "客戶資源",
     "deepDiveDirection": "深化方向",
     "add": "添加",
     "col": {
       "name": "姓名",
-      "title": "职位",
-      "email": "邮箱",
-      "phone": "电话",
-      "primaryContact": "主要联系人",
+      "title": "職位",
+      "email": "電郵",
+      "phone": "電話",
+      "primaryContact": "主要聯絡人",
       "yes": "是",
-      "oppName": "商机名称",
-      "amount": "金额",
-      "stage": "阶段",
-      "winRate": "赢率",
-      "expectedClose": "预计结单",
-      "contractNumber": "合同编号",
-      "type": "类型",
-      "status": "状态",
+      "oppName": "商機名稱",
+      "amount": "金額",
+      "stage": "階段",
+      "winRate": "贏率",
+      "expectedClose": "預計結單",
+      "contractNumber": "合約編號",
+      "type": "類型",
+      "status": "狀態",
       "expiryDate": "到期日",
-      "orderNumber": "订单号",
-      "piNumber": "PI 号",
-      "orderType": "类型",
-      "createdAt": "创建时间",
-      "receivedAt": "到账时间",
-      "currency": "币种",
+      "orderNumber": "訂單號",
+      "piNumber": "PI 號",
+      "orderType": "類型",
+      "createdAt": "建立時間",
+      "receivedAt": "到賬時間",
+      "currency": "幣種",
       "method": "方式",
-      "time": "时间",
-      "content": "内容",
-      "recorder": "记录人",
-      "campaignCode": "活动编号",
-      "campaignName": "活动名称",
-      "convertedAmount": "转化金额",
-      "fileName": "文件名",
-      "uploadDate": "上传日期"
+      "time": "時間",
+      "content": "內容",
+      "recorder": "記錄人",
+      "campaignCode": "活動編號",
+      "campaignName": "活動名稱",
+      "convertedAmount": "轉化金額",
+      "fileName": "檔案名稱",
+      "uploadDate": "上傳日期"
     },
     "docType": {
-      "po": "采购订单",
-      "receipt": "收款确认书"
+      "po": "採購訂單",
+      "receipt": "收款確認書"
     },
     "stage": {
-      "prospect": "初步接触",
-      "qualify": "需求确认",
-      "proposal": "方案报价",
-      "negotiate": "谈判中"
+      "prospect": "初步接觸",
+      "qualify": "需求確認",
+      "proposal": "方案報價",
+      "negotiate": "談判中"
     }
   },
   "contacts": {
-    "title": "聯繫人",
-    "subtitle": "管理客戶聯繫人、職位與聯繫方式。",
-    "create": "新建聯繫人",
-    "searchPlaceholder": "搜索姓名、公司...",
+    "title": "聯絡人",
+    "subtitle": "管理客戶聯絡人、職位與聯絡方式。",
+    "create": "新增聯絡人",
+    "searchPlaceholder": "搜尋姓名、公司...",
     "name": "姓名",
     "jobTitle": "職位",
     "account": "客戶",
-    "email": "郵箱",
+    "email": "電郵",
     "phone": "電話",
-    "primary": "主要聯繫人",
+    "primary": "主要聯絡人",
     "yes": "是",
     "no": "-",
-    "detail": "聯繫人詳情"
+    "detail": "聯絡人詳情"
   },
   "contracts": {
-    "title": "合同",
-    "subtitle": "管理合同生命週期、到期提醒與收款進度。",
-    "create": "新建合同",
-    "alert": "提醒：{count} 份合同將在 30 天內到期",
-    "code": "合同編號",
+    "title": "合約",
+    "subtitle": "管理合約生命週期、到期提醒與收款進度。",
+    "create": "新增合約",
+    "alert": "提醒：{count} 份合約將在 30 天內到期",
+    "code": "合約編號",
     "account": "客戶",
     "name": "名稱",
     "type": "類型",
@@ -702,11 +715,11 @@
     "collectionProgress": "收款進度",
     "paymentStatus": "回款狀態",
     "expiry": "到期日",
-    "detail": "合同詳情"
+    "detail": "合約詳情"
   },
   "payments": {
     "title": "支付登記",
-    "subtitle": "登記與確認客戶回款，關聯訂單與合同。",
+    "subtitle": "登記與確認客戶回款，關聯訂單與合約。",
     "create": "登記收款",
     "receivedAt": "到賬時間",
     "account": "客戶",
@@ -721,8 +734,8 @@
   "products": {
     "title": "產品目錄",
     "subtitle": "管理 SKU、產品線、規格、價格與庫存。",
-    "create": "新建產品",
-    "searchPlaceholder": "搜索 SKU、產品名稱...",
+    "create": "新增產品",
+    "searchPlaceholder": "搜尋 SKU、產品名稱...",
     "sku": "SKU",
     "name": "名稱",
     "category": "類別",
@@ -734,7 +747,7 @@
     "status": "狀態"
   },
   "workqueue": {
-    "title": "我的待辦工作臺",
+    "title": "我的待辦工作枱",
     "role": "你的角色",
     "subtitle": "集中處理需要跟進的任務與審批。",
     "cards": {
@@ -758,14 +771,16 @@
       "subtotal": "小計",
       "status": "狀態",
       "action": "待辦動作",
-      "createdAt": "創建時間",
+      "createdAt": "建立時間",
       "receivedAt": "到賬日期",
       "amount": "金額",
       "financeConfirm": "財務確認",
       "dueDate": "到期日期",
       "planAmount": "計劃收款",
       "open": "打開",
-      "noData": "全部清理完畢，沒有待辦。"
+      "noData": "全部清理完畢，沒有待辦。",
+      "confirmPayment": "確認付款",
+      "remindCustomer": "提醒客戶"
     }
   },
   "pool": {
@@ -784,8 +799,8 @@
   "endUsers": {
     "title": "終端用戶",
     "subtitle": "記錄各客戶名下的終端裝機與使用情況。",
-    "create": "新建終端用戶",
-    "searchPlaceholder": "搜索終端用戶...",
+    "create": "新增終端用戶",
+    "searchPlaceholder": "搜尋終端用戶...",
     "name": "終端用戶名稱",
     "account": "歸屬客戶",
     "location": "位置",
@@ -797,9 +812,9 @@
     "title": "團隊管理",
     "subtitle": "管理團隊成員、部門、權限與在職狀態。",
     "invite": "邀請成員",
-    "searchPlaceholder": "搜索姓名、郵箱...",
+    "searchPlaceholder": "搜尋姓名、電郵...",
     "name": "姓名",
-    "email": "郵箱",
+    "email": "電郵",
     "department": "部門",
     "role": "權限",
     "market": "市場",
@@ -815,7 +830,11 @@
     "monthlyTarget": "月目標",
     "kpi": "KPI",
     "actualReceipt": "實際收款",
-    "progress": "進度"
+    "progress": "進度",
+    "periodYear": "年度",
+    "periodQ2": "Q2",
+    "periodJune": "6月",
+    "periodWeek": "本周"
   },
   "executiveReport": {
     "title": "高管報告",
@@ -838,7 +857,7 @@
   "retail": {
     "title": "零售運營",
     "subtitle": "追蹤 SO 臺數、戰略品、淨增門店與動銷率。",
-    "entry": "錄入月度數據",
+    "entry": "輸入月度數據",
     "ytdSo": "YTD SO 臺數",
     "strategic": "戰略品臺數",
     "netNew": "淨增門店",
@@ -857,7 +876,7 @@
     "log": "登記進度",
     "project": "項目",
     "account": "客戶",
-    "stage": "當前階段",
+    "stage": "目前階段",
     "installed": "裝機",
     "recorder": "記錄人",
     "date": "日期",
@@ -865,16 +884,16 @@
   },
   "importPage": {
     "title": "數據導入",
-    "subtitle": "通過 CSV / Excel 批量導入客戶、聯繫人或訂單數據。",
+    "subtitle": "透過 CSV / Excel 批量導入客戶、聯絡人或訂單數據。",
     "upload": "上傳 CSV / Excel",
-    "drag": "點擊或拖拽文件到此處",
-    "hint": "支持 .csv / .xlsx，單次不超過 5000 行",
+    "drag": "點擊或拖曳檔案到此處",
+    "hint": "支援 .csv / .xlsx，單次不超過 5000 行",
     "start": "開始導入"
   },
   "invite": {
     "title": "邀請用戶",
     "subtitle": "邀請新成員加入團隊並分配角色與市場。",
-    "email": "郵箱",
+    "email": "電郵",
     "name": "姓名",
     "role": "角色",
     "market": "市場",
@@ -883,7 +902,7 @@
   "attendance": {
     "title": "考勤打卡",
     "subtitle": "每日上下班打卡與外勤登記。",
-    "status": "當前狀態",
+    "status": "目前狀態",
     "checkedIn": "已上班",
     "notCheckedIn": "未上班",
     "location": "打卡地點",
@@ -903,7 +922,7 @@
     "type": "跟進類型",
     "content": "跟進內容",
     "reminder": "下次跟進提醒",
-    "save": "保存跟進",
+    "save": "儲存跟進",
     "recentRecords": "近期跟進記錄",
     "accountPlaceholder": "選擇客戶",
     "oppPlaceholder": "選擇商機",
@@ -930,41 +949,168 @@
     "statusRejected": "已駁回"
   },
   "dailyReport": {
-    "title": "今日日报",
-    "hint": "保持简短 – 3 分钟搞定。让经理了解你今天做了什么、明天准备做什么。",
-    "workTitle": "今日工作(逐条记录,每条一件事) *",
-    "workPlaceholder": "例如:拜访 Marina Bay,推进到方案报价阶段",
-    "planTitle": "明日计划(逐条记录,每条一件事) *",
-    "planPlaceholder": "例如:跟进 Raffles 报价",
-    "paymentTitle": "回款进展(可选,可加多条)",
-    "paymentPlaceholder": "例如:Marina Bay 第二期款 $50k 已到账",
-    "problemTitle": "遇到的问题(可选,可加多条 – 会通知上级)",
-    "problemPlaceholder": "例如:客户卡在采购审批,需要协助加速",
-    "addRow": "再加一条",
-    "delete": "删除",
-    "followupTitle": "今日客户跟进",
-    "followupDesc": "在这里登记你今天接触过的客户 —— 不用再单独到每条商机里逐一录入，系统会自动把它们写入对应商机的跟进记录。",
-    "followupEmpty": "今天还没登记客户跟进。点击下方「+ 添加跟进」记录一次电话/微信/拜访/方案。",
-    "followupPlaceholder": "例如:电话拜访 Marina Bay,确认方案需求",
-    "followupAdd": "+ + 添加一条客户跟进",
-    "issueTitle": "重大事项 / 需协助跟进(可加多条)",
-    "issueDesc": "今天有什么需要领导或其他部门关注、拍板、协调的事项？一天可能有多件 —— 例如：大单卡审批 / 客户高层投诉 / 跨部门资源调度 / 集团政策征询。填写后会同步显示在 Today 页面，相关方可立即看到并跟进。",
-    "issueEmpty": "今天没有需要上报的事项。如有，点击下方「+ 添加」",
+    "title": "今日日報",
+    "hint": "保持簡短 – 3 分鐘搞定。讓經理了解你今天做了什麼、明天準備做什麼。",
+    "workTitle": "今日工作(逐條記錄,每條一件事) *",
+    "workPlaceholder": "例如:拜訪 Marina Bay,推進到方案報價階段",
+    "planTitle": "明日計劃(逐條記錄,每條一件事) *",
+    "planPlaceholder": "例如:跟進 Raffles 報價",
+    "paymentTitle": "回款進展(可選,可加多條)",
+    "paymentPlaceholder": "例如:Marina Bay 第二期款 $50k 已到賬",
+    "problemTitle": "遇到的問題(可選,可加多條 – 會通知上級)",
+    "problemPlaceholder": "例如:客戶卡在採購審批,需要協助加速",
+    "addRow": "再加一條",
+    "delete": "刪除",
+    "followupTitle": "今日客戶跟進",
+    "followupDesc": "在這裡登記你今天接觸過的客戶 —— 不用再單獨到每條商機裡逐一輸入，系統會自動把它們寫入對應商機的跟進記錄。",
+    "followupEmpty": "今天還沒登記客戶跟進。點擊下方「+ 添加跟進」記錄一次電話/微信/拜訪/方案。",
+    "followupPlaceholder": "例如:電話拜訪 Marina Bay,確認方案需求",
+    "followupAdd": "+ + 添加一條客戶跟進",
+    "issueTitle": "重大事項 / 需協助跟進(可加多條)",
+    "issueDesc": "今天有什麼需要領導或其他部門關注、拍板、協調的事項？一天可能有多件 —— 例如：大單卡審批 / 客戶高層投訴 / 跨部門資源調度 / 集團政策徵詢。填寫後會同步顯示在 Today 頁面，相關方可立即看到並跟進。",
+    "issueEmpty": "今天沒有需要上報的事項。如有，點擊下方「+ 添加」",
     "issuePlaceholder": "例如:HK Hospitality 15% discount 需 CSO 拍板",
-    "issueAdd": "+ + 新增一条事项",
+    "issueAdd": "+ + 新增一條事項",
     "moodTitle": "今日心情",
     "mood": {
-      "sad": "难过/生气",
+      "sad": "難過/生氣",
       "upset": "委屈",
       "neutral": "平淡",
-      "happy": "开心",
-      "excited": "大笑/兴奋"
+      "happy": "開心",
+      "excited": "大笑/興奮"
     },
     "cancel": "取消",
-    "save": "保存日报",
+    "save": "儲存日報",
     "error": {
-      "workRequired": "请至少填写一项今日工作",
-      "planRequired": "请至少填写一项明日计划"
+      "workRequired": "請至少填寫一項今日工作",
+      "planRequired": "請至少填寫一項明日計劃"
     }
-  }
+  },
+  "labels": {
+    "orderStatus": {
+      "pendingPI": "待開具 PI",
+      "piIssued": "PI 已開具",
+      "shipped": "已發貨",
+      "completed": "已完成"
+    },
+    "orderType": {
+      "preWin": "Pre-win",
+      "firstOrder": "首單",
+      "reorder": "翻單"
+    },
+    "orderKind": {
+      "bulk": "大貨訂單",
+      "sample": "樣機訂單",
+      "reorder": "返單"
+    },
+    "poStatus": {
+      "received": "PO ✓",
+      "pending": "PO 待收"
+    },
+    "contractStatus": {
+      "signed": "已簽訂",
+      "active": "有效",
+      "expiring": "即將到期",
+      "expired": "已到期"
+    },
+    "contractType": {
+      "annualFramework": "年度框架",
+      "supplyAgreement": "供應協議",
+      "distributionAgreement": "經銷協議"
+    },
+    "paymentStatus": {
+      "confirmed": "已確認",
+      "receivable": "應收",
+      "partial": "部分到賬",
+      "normal": "正常",
+      "overdueRisk": "逾期風險"
+    },
+    "oppStage": {
+      "prospect": "初步接觸",
+      "qualify": "需求確認",
+      "proposal": "方案報價",
+      "negotiate": "談判中",
+      "closedWon": "已贏單"
+    },
+    "campaignType": {
+      "tradeshow": "展會",
+      "paidAds": "付費廣告",
+      "webinar": "網絡研討會",
+      "referral": "轉介紹"
+    },
+    "campaignStatus": {
+      "active": "進行中",
+      "completed": "已完成"
+    },
+    "leadSource": {
+      "campaign": "市場活動",
+      "offlineEvent": "線下活動",
+      "website": "官網",
+      "referral": "轉介紹",
+      "tradeshow": "展會",
+      "social": "社交媒體",
+      "other": "其他"
+    },
+    "leadStatus": {
+      "new": "新線索",
+      "contacted": "已聯絡",
+      "qualified": "已確認意向",
+      "converted": "已轉化"
+    },
+    "productCategory": {
+      "commercial": "商用",
+      "residential": "家用",
+      "industrial": "工業",
+      "strategic": "戰略品"
+    },
+    "productStatus": {
+      "onSale": "在售",
+      "discontinued": "停產",
+      "rnd": "研發中"
+    },
+    "activityType": {
+      "finance": "財務",
+      "email": "電郵",
+      "phone": "電話",
+      "meeting": "會議",
+      "visit": "拜訪",
+      "wechat": "微信",
+      "other": "其他"
+    },
+    "projectStage": {
+      "survey": "現場勘測",
+      "install": "安裝",
+      "commissioning": "調試驗收"
+    },
+    "paymentMethod": {
+      "wire": "銀行轉賬",
+      "lc": "信用證",
+      "check": "支票",
+      "paypal": "PayPal",
+      "stripe": "Stripe"
+    },
+    "collectionStatus": {
+      "due": "即將到期",
+      "overdue": "已逾期"
+    },
+    "productLine": {
+      "commercial": "商用",
+      "retail": "零售",
+      "industrial": "工業",
+      "public": "公共場景"
+    },
+    "readWrite": "讀寫",
+    "businessType": {
+      "commercial": "商用",
+      "retail": "零售",
+      "industrial": "工業",
+      "public": "公共場景"
+    }
+  },
+  "placeholderPage": {
+    "subtitle": "該頁面正在持續完善中。",
+    "comingSoon": "敬請期待",
+    "description": "目前為高保真復刻過渡頁，後續將補充完整互動與數據。"
+  },
+  "adminAvatar": "管理"
 }

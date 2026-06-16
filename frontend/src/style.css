@@ -450,17 +450,26 @@ h6 {
 }
 
 .crm-locale-select {
-  min-width: 70px;
+  min-width: 110px;
 }
 
 .crm-locale-select .ant-select-selector {
-  color: var(--text-on-dark-muted) !important;
+  color: var(--text-on-dark) !important;
   font-weight: 600;
-  padding: 0 !important;
+  background: var(--surface-dark-hover) !important;
+  border-color: var(--border-dark) !important;
+  border-radius: var(--radius-input) !important;
+  padding-inline: 10px !important;
 }
 
 .crm-locale-select .ant-select-arrow {
   color: var(--text-on-dark-label);
+}
+
+.crm-locale-select .ant-select-selection-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .crm-logout-btn {

@@ -25,7 +25,6 @@ import {
   getUserById,
   orders,
   payments,
-  statusLabel,
   statusTone,
 } from '../mocks/crmData'
 
@@ -64,14 +63,14 @@ export function AccountDetailPage() {
   const owner = getUserById(account.ownerId)
   const progress = Math.round((account.yearToDateUsd / account.annualTargetUsd) * 100)
   const totalRevenue = orders
-    .filter((o) => o.accountId === account.id && o.status === '已完成')
+    .filter((o) => o.accountId === account.id && o.status === 'completed')
     .reduce((s, o) => s + o.subtotalUsd, 0)
   const totalReceived = payments
-    .filter((p) => p.accountId === account.id && p.status === '已确认')
+    .filter((p) => p.accountId === account.id && p.status === 'confirmed')
     .reduce((s, p) => s + p.amountUsd, 0)
   const receivable = totalRevenue - totalReceived
   const activeOpps = getOpportunitiesByAccount(account.id)
-  const wonOpps = activeOpps.filter((o) => o.stage === '已赢单')
+  const wonOpps = activeOpps.filter((o) => o.stage === 'closedWon')
 
   const stats = [
     { label: t('accountDetail.cumulativeSales'), value: formatCurrency(totalRevenue) },
@@ -117,7 +116,7 @@ export function AccountDetailPage() {
           <div className="crm-page-header-title" style={{ marginTop: 4 }}>
             {account.name}
             <Tag color={statusTone(account.contractStatus) === 'green' ? 'success' : statusTone(account.contractStatus) === 'amber' ? 'warning' : 'error'} style={{ marginLeft: 10 }}>
-              {statusLabel(account.contractStatus)}
+              {t(`labels.contractStatus.${account.contractStatus}`)}
             </Tag>
           </div>
           <div className="crm-page-header-desc">
@@ -186,7 +185,7 @@ export function AccountDetailPage() {
             <Col span={12}><Form.Item label={t('accountDetail.form.winRate')}><Select options={['20','40','60','80','100'].map(v => ({value:v, label:v+'%'}))} /></Form.Item></Col>
           </Row>
           <Row gutter={16}>
-            <Col span={12}><Form.Item label={t('accountDetail.form.stage')}><Select options={['初步接触','需求确认','方案报价','谈判中'].map(v => ({value:v, label:v}))} /></Form.Item></Col>
+            <Col span={12}><Form.Item label={t('accountDetail.form.stage')}><Select options={['prospect','qualify','proposal','negotiate'].map(v => ({value:v, label:t(`accountDetail.stage.${v}`)}))} /></Form.Item></Col>
             <Col span={12}><Form.Item label={t('accountDetail.form.expectedClose')}><Input placeholder={t('accountDetail.form.expectedClosePlaceholder')} /></Form.Item></Col>
           </Row>
         </Form>
@@ -308,7 +307,7 @@ function OpportunitiesTab({ accountId }: { accountId: string }) {
       columns={[
         { title: t('accountDetail.col.oppName'), dataIndex: 'name' },
         { title: t('accountDetail.col.amount'), dataIndex: 'amountUsd', render: (v) => formatCurrency(v) },
-        { title: t('accountDetail.col.stage'), dataIndex: 'stage' },
+        { title: t('accountDetail.col.stage'), dataIndex: 'stage', render: (v) => t(`labels.oppStage.${v}`) },
         { title: t('accountDetail.col.winRate'), dataIndex: 'probability', render: (v) => `${v}%` },
         { title: t('accountDetail.col.expectedClose'), dataIndex: 'expectedCloseDate' },
       ]}
@@ -327,8 +326,8 @@ function ContractsTab({ accountId }: { accountId: string }) {
       columns={[
         { title: t('accountDetail.col.contractNumber'), dataIndex: 'contractNumber' },
         { title: t('accountDetail.col.name'), dataIndex: 'name' },
-        { title: t('accountDetail.col.type'), dataIndex: 'type' },
-        { title: t('accountDetail.col.status'), dataIndex: 'status' },
+        { title: t('accountDetail.col.type'), dataIndex: 'type', render: (v) => t(`labels.contractType.${v}`) },
+        { title: t('accountDetail.col.status'), dataIndex: 'status', render: (v) => t(`labels.contractStatus.${v}`) },
         { title: t('accountDetail.col.amount'), dataIndex: 'amountUsd', render: (v) => formatCurrency(v) },
         { title: t('accountDetail.col.expiryDate'), dataIndex: 'expiryDate' },
       ]}
@@ -348,8 +347,8 @@ function OrdersTab({ accountId }: { accountId: string }) {
         { title: t('accountDetail.col.orderNumber'), dataIndex: 'orderNumber' },
         { title: t('accountDetail.col.piNumber'), dataIndex: 'piNumber' },
         { title: t('accountDetail.col.amount'), dataIndex: 'subtotalUsd', render: (v) => formatCurrency(v) },
-        { title: t('accountDetail.col.type'), dataIndex: 'orderType' },
-        { title: t('accountDetail.col.status'), dataIndex: 'status' },
+        { title: t('accountDetail.col.type'), dataIndex: 'orderType', render: (v) => t(`labels.orderType.${v}`) },
+        { title: t('accountDetail.col.status'), dataIndex: 'status', render: (v) => t(`labels.orderStatus.${v}`) },
         { title: t('accountDetail.col.createdAt'), dataIndex: 'createdAt' },
       ]}
     />
@@ -368,8 +367,8 @@ function PaymentsTab({ accountId }: { accountId: string }) {
         { title: t('accountDetail.col.receivedAt'), dataIndex: 'receivedAt' },
         { title: t('accountDetail.col.amount'), dataIndex: 'amountUsd', render: (v) => formatCurrency(v) },
         { title: t('accountDetail.col.currency'), dataIndex: 'currency' },
-        { title: t('accountDetail.col.method'), dataIndex: 'method' },
-        { title: t('accountDetail.col.status'), dataIndex: 'status' },
+        { title: t('accountDetail.col.method'), dataIndex: 'method', render: (v) => t(`labels.paymentMethod.${v}`) },
+        { title: t('accountDetail.col.status'), dataIndex: 'status', render: (v) => t(`labels.paymentStatus.${v}`) },
       ]}
     />
   )
@@ -385,7 +384,7 @@ function ActivitiesTab({ accountId }: { accountId: string }) {
       pagination={false}
       columns={[
         { title: t('accountDetail.col.time'), dataIndex: 'createdAt' },
-        { title: t('accountDetail.col.type'), dataIndex: 'type' },
+        { title: t('accountDetail.col.type'), dataIndex: 'type', render: (v) => t(`labels.activityType.${v}`) },
         { title: t('accountDetail.col.content'), dataIndex: 'content' },
         { title: t('accountDetail.col.recorder'), dataIndex: 'createdById', render: (id) => getUserById(id)?.name ?? id },
       ]}
@@ -403,7 +402,7 @@ function CampaignsTab() {
       columns={[
         { title: t('accountDetail.col.campaignCode'), dataIndex: 'code' },
         { title: t('accountDetail.col.campaignName'), dataIndex: 'name' },
-        { title: t('accountDetail.col.status'), dataIndex: 'status' },
+        { title: t('accountDetail.col.status'), dataIndex: 'status', render: (v) => t(`labels.campaignStatus.${v}`) },
         { title: t('accountDetail.col.convertedAmount'), dataIndex: 'opportunityValueUsd', render: (v) => formatCurrency(v) },
       ]}
     />

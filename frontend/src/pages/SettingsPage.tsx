@@ -116,8 +116,8 @@ function BrandTab({ t }: { t: (k: string) => string }) {
         </Card>
         <Card>
           <Text strong>{t('settings.brand.zh')}</Text>
-          <div style={{ fontSize: 18, marginTop: 8 }}>方正兰亭黑 / 苹方</div>
-          <div style={{ fontSize: 14 }}>安吉尔 全球销售 CRM</div>
+          <div style={{ fontSize: 18, marginTop: 8 }}>{t('settings.brand.zhFont')}</div>
+          <div style={{ fontSize: 14 }}>{t('settings.brand.zhSample')}</div>
         </Card>
       </div>
     </div>
@@ -157,7 +157,7 @@ function DepartmentsTab({ t }: { t: (k: string) => string }) {
 function RolesTab({ t }: { t: (k: string) => string }) {
   return (
     <Table
-      dataSource={roles.map((r) => ({ role: r, ...Object.fromEntries(roleModules.map((m) => [m, '读写'])) }))}
+      dataSource={roles.map((r) => ({ role: r, ...Object.fromEntries(roleModules.map((m) => [m, t('labels.readWrite')])) }))}
       rowKey="role"
       pagination={false}
       columns={[
@@ -232,7 +232,7 @@ function AuditLogsTab({ t }: { t: (k: string) => string }) {
 function AccountTab({ t }: { t: (k: string) => string }) {
   return (
     <Form layout="vertical" style={{ maxWidth: 480 }}>
-      <Form.Item label={t('settings.account.displayName')}><Input defaultValue="系统管理员" /></Form.Item>
+      <Form.Item label={t('settings.account.displayName')}><Input defaultValue={t('systemAdmin')} /></Form.Item>
       <Form.Item label={t('settings.account.email')}><Input defaultValue="admin@angel.cn" /></Form.Item>
       <Form.Item label={t('settings.account.currentPassword')}><Input.Password /></Form.Item>
       <Form.Item label={t('settings.account.newPassword')}><Input.Password /></Form.Item>

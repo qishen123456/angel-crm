@@ -10,7 +10,6 @@ import {
   flagForMarket,
   getUserById,
   markets,
-  statusLabel,
   statusTone,
   type Account,
   type MarketCode,
@@ -124,7 +123,7 @@ export function AccountsPage() {
             <Col span={12}><Form.Item label={t('accounts.formOwner')}><Select options={['u2','u3','u4','u5'].map(id => ({value:id, label:getUserById(id)?.name}))} /></Form.Item></Col>
           </Row>
           <Row gutter={16}>
-            <Col span={12}><Form.Item label={t('accounts.formType')}><Select options={['commercial','retail','industrial','public'].map(v => ({value:v, label:v}))} /></Form.Item></Col>
+            <Col span={12}><Form.Item label={t('accounts.formType')}><Select options={['commercial','retail','industrial','public'].map(v => ({value:v, label:t(`labels.businessType.${v}`)}))} /></Form.Item></Col>
             <Col span={12}><Form.Item label={t('accounts.formTarget')}><Input prefix="$" placeholder="800000" /></Form.Item></Col>
           </Row>
           <Form.Item label={t('accounts.formNotes')}><Input.TextArea rows={4} /></Form.Item>
@@ -170,9 +169,9 @@ function AccountCard({ account }: { account: Account }) {
         </div>
 
         <div className="account-card-status-row">
-          <span className={`pill pill-${tone}`}>{statusLabel(account.contractStatus)}</span>
+          <span className={`pill pill-${tone}`}>{t(`labels.contractStatus.${account.contractStatus}`)}</span>
           {account.contractExpiresAt && account.contractStatus !== 'active' && (
-            <Text className="account-card-expiry">到期 {account.contractExpiresAt}</Text>
+            <Text className="account-card-expiry">{t('accounts.expiresOn', { date: account.contractExpiresAt })}</Text>
           )}
         </div>
 

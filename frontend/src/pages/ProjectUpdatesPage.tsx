@@ -3,15 +3,11 @@ import { Button, Card, Form, Input, InputNumber, Modal, Select, Tag, Timeline, T
 import { useState } from 'react'
 import { useGlobalMessage } from '../hooks/useGlobalMessage'
 import { useI18n } from '../hooks/useI18n'
-import { getAccountById, getUserById, projectUpdates } from '../mocks/crmData'
+import { accounts, getAccountById, getUserById, projectUpdates } from '../mocks/crmData'
 
 const { Text } = Typography
 
-const stageMap: Record<string, string> = {
-  survey: '现场勘测',
-  install: '安装',
-  commissioning: '调试验收',
-}
+const stages = ['survey', 'install', 'commissioning']
 
 export function ProjectUpdatesPage() {
   const { t } = useI18n()
@@ -36,7 +32,7 @@ export function ProjectUpdatesPage() {
             children: (
               <div style={{ marginBottom: 12 }}>
                 <Text strong>{getAccountById(p.accountId)?.name}</Text>
-                <Tag color="blue" style={{ marginLeft: 8 }}>{stageMap[p.stage]}</Tag>
+                <Tag color="blue" style={{ marginLeft: 8 }}>{t(`labels.projectStage.${p.stage}`)}</Tag>
                 <div style={{ color: 'var(--text-muted)', marginTop: 4 }}>{p.summary}</div>
                 <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>
                   {p.unitsInstalled ? `${t('projectUpdates.installed')} ${p.unitsInstalled} · ` : ''}{t('projectUpdates.recorder')}：{getUserById(p.postedById)?.name}
@@ -56,10 +52,10 @@ export function ProjectUpdatesPage() {
       >
         <Form layout="vertical">
           <Form.Item label={t('projectUpdates.account')}>
-            <Select options={['Bangkok Mall Group', 'Raffles Hospitality'].map((v) => ({ value: v, label: v }))} />
+            <Select options={accounts.map((a) => ({ value: a.id, label: a.name }))} />
           </Form.Item>
           <Form.Item label={t('projectUpdates.stage')}>
-            <Select options={Object.entries(stageMap).map(([k, v]) => ({ value: k, label: v }))} />
+            <Select options={stages.map((k) => ({ value: k, label: t(`labels.projectStage.${k}`) }))} />
           </Form.Item>
           <Form.Item label={t('projectUpdates.installed')}><InputNumber style={{ width: '100%' }} /></Form.Item>
           <Form.Item label={t('projectUpdates.notes')}><Input.TextArea rows={3} /></Form.Item>

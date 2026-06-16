@@ -26,55 +26,55 @@ export type PageKey =
   | 'settings'
 
 export const pageTitles: Record<PageKey, string> = {
-  today: '今日',
-  dashboard: '数据看板',
-  workqueue: '待办工作台',
-  attendance: '考勤打卡',
-  campaigns: '市场活动',
-  leads: '销售线索',
-  retail: '零售运营',
-  accounts: '客户列表',
-  pool: '公海',
-  contacts: '联系人',
-  endUsers: '终端用户',
-  pipeline: '销售漏斗',
-  logActivity: '记录跟进',
-  projectUpdates: '项目进度',
-  contracts: '合同',
-  orders: '订单中心',
-  invoices: '开票申请',
-  payments: '支付登记',
-  products: '产品目录',
-  countryReports: '国家报告',
-  executiveReport: '高管报告',
-  import: '数据导入',
-  invite: '邀请用户',
-  team: '团队管理',
-  settings: '系统设置',
+  today: 'pages.today',
+  dashboard: 'pages.dashboard',
+  workqueue: 'pages.workqueue',
+  attendance: 'pages.attendance',
+  campaigns: 'pages.campaigns',
+  leads: 'pages.leads',
+  retail: 'pages.retail',
+  accounts: 'pages.accounts',
+  pool: 'pages.pool',
+  contacts: 'pages.contacts',
+  endUsers: 'pages.endUsers',
+  pipeline: 'pages.pipeline',
+  logActivity: 'pages.logActivity',
+  projectUpdates: 'pages.projectUpdates',
+  contracts: 'pages.contracts',
+  orders: 'pages.orders',
+  invoices: 'pages.invoices',
+  payments: 'pages.payments',
+  products: 'pages.products',
+  countryReports: 'pages.countryReports',
+  executiveReport: 'pages.executiveReport',
+  import: 'pages.import',
+  invite: 'pages.invite',
+  team: 'pages.team',
+  settings: 'pages.settings',
 }
 
 export const accountTabs = [
-  '概览',
-  '联系人',
-  '商机',
-  '合同',
-  '订单',
-  '回款',
-  '跟进记录',
-  '市场活动',
-  '文档附件',
+  'overview',
+  'contacts',
+  'opportunities',
+  'contracts',
+  'orders',
+  'payments',
+  'activities',
+  'campaigns',
+  'documents',
 ]
 
 export const settingsTabs = [
-  '品牌',
-  '市场',
-  '部门',
-  '角色与权限',
-  '年度目标',
-  '文档模板',
-  '通知',
-  '审计日志',
-  '账户',
+  'brand',
+  'market',
+  'department',
+  'roles',
+  'targets',
+  'templates',
+  'notifications',
+  'audit',
+  'account',
 ]
 
 // ---------------- Entities ----------------
@@ -349,10 +349,10 @@ export interface Campaign {
 }
 
 export const campaigns: Campaign[] = [
-  { id: 'cmp-1', code: 'CMP-2026-Q1-DXB', name: 'GulfHost Dubai 2026 — Tradeshow', type: '展会', status: 'completed', market: 'US', budgetUsd: 65000, actualSpendUsd: 61800, ownerId: 'u7', leadCount: 18, convertedCount: 4, opportunityValueUsd: 950000, startDate: '2026-03-10', endDate: '2026-03-14' },
-  { id: 'cmp-2', code: 'CMP-2026-Q2-LINKEDIN', name: 'LinkedIn ABM — SEA Hospitality CIOs', type: '付费广告', status: 'active', market: 'SG', budgetUsd: 18000, actualSpendUsd: 11400, ownerId: 'u7', leadCount: 9, convertedCount: 1, opportunityValueUsd: 180000, startDate: '2026-05-01', endDate: '2026-07-01' },
-  { id: 'cmp-3', code: 'CMP-2026-Q2-WEBINAR', name: 'Webinar: Water Quality Standards', type: '网络研讨会', status: 'completed', market: 'SG', budgetUsd: 4500, actualSpendUsd: 4120, ownerId: 'u7', leadCount: 11, convertedCount: 2, opportunityValueUsd: 320000, startDate: '2026-05-18', endDate: '2026-05-18' },
-  { id: 'cmp-4', code: 'CMP-2026-Q2-REFERRAL', name: 'Q2 Distributor Referral Program', type: '转介绍', status: 'active', market: 'SG', budgetUsd: 25000, actualSpendUsd: 12500, ownerId: 'u7', leadCount: 14, convertedCount: 3, opportunityValueUsd: 480000, startDate: '2026-04-15', endDate: '2026-06-30' },
+  { id: 'cmp-1', code: 'CMP-2026-Q1-DXB', name: 'GulfHost Dubai 2026 — Tradeshow', type: 'tradeshow', status: 'completed', market: 'US', budgetUsd: 65000, actualSpendUsd: 61800, ownerId: 'u7', leadCount: 18, convertedCount: 4, opportunityValueUsd: 950000, startDate: '2026-03-10', endDate: '2026-03-14' },
+  { id: 'cmp-2', code: 'CMP-2026-Q2-LINKEDIN', name: 'LinkedIn ABM — SEA Hospitality CIOs', type: 'paidAds', status: 'active', market: 'SG', budgetUsd: 18000, actualSpendUsd: 11400, ownerId: 'u7', leadCount: 9, convertedCount: 1, opportunityValueUsd: 180000, startDate: '2026-05-01', endDate: '2026-07-01' },
+  { id: 'cmp-3', code: 'CMP-2026-Q2-WEBINAR', name: 'Webinar: Water Quality Standards', type: 'webinar', status: 'completed', market: 'SG', budgetUsd: 4500, actualSpendUsd: 4120, ownerId: 'u7', leadCount: 11, convertedCount: 2, opportunityValueUsd: 320000, startDate: '2026-05-18', endDate: '2026-05-18' },
+  { id: 'cmp-4', code: 'CMP-2026-Q2-REFERRAL', name: 'Q2 Distributor Referral Program', type: 'referral', status: 'active', market: 'SG', budgetUsd: 25000, actualSpendUsd: 12500, ownerId: 'u7', leadCount: 14, convertedCount: 3, opportunityValueUsd: 480000, startDate: '2026-04-15', endDate: '2026-06-30' },
 ]
 
 export interface Lead {
@@ -376,10 +376,10 @@ export interface Lead {
 }
 
 export const leads: Lead[] = [
-  { id: 'lead-1', name: 'Faisal Al-Rashid', title: 'Head of Procurement', companyName: 'Emirates Palace Hospitality Group', country: 'AE', email: 'faisal.alrashid@emiratespalace.ae', phone: '+971 50 123 4567', status: 'qualified', source: '市场活动', campaignId: 'cmp-1', rating: 5, estimatedValueUsd: 280000, ownerId: 'u5', lastContactedAt: '2026-06-13', notes: 'Met at GulfHost. Replacing entire dispenser fleet across 4 hotels Q3.' },
-  { id: 'lead-2', name: '林伟明', title: 'F&B Procurement Director', companyName: 'Marina Bay Sands', country: 'SG', email: 'wm.lim@marinabaysands.sg', phone: '+65 9876 5432', status: 'contacted', source: '市场活动', campaignId: 'cmp-2', rating: 4, estimatedValueUsd: 180000, ownerId: 'u2', lastContactedAt: '2026-06-06', notes: 'LinkedIn DM responded. Demo scheduled next week.' },
-  { id: 'lead-3', name: '陈慧珊', title: 'Director of Facilities', companyName: 'Bangkok International Hospital', country: 'TH', email: 's.chen@bih.co.th', phone: '+66 81 987 6543', status: 'new', source: '市场活动', campaignId: 'cmp-3', rating: 4, estimatedValueUsd: 120000, ownerId: 'u3', lastContactedAt: '-', notes: 'Webinar attendee — asked great questions about water hardness compliance.' },
-  { id: 'lead-4', name: 'James Lee', title: 'Operations VP', companyName: 'Raffles Hospitality', country: 'SG', email: 'james.lee@raffles.com', phone: '+65 9234 9876', status: 'converted', source: '线下活动', campaignId: 'cmp-1', rating: 5, estimatedValueUsd: 460000, ownerId: 'u2', lastContactedAt: '2026-03-08', notes: 'Originally met at F&B Asia 2025. Converted into Raffles full rollout deal.', convertedAccountId: 'a1', convertedOpportunityId: 'o13' },
+  { id: 'lead-1', name: 'Faisal Al-Rashid', title: 'Head of Procurement', companyName: 'Emirates Palace Hospitality Group', country: 'AE', email: 'faisal.alrashid@emiratespalace.ae', phone: '+971 50 123 4567', status: 'qualified', source: 'campaign', campaignId: 'cmp-1', rating: 5, estimatedValueUsd: 280000, ownerId: 'u5', lastContactedAt: '2026-06-13', notes: 'Met at GulfHost. Replacing entire dispenser fleet across 4 hotels Q3.' },
+  { id: 'lead-2', name: '林伟明', title: 'F&B Procurement Director', companyName: 'Marina Bay Sands', country: 'SG', email: 'wm.lim@marinabaysands.sg', phone: '+65 9876 5432', status: 'contacted', source: 'campaign', campaignId: 'cmp-2', rating: 4, estimatedValueUsd: 180000, ownerId: 'u2', lastContactedAt: '2026-06-06', notes: 'LinkedIn DM responded. Demo scheduled next week.' },
+  { id: 'lead-3', name: '陈慧珊', title: 'Director of Facilities', companyName: 'Bangkok International Hospital', country: 'TH', email: 's.chen@bih.co.th', phone: '+66 81 987 6543', status: 'new', source: 'campaign', campaignId: 'cmp-3', rating: 4, estimatedValueUsd: 120000, ownerId: 'u3', lastContactedAt: '-', notes: 'Webinar attendee — asked great questions about water hardness compliance.' },
+  { id: 'lead-4', name: 'James Lee', title: 'Operations VP', companyName: 'Raffles Hospitality', country: 'SG', email: 'james.lee@raffles.com', phone: '+65 9234 9876', status: 'converted', source: 'offlineEvent', campaignId: 'cmp-1', rating: 5, estimatedValueUsd: 460000, ownerId: 'u2', lastContactedAt: '2026-03-08', notes: 'Originally met at F&B Asia 2025. Converted into Raffles full rollout deal.', convertedAccountId: 'a1', convertedOpportunityId: 'o13' },
 ]
 
 export interface Opportunity {
@@ -394,12 +394,12 @@ export interface Opportunity {
 }
 
 export const opportunities: Opportunity[] = [
-  { id: 'o11', accountId: 'a1', name: 'Raffles group supply framework', amountUsd: 460000, stage: '谈判中', probability: 60, expectedCloseDate: '2026-06-30', ownerId: 'u2' },
-  { id: 'o12', accountId: 'a1', name: 'BKK + KL pilot installation', amountUsd: 180000, stage: '方案', probability: 40, expectedCloseDate: '2026-07-15', ownerId: 'u2' },
-  { id: 'o21', accountId: 'a2', name: 'Marina Bay renewal + SkyPark', amountUsd: 640000, stage: '需求确认', probability: 50, expectedCloseDate: '2026-08-15', ownerId: 'u2' },
-  { id: 'o41', accountId: 'a4', name: 'Bangkok Mall D2000 rollout', amountUsd: 310000, stage: '已赢单', probability: 100, expectedCloseDate: '2026-06-15', ownerId: 'u3' },
-  { id: 'o61', accountId: 'a6', name: 'HK Hospitality 5-year framework', amountUsd: 3800000, stage: '初步接触', probability: 20, expectedCloseDate: '2026-09-30', ownerId: 'u4' },
-  { id: 'o81', accountId: 'a8', name: 'Westwind F&B first order', amountUsd: 108000, stage: '已赢单', probability: 100, expectedCloseDate: '2026-06-10', ownerId: 'u5' },
+  { id: 'o11', accountId: 'a1', name: 'Raffles group supply framework', amountUsd: 460000, stage: 'negotiate', probability: 60, expectedCloseDate: '2026-06-30', ownerId: 'u2' },
+  { id: 'o12', accountId: 'a1', name: 'BKK + KL pilot installation', amountUsd: 180000, stage: 'proposal', probability: 40, expectedCloseDate: '2026-07-15', ownerId: 'u2' },
+  { id: 'o21', accountId: 'a2', name: 'Marina Bay renewal + SkyPark', amountUsd: 640000, stage: 'qualify', probability: 50, expectedCloseDate: '2026-08-15', ownerId: 'u2' },
+  { id: 'o41', accountId: 'a4', name: 'Bangkok Mall D2000 rollout', amountUsd: 310000, stage: 'closedWon', probability: 100, expectedCloseDate: '2026-06-15', ownerId: 'u3' },
+  { id: 'o61', accountId: 'a6', name: 'HK Hospitality 5-year framework', amountUsd: 3800000, stage: 'prospect', probability: 20, expectedCloseDate: '2026-09-30', ownerId: 'u4' },
+  { id: 'o81', accountId: 'a8', name: 'Westwind F&B first order', amountUsd: 108000, stage: 'closedWon', probability: 100, expectedCloseDate: '2026-06-10', ownerId: 'u5' },
 ]
 
 export interface Order {
@@ -430,10 +430,10 @@ export const orders: Order[] = [
       { sku: 'ANG-INSTALL-STD', name: 'Standard Installation Service', qty: 12, unitPrice: 220 },
     ],
     subtotalUsd: 31440,
-    status: 'PI 已开具',
-    orderType: 'Pre-win',
-    orderKind: '大货订单',
-    poStatus: 'PO ✓',
+    status: 'piIssued',
+    orderType: 'preWin',
+    orderKind: 'bulk',
+    poStatus: 'received',
     createdAt: '2026-06-13',
   },
   {
@@ -447,10 +447,10 @@ export const orders: Order[] = [
       { sku: 'ANG-INSTALL-STD', name: 'Standard Installation Service', qty: 6, unitPrice: 350 },
     ],
     subtotalUsd: 23700,
-    status: '已完成',
-    orderType: '首单',
-    orderKind: '样机订单',
-    poStatus: 'PO ✓',
+    status: 'completed',
+    orderType: 'firstOrder',
+    orderKind: 'sample',
+    poStatus: 'received',
     createdAt: '2026-05-27',
     shippedAt: '2026-06-02',
   },
@@ -464,10 +464,10 @@ export const orders: Order[] = [
       { sku: 'ANG-FB-D3000', name: 'Angel D3000 Pro Commercial Dispenser', qty: 30, unitPrice: 3600 },
     ],
     subtotalUsd: 108000,
-    status: '待开具 PI',
-    orderType: '首单',
-    orderKind: '大货订单',
-    poStatus: 'PO 待收',
+    status: 'pendingPI',
+    orderType: 'firstOrder',
+    orderKind: 'bulk',
+    poStatus: 'pending',
     createdAt: '2026-06-15',
   },
   {
@@ -481,10 +481,10 @@ export const orders: Order[] = [
       { sku: 'ANG-FILTER-12M', name: '12-month Filter Pack', qty: 6, unitPrice: 680 },
     ],
     subtotalUsd: 13680,
-    status: '已完成',
-    orderType: '翻单',
-    orderKind: '返单',
-    poStatus: 'PO ✓',
+    status: 'completed',
+    orderType: 'reorder',
+    orderKind: 'reorder',
+    poStatus: 'received',
     createdAt: '2026-06-08',
     shippedAt: '2026-06-10',
   },
@@ -499,10 +499,10 @@ export const orders: Order[] = [
       { sku: 'ANG-RES-U200', name: 'Angel U200 Under-Sink Filter', qty: 60, unitPrice: 480 },
     ],
     subtotalUsd: 72000,
-    status: '已完成',
-    orderType: 'Pre-win',
-    orderKind: '大货订单',
-    poStatus: 'PO ✓',
+    status: 'completed',
+    orderType: 'preWin',
+    orderKind: 'bulk',
+    poStatus: 'received',
     createdAt: '2026-05-25',
     shippedAt: '2026-05-30',
   },
@@ -523,10 +523,10 @@ export interface Contract {
 }
 
 export const contracts: Contract[] = [
-  { id: 'con-1', contractNumber: 'CON-SG-2026-RAFF-01', accountId: 'a1', name: '年度采购框架', type: '年度框架', status: '已签订', signEntity: 'AHT SG', amountUsd: 800000, paymentProgress: '78%', paymentStatus: '正常', expiryDate: '2026-12-31' },
-  { id: 'con-2', contractNumber: 'CON-SG-2026-MARI-01', accountId: 'a2', name: 'Marina Bay 供应协议', type: '供应协议', status: '即将到期', signEntity: 'AHT SG', amountUsd: 1200000, paymentProgress: '45%', paymentStatus: '正常', expiryDate: '2026-07-08' },
-  { id: 'con-3', contractNumber: 'CON-MY-2026-GENT-01', accountId: 'a3', name: 'Genting 框架协议', type: '年度框架', status: '已签订', signEntity: 'AHT MY', amountUsd: 600000, paymentProgress: '80%', paymentStatus: '正常', expiryDate: '2026-11-15' },
-  { id: 'con-4', contractNumber: 'CON-ID-2026-SOEK-01', accountId: 'a5', name: 'Soekarno 经销协议', type: '经销协议', status: '即将到期', signEntity: 'AHT ID', amountUsd: 400000, paymentProgress: '28%', paymentStatus: '逾期风险', expiryDate: '2026-06-21' },
+  { id: 'con-1', contractNumber: 'CON-SG-2026-RAFF-01', accountId: 'a1', name: '年度采购框架', type: 'annualFramework', status: 'signed', signEntity: 'AHT SG', amountUsd: 800000, paymentProgress: '78%', paymentStatus: 'normal', expiryDate: '2026-12-31' },
+  { id: 'con-2', contractNumber: 'CON-SG-2026-MARI-01', accountId: 'a2', name: 'Marina Bay 供应协议', type: 'supplyAgreement', status: 'expiring', signEntity: 'AHT SG', amountUsd: 1200000, paymentProgress: '45%', paymentStatus: 'normal', expiryDate: '2026-07-08' },
+  { id: 'con-3', contractNumber: 'CON-MY-2026-GENT-01', accountId: 'a3', name: 'Genting 框架协议', type: 'annualFramework', status: 'signed', signEntity: 'AHT MY', amountUsd: 600000, paymentProgress: '80%', paymentStatus: 'normal', expiryDate: '2026-11-15' },
+  { id: 'con-4', contractNumber: 'CON-ID-2026-SOEK-01', accountId: 'a5', name: 'Soekarno 经销协议', type: 'distributionAgreement', status: 'expiring', signEntity: 'AHT ID', amountUsd: 400000, paymentProgress: '28%', paymentStatus: 'overdueRisk', expiryDate: '2026-06-21' },
 ]
 
 export interface Payment {
@@ -542,10 +542,10 @@ export interface Payment {
 }
 
 export const payments: Payment[] = [
-  { id: 'pay-1', receivedAt: '2026-05-28', accountId: 'a1', orderId: 'ord-2', amountUsd: 23700, currency: 'USD', registeredById: 'u9', method: 'Wire', status: '已确认' },
-  { id: 'pay-2', receivedAt: '2026-06-09', accountId: 'a1', orderId: 'ord-4', amountUsd: 6840, currency: 'USD', registeredById: 'u9', method: 'Wire', status: '应收' },
-  { id: 'pay-3', receivedAt: '2026-05-30', accountId: 'a5', orderId: 'ord-5', amountUsd: 72000, currency: 'USD', registeredById: 'u9', method: 'LC', status: '已确认' },
-  { id: 'pay-4', receivedAt: '2026-06-12', accountId: 'a4', orderId: 'ord-1', amountUsd: 15720, currency: 'USD', registeredById: 'u9', method: 'Wire', status: '部分到账' },
+  { id: 'pay-1', receivedAt: '2026-05-28', accountId: 'a1', orderId: 'ord-2', amountUsd: 23700, currency: 'USD', registeredById: 'u9', method: 'wire', status: 'confirmed' },
+  { id: 'pay-2', receivedAt: '2026-06-09', accountId: 'a1', orderId: 'ord-4', amountUsd: 6840, currency: 'USD', registeredById: 'u9', method: 'wire', status: 'receivable' },
+  { id: 'pay-3', receivedAt: '2026-05-30', accountId: 'a5', orderId: 'ord-5', amountUsd: 72000, currency: 'USD', registeredById: 'u9', method: 'lc', status: 'confirmed' },
+  { id: 'pay-4', receivedAt: '2026-06-12', accountId: 'a4', orderId: 'ord-1', amountUsd: 15720, currency: 'USD', registeredById: 'u9', method: 'wire', status: 'partial' },
 ]
 
 export interface Product {
@@ -558,16 +558,16 @@ export interface Product {
   unitPrice: number
   leadTime: string
   stock: number
-  status: '在售' | '停产' | '研发中'
+  status: 'onSale' | 'discontinued' | 'rnd'
 }
 
 export const products: Product[] = [
-  { id: 'p1', sku: 'ANG-FB-D3000', name: 'Angel D3000 Pro Commercial Dispenser', category: '商用', line: 'D 系列', spec: '3000L/天', unitPrice: 3600, leadTime: '3-4 周', stock: 86, status: '在售' },
-  { id: 'p2', sku: 'ANG-FB-D2000', name: 'Angel D2000 Commercial Dispenser', category: '商用', line: 'D 系列', spec: '2000L/天', unitPrice: 2400, leadTime: '3-4 周', stock: 120, status: '在售' },
-  { id: 'p3', sku: 'ANG-RES-H500', name: 'Angel H500 Residential Whole-Home System', category: '家用', line: 'H 系列', spec: '500L/天', unitPrice: 1800, leadTime: '2-3 周', stock: 240, status: '在售' },
-  { id: 'p4', sku: 'ANG-RES-U200', name: 'Angel U200 Under-Sink Filter', category: '家用', line: 'U 系列', spec: '200L/天', unitPrice: 480, leadTime: '1-2 周', stock: 560, status: '在售' },
-  { id: 'p5', sku: 'ANG-IND-W1000', name: 'Angel W1000 Industrial System', category: '工业', line: 'W 系列', spec: '10000L/天', unitPrice: 12000, leadTime: '6-8 周', stock: 12, status: '在售' },
-  { id: 'p6', sku: 'ANG-WPU-7000', name: 'AHT-WPU-7000 Strategic Dispenser', category: '战略品', line: 'WPU 系列', spec: '7000L/天', unitPrice: 8500, leadTime: '4-6 周', stock: 8, status: '在售' },
+  { id: 'p1', sku: 'ANG-FB-D3000', name: 'Angel D3000 Pro Commercial Dispenser', category: 'commercial', line: 'D 系列', spec: '3000L/天', unitPrice: 3600, leadTime: '3-4 周', stock: 86, status: 'onSale' },
+  { id: 'p2', sku: 'ANG-FB-D2000', name: 'Angel D2000 Commercial Dispenser', category: 'commercial', line: 'D 系列', spec: '2000L/天', unitPrice: 2400, leadTime: '3-4 周', stock: 120, status: 'onSale' },
+  { id: 'p3', sku: 'ANG-RES-H500', name: 'Angel H500 Residential Whole-Home System', category: 'residential', line: 'H 系列', spec: '500L/天', unitPrice: 1800, leadTime: '2-3 周', stock: 240, status: 'onSale' },
+  { id: 'p4', sku: 'ANG-RES-U200', name: 'Angel U200 Under-Sink Filter', category: 'residential', line: 'U 系列', spec: '200L/天', unitPrice: 480, leadTime: '1-2 周', stock: 560, status: 'onSale' },
+  { id: 'p5', sku: 'ANG-IND-W1000', name: 'Angel W1000 Industrial System', category: 'industrial', line: 'W 系列', spec: '10000L/天', unitPrice: 12000, leadTime: '6-8 周', stock: 12, status: 'onSale' },
+  { id: 'p6', sku: 'ANG-WPU-7000', name: 'AHT-WPU-7000 Strategic Dispenser', category: 'strategic', line: 'WPU 系列', spec: '7000L/天', unitPrice: 8500, leadTime: '4-6 周', stock: 8, status: 'onSale' },
 ]
 
 export interface EndUser {
@@ -614,11 +614,11 @@ export interface Activity {
 }
 
 export const activities: Activity[] = [
-  { id: 'act1', accountId: 'a1', createdAt: '2026-06-14', createdById: 'u2', type: '邮件', content: '发送 F&B catalogue + reference list' },
-  { id: 'act2', accountId: 'a1', createdAt: '2026-06-10', createdById: 'u2', type: '会议', content: '与 James Lee 确认试点安装范围' },
-  { id: 'act3', accountId: 'a1', createdAt: '2026-05-30', createdById: 'u9', type: '财务', content: '登记客户 PO 与付款通知' },
-  { id: 'act4', accountId: 'a2', createdAt: '2026-06-12', createdById: 'u2', type: '拜访', content: 'Marina Bay Sands site visit — 12 dispenser positions confirmed.' },
-  { id: 'act5', accountId: 'a4', createdAt: '2026-06-14', createdById: 'u3', type: '电话', content: 'Bangkok Mall PO confirmed receipt.' },
+  { id: 'act1', accountId: 'a1', createdAt: '2026-06-14', createdById: 'u2', type: 'email', content: '发送 F&B catalogue + reference list' },
+  { id: 'act2', accountId: 'a1', createdAt: '2026-06-10', createdById: 'u2', type: 'meeting', content: '与 James Lee 确认试点安装范围' },
+  { id: 'act3', accountId: 'a1', createdAt: '2026-05-30', createdById: 'u9', type: 'finance', content: '登记客户 PO 与付款通知' },
+  { id: 'act4', accountId: 'a2', createdAt: '2026-06-12', createdById: 'u2', type: 'visit', content: 'Marina Bay Sands site visit — 12 dispenser positions confirmed.' },
+  { id: 'act5', accountId: 'a4', createdAt: '2026-06-14', createdById: 'u3', type: 'phone', content: 'Bangkok Mall PO confirmed receipt.' },
 ]
 
 export interface RetailMonthly {
@@ -763,20 +763,15 @@ export function accountProgress(a: Account): number {
 }
 
 export function statusTone(status: string): 'green' | 'amber' | 'red' | 'gray' | 'blue' {
-  if (['active', '在售', '已完成', '已签订', 'PO ✓', '已确认', '已收款', '正常'].includes(status)) return 'green'
-  if (['expiring', '即将到期', '已发货', '部分付款', '待付款', '部分到账'].includes(status)) return 'amber'
-  if (['进行中', 'PI 已开具', '待开具 PI', '信息', 'contacted', 'qualified'].includes(status)) return 'blue'
-  if (['expired', '已到期', '停产', '已停用', '逾期风险'].includes(status)) return 'red'
+  if (['active', 'onSale', 'completed', 'signed', 'received', 'confirmed', 'collected', 'normal'].includes(status)) return 'green'
+  if (['expiring', 'shipped', 'partial', 'receivable', 'due'].includes(status)) return 'amber'
+  if (['piIssued', 'pendingPI', 'info', 'contacted', 'qualified', 'pending'].includes(status)) return 'blue'
+  if (['expired', 'discontinued', 'inactive', 'overdueRisk', 'overdue'].includes(status)) return 'red'
   return 'gray'
 }
 
 export function statusLabel(status: string): string {
-  const map: Record<string, string> = {
-    active: '有效',
-    expiring: '即将到期',
-    expired: '已到期',
-  }
-  return map[status] ?? status
+  return `labels.contractStatus.${status}`
 }
 
 export function flagForMarket(code: MarketCode): string {

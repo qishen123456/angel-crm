@@ -21,20 +21,20 @@ export function DashboardPage() {
   const { t } = useI18n()
   const navigate = useNavigate()
 
-  // 总体销售结果（对齐源系统高管报告数字）
+  // Overall sales results (aligned with executive report figures)
   const totalTarget = 8_500_000
   const totalActual = 3_870_000
   const totalProgress = 46
   const weightedPipeline = opportunities.reduce((s, o) => s + o.amountUsd * (o.probability / 100), 0)
 
-  // 出库且报关核心 KPI
-  const shippedOrders = orders.filter((o) => o.status === '已完成')
+  // Core KPI: shipped and customs-cleared
+  const shippedOrders = orders.filter((o) => o.status === 'completed')
   const ytdShippedCleared = shippedOrders.reduce((s, o) => s + o.subtotalUsd, 0)
   const shippedTarget = 6_890_000
   const gap = Math.max(0, shippedTarget - ytdShippedCleared)
   const shippedUncollected = 31_000
   const shippedCollected = 23_000
-  const pendingOrders = orders.filter((o) => o.status !== '已完成').length
+  const pendingOrders = orders.filter((o) => o.status !== 'completed').length
 
   const coreKpisTop = [
     { label: t('dashboard.shippedYtd'), value: formatCurrency(ytdShippedCleared), sub: `${t('dashboard.target')} ${formatCurrency(shippedTarget)}` },
@@ -80,7 +80,7 @@ export function DashboardPage() {
   ]
 
   const topOpportunities = opportunities
-    .filter((o) => o.stage !== '已赢单')
+    .filter((o) => o.stage !== 'closedWon')
     .slice(0, 5)
     .map((o) => ({
       name: o.name,
@@ -100,7 +100,7 @@ export function DashboardPage() {
     name: a.name,
     market: a.market,
     notes: a.opportunityNotes.slice(0, 80) + '...',
-    status: a.contractStatus,
+    statusKey: a.contractStatus,
   }))
 
   const peopleRows = users.filter((u) => u.role !== 'Admin').slice(0, 4).map((u) => ({
@@ -111,18 +111,11 @@ export function DashboardPage() {
     active: Math.floor(Math.random() * 8 + 2),
   }))
 
-  const activityTypeMap = [
-    { key: 'email', value: '邮件' },
-    { key: 'phone', value: '电话' },
-    { key: 'meeting', value: '会议' },
-    { key: 'visit', value: '拜访' },
-    { key: 'wechat', value: '微信' },
-    { key: 'other', value: '其他' },
-  ]
-  const activityCounts = activityTypeMap.map(({ key, value }) => ({
+  const activityTypeMap = ['email', 'phone', 'meeting', 'visit', 'wechat', 'other']
+  const activityCounts = activityTypeMap.map((key) => ({
     key,
     type: t(`dashboard.activityTypes.${key}`),
-    count: activities.filter((a) => a.type === value).length,
+    count: activities.filter((a) => a.type === key).length,
   }))
 
   const productRows = products.slice(0, 4).map((p) => ({
@@ -133,7 +126,7 @@ export function DashboardPage() {
   }))
 
   const recentWins = opportunities
-    .filter((o) => o.stage === '已赢单')
+    .filter((o) => o.stage === 'closedWon')
     .slice(0, 4)
     .map((o) => ({
       name: o.name,
@@ -151,7 +144,7 @@ export function DashboardPage() {
         </div>
       </div>
 
-      {/* 一、总体销售结果分析 */}
+      {/* 1. Overall sales results */}
       <Card
         title={<span style={{ fontWeight: 700 }}>{t('dashboard.overallSales')}</span>}
         bodyStyle={{ padding: '16px 20px' }}
@@ -164,7 +157,7 @@ export function DashboardPage() {
         <Progress percent={totalProgress} showInfo={false} strokeColor="#ee2737" trailColor="#ece6df" size="small" />
       </Card>
 
-      {/* 二、出库且报关核心 KPI */}
+      {/* 2. Core KPI: shipped and customs-cleared */}
       <Card
         title={<span style={{ fontWeight: 700 }}>{t('dashboard.coreKpi')}</span>}
         bodyStyle={{ padding: '16px 20px' }}
@@ -194,7 +187,7 @@ export function DashboardPage() {
         </Row>
       </Card>
 
-      {/* 三、市场目标 + 海外零售 */}
+      {/* 3. Market targets + overseas retail */}
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col xs={24} lg={15}>
           <Card title={<span style={{ fontWeight: 700 }}>{t('dashboard.marketTarget')}</span>} bodyStyle={{ padding: 16 }}>
@@ -246,7 +239,7 @@ export function DashboardPage() {
         </Col>
       </Row>
 
-      {/* 四、AR 账龄 + 合同到期监控 */}
+      {/* 4. AR aging + contract expiry monitoring */}
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col xs={24} lg={12}>
           <Card title={<span style={{ fontWeight: 700 }}>{t('dashboard.arAging')}</span>} bodyStyle={{ padding: 16 }}>
@@ -271,7 +264,7 @@ export function DashboardPage() {
         </Col>
       </Row>
 
-      {/* 五、过程分析：加权漏斗 + 重点商机 */}
+      {/* 5. Process analysis: weighted funnel + top opportunities */}
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col xs={24} lg={8}>
           <Card title={<span style={{ fontWeight: 700 }}>{t('dashboard.weightedFunnel')}</span>} bodyStyle={{ padding: 16 }}>
@@ -304,7 +297,7 @@ export function DashboardPage() {
                 { title: t('dashboard.oppName'), dataIndex: 'name' },
                 { title: t('dashboard.account'), dataIndex: 'account' },
                 { title: t('dashboard.amount'), dataIndex: 'amount' },
-                { title: t('dashboard.stage'), dataIndex: 'stage' },
+                { title: t('dashboard.stage'), dataIndex: 'stage', render: (v) => t(`labels.oppStage.${v}`) },
                 { title: t('dashboard.probability'), dataIndex: 'probability' },
               ]}
             />
@@ -312,7 +305,7 @@ export function DashboardPage() {
         </Col>
       </Row>
 
-      {/* 六、客户商机池 + 商用标杆案例 */}
+      {/* 6. Account pipeline + commercial case studies */}
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col xs={24} lg={12}>
           <Card title={<span style={{ fontWeight: 700 }}>{t('dashboard.accountPool')}</span>} bodyStyle={{ padding: 16 }}>
@@ -321,7 +314,7 @@ export function DashboardPage() {
               <div key={a.name} style={{ padding: '10px 0', borderBottom: '1px solid var(--border)', cursor: 'pointer' }} onClick={() => navigate('/app/accounts')}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                   <Text strong>{a.name}</Text>
-                  <Tag className={`pill pill-${statusTone(a.status)}`}>{a.status}</Tag>
+                  <Tag className={`pill pill-${statusTone(a.statusKey)}`}>{t(`labels.contractStatus.${a.statusKey}`)}</Tag>
                 </div>
                 <Text className="text-muted" style={{ fontSize: 12 }}>{a.notes}</Text>
               </div>
@@ -344,7 +337,7 @@ export function DashboardPage() {
         </Col>
       </Row>
 
-      {/* 七、人员效能 */}
+      {/* 7. People performance */}
       <Card title={<span style={{ fontWeight: 700 }}>{t('dashboard.peoplePerformance')}</span>} bodyStyle={{ padding: 16 }} style={{ marginTop: 16 }}>
         <Table
           dataSource={peopleRows}
@@ -361,7 +354,7 @@ export function DashboardPage() {
         />
       </Card>
 
-      {/* 八、销售行为 + 产品与订单 + 近期赢单 */}
+      {/* 8. Sales behavior + products/orders + recent wins */}
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col xs={24} lg={8}>
           <Card title={<span style={{ fontWeight: 700 }}>{t('dashboard.salesBehavior')}</span>} bodyStyle={{ padding: 16 }}>
@@ -413,7 +406,7 @@ export function DashboardPage() {
         </Col>
       </Row>
 
-      {/* 九、最近订单 */}
+      {/* 9. Recent orders */}
       <Card title={<span style={{ fontWeight: 700 }}>{t('dashboard.recentOrders')}</span>} bodyStyle={{ padding: 16 }} style={{ marginTop: 16 }}>
         <Table
           dataSource={orders.slice(0, 4)}
@@ -425,7 +418,7 @@ export function DashboardPage() {
             { title: t('dashboard.orderNo'), dataIndex: 'orderNumber' },
             { title: t('dashboard.account'), dataIndex: 'accountId', render: (id) => getAccountById(id)?.name ?? id },
             { title: t('dashboard.amount'), dataIndex: 'subtotalUsd', render: (v) => `$${v.toLocaleString()}` },
-            { title: t('dashboard.status'), dataIndex: 'status' },
+            { title: t('dashboard.status'), dataIndex: 'status', render: (v) => t(`labels.orderStatus.${v}`) },
           ]}
         />
       </Card>

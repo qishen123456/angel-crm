@@ -48,7 +48,7 @@
     },
     {
       "key": "retail",
-      "label": "Retail",
+      "label": "🛍 Retail",
       "items": [
         {
           "key": "/app/retail",
@@ -150,7 +150,7 @@
       "items": [
         {
           "key": "/app/import",
-          "label": "Import Data"
+          "label": "📥 Import Data"
         },
         {
           "key": "/app/invite",
@@ -191,9 +191,8 @@
     "executiveReport": "Executive Report",
     "import": "Import Data",
     "invite": "Invite User",
-    "team": "Team",
-    "settings": "Settings",
-    "accountDetail": "Account Detail"
+    "team": "Team Management",
+    "settings": "System Settings"
   },
   "common": {
     "search": "Search",
@@ -232,11 +231,15 @@
     "progress": "Progress",
     "category": "Category",
     "price": "Unit price",
-    "stock": "Stock"
+    "stock": "Stock",
+    "qty": "Qty",
+    "unit": "Unit price",
+    "lineTotal": "Subtotal",
+    "selectProduct": "Select product"
   },
   "login": {
     "title": "Sign in to ANGEL CRM",
-    "subtitle": "AHT Global Sales · Internal Workspace",
+    "subtitle": "AHT Global Sales Management · Internal Workspace",
     "sso": "Sign in with Feishu SSO",
     "divider": "or",
     "email": "Work email",
@@ -264,11 +267,12 @@
     "formOwner": "Owner",
     "formType": "Business type",
     "formTarget": "Annual target (USD)",
-    "formNotes": "Resources & opportunity notes"
+    "formNotes": "Customer resources & opportunity mining",
+    "expiresOn": "Expires on {{date}}"
   },
   "orders": {
     "title": "Orders",
-    "subtitle": "Orders, PI, collection plans, fulfillment and after-sales.",
+    "subtitle": "Orders · PI · collection plans · fulfillment · after-sales lifecycle management.",
     "viewBusiness": "Business",
     "viewFinance": "Finance",
     "viewSupply": "Supply Chain",
@@ -280,14 +284,20 @@
     "colItems": "Items",
     "colSubtotal": "Subtotal",
     "colType": "Type",
-    "colKind": "Kind",
+    "colKind": "Order Kind",
     "colPo": "PO",
     "colStatus": "Status",
     "colCreated": "Created",
     "createTitle": "New Order",
     "drawerLines": "Order lines",
     "drawerShipment": "Shipments & Customs",
-    "drawerAttachments": "Attachments & Payments"
+    "drawerAttachments": "Attachments & Payments",
+    "drawerSku": "SKU",
+    "drawerProduct": "Product",
+    "drawerQty": "Qty",
+    "drawerUnit": "Unit price",
+    "drawerLineTotal": "Line total",
+    "drawerSubtotal": "Subtotal"
   },
   "today": {
     "greeting": "Good afternoon, ",
@@ -298,7 +308,7 @@
     "greetingEvening": "Good evening, ",
     "subtitle": "You have {count} items to handle today.",
     "targetAchievement": "Target Achievement",
-    "targetSubtitle": "Core KPI = Shipped & Cleared.",
+    "targetSubtitle": "Core KPI = Shipped & Cleared. Revenue not yet shipped does not count toward KPI.",
     "shippedClearedTag": "Shipped & Cleared",
     "monthly": "Monthly",
     "quarterly": "Quarterly",
@@ -306,43 +316,43 @@
     "achieved": "achieved",
     "todayReport": "Daily Report",
     "daysUnsubmitted": "Unsubmitted for {count} days",
-    "reportHint": "Write daily report to keep team updated.",
+    "reportHint": "Write a daily report to keep the team in sync.",
     "streak": "Streak {count} days",
     "writeReport": "Write Report",
     "viewFunnel": "View Funnel",
-    "funnelDesc": "Open kanban to view active opportunities.",
+    "funnelDesc": "Open the board to view all active opportunities.",
     "teamEvents": "Team Events (Last 3 Days)",
     "todo": "To-do",
-    "reportSubmitted": "今日日报已提交",
-    "reportSavedHint": "日报已保存，可随时点击右侧按钮查看或修改。",
-    "viewReport": "查看日报",
-    "streakDays": "已连续{count}天提交",
-    "reportSaveSuccess": "日报已保存",
-    "followUps": "今日待跟进",
+    "reportSubmitted": "Daily report submitted",
+    "reportSavedHint": "Report saved. You can view or edit it anytime via the button on the right.",
+    "viewReport": "View Report",
+    "streakDays": "Submitted for {count} consecutive days",
+    "reportSaveSuccess": "Report saved",
+    "followUps": "Follow-ups Today",
     "alertLevel": {
-      "urgent": "紧急",
-      "high": "高"
+      "urgent": "Urgent",
+      "high": "High"
     },
     "alertText": {
-      "hkHospitalityDiscount": "HK Hospitality 集团总部要求 15% 一次性 discount 作为框架协议条件，涉及 5 年合作金额 $3.8M。当前我们的折扣权限是 8%，需 CSO 决策。",
-      "marinaBayContract": "Marina Bay 合同 22 天后到期，客户 CFO Olivia 要求增加「3 年内任意 1 次免费更换主件」条款，涉及成本约 $80k。需法务和高管决策是否接受。"
+      "hkHospitalityDiscount": "HK Hospitality headquarters is requesting a one-time 15% discount as a framework-agreement condition, involving a 5-year cooperation value of $3.8M. Our current discount authority is 8%, requiring a CSO decision.",
+      "marinaBayContract": "Marina Bay contract expires in 22 days. Client CFO Olivia requests adding a clause for 'one free main-component replacement at any time within 3 years', involving a cost of about $80k. Legal and executive decision required on whether to accept."
     },
     "todoTitle": {
-      "noFollowUp": "无跟进",
-      "expiring": "即将到期",
-      "reminder": "提醒"
+      "noFollowUp": "No follow-up",
+      "expiring": "Expiring",
+      "reminder": "Reminder"
     },
     "todoText": {
-      "hkHospitalityNoFollowUp": "HK Hospitality Corp — 已 28 天未更新",
-      "gentingNoFollowUp": "Genting Group — 已 25 天未更新",
-      "bangkokMallNoFollowUp": "Bangkok Mall Group — 已 31 天未更新",
-      "marinaBayExpiring": "Marina Bay Sands 合同 21 天后到期",
-      "soekarnoExpiring": "Soekarno Retail Distribution 合同 5 天后到期",
-      "rafflesEndUserInfo": "请收集 Raffles Hospitality 的终端用户信息（赢单后 95 天）"
+      "hkHospitalityNoFollowUp": "HK Hospitality Corp — no update for 28 days",
+      "gentingNoFollowUp": "Genting Group — no update for 25 days",
+      "bangkokMallNoFollowUp": "Bangkok Mall Group — no update for 31 days",
+      "marinaBayExpiring": "Marina Bay Sands contract expires in 21 days",
+      "soekarnoExpiring": "Soekarno Retail Distribution contract expires in 5 days",
+      "rafflesEndUserInfo": "Please collect end-user information for Raffles Hospitality (95 days after closed won)"
     },
     "followUpStage": {
-      "proposal": "方案",
-      "contact": "联系"
+      "proposal": "Proposal",
+      "contact": "Contact"
     },
     "followUpTask": {
       "mgmPricingPushback": "Follow up on pricing pushback",
@@ -365,13 +375,15 @@
     "subtitle": "Manage brand, markets, departments, roles and system configuration.",
     "brand": {
       "logoRules": "LOGO Usage",
-      "vi": "Use dark logo on ≤40% grey backgrounds; white logo on >40%.",
-      "sidebar": "Sidebar (dark)",
-      "headerLogin": "Header / Login (light)",
+      "vi": "Use the dark logo when background greyscale is ≤40%; use the white logo when >40%.",
+      "sidebar": "Sidebar (dark background)",
+      "headerLogin": "Header / Login (light background)",
       "brandColors": "Brand Colors",
       "typography": "Typography",
       "en": "English",
-      "zh": "Chinese"
+      "zh": "Chinese",
+      "zhFont": "FZLTH / PingFang",
+      "zhSample": "ANGEL Global Sales CRM"
     },
     "market": {
       "code": "Market Code",
@@ -495,7 +507,7 @@
     "pendingOrders": "Pending orders",
     "contractExpiry": "Contract expiry (90d)",
     "contractOk": "No contracts expiring in 90 days.",
-    "weightedFunnel": "Weighted Funnel",
+    "weightedFunnel": "Weighted Funnel (by stage)",
     "stageProspect": "Prospect",
     "stageQualify": "Qualify",
     "stageProposal": "Proposal",
@@ -507,12 +519,12 @@
     "soUnits": "SO units",
     "netNew": "Net new",
     "activityTypes": {
-      "email": "邮件",
-      "phone": "电话",
-      "meeting": "会议",
-      "visit": "拜访",
-      "wechat": "微信",
-      "other": "其他"
+      "email": "Email",
+      "phone": "Phone",
+      "meeting": "Meeting",
+      "visit": "Visit",
+      "wechat": "WeChat",
+      "other": "Other"
     }
   },
   "pipeline": {
@@ -596,81 +608,81 @@
       "documents": "Documents"
     },
     "form": {
-      "name": "客户名称",
-      "code": "客户代码",
-      "market": "市场",
-      "owner": "负责人",
-      "annualTarget": "年度目标 (USD)",
-      "opportunityNotes": "商机深掘",
-      "oppName": "商机名称",
-      "oppNamePlaceholder": "输入商机名称",
-      "estimatedAmount": "预计金额 (USD)",
-      "winRate": "赢率 (%)",
-      "stage": "阶段",
-      "expectedClose": "预计结单",
+      "name": "Account name",
+      "code": "Account code",
+      "market": "Market",
+      "owner": "Owner",
+      "annualTarget": "Annual target (USD)",
+      "opportunityNotes": "Opportunity mining",
+      "oppName": "Opportunity name",
+      "oppNamePlaceholder": "Enter opportunity name",
+      "estimatedAmount": "Estimated amount (USD)",
+      "winRate": "Win rate (%)",
+      "stage": "Stage",
+      "expectedClose": "Expected close",
       "expectedClosePlaceholder": "2026-06-30"
     },
     "card": {
-      "opportunityMining": "商机深掘",
-      "annualTargetProgress": "年度目标进度",
-      "profile": "客户档案",
-      "keyContacts": "主要联系人"
+      "opportunityMining": "Opportunity mining",
+      "annualTargetProgress": "Annual target progress",
+      "profile": "Account profile",
+      "keyContacts": "Key contacts"
     },
     "profile": {
-      "country": "客户所在国家",
-      "market": "市场",
-      "company": "归属公司",
-      "paymentTerms": "付款条款",
-      "creditLimit": "信用额度",
-      "annualTarget": "年度目标",
-      "ytdSales": "YTD 销售额",
-      "owner": "负责人"
+      "country": "Country",
+      "market": "Market",
+      "company": "Company",
+      "paymentTerms": "Payment terms",
+      "creditLimit": "Credit limit",
+      "annualTarget": "Annual target",
+      "ytdSales": "YTD sales",
+      "owner": "Owner"
     },
-    "b2bInProgress": "商用 (B2B) · 推进中",
-    "customerResources": "客户资源",
-    "deepDiveDirection": "深化方向",
-    "add": "添加",
+    "b2bInProgress": "Commercial (B2B) · In progress",
+    "customerResources": "Customer resources",
+    "deepDiveDirection": "Deep-dive direction",
+    "add": "Add",
     "col": {
-      "name": "姓名",
-      "title": "职位",
-      "email": "邮箱",
-      "phone": "电话",
-      "primaryContact": "主要联系人",
-      "yes": "是",
-      "oppName": "商机名称",
-      "amount": "金额",
-      "stage": "阶段",
-      "winRate": "赢率",
-      "expectedClose": "预计结单",
-      "contractNumber": "合同编号",
-      "type": "类型",
-      "status": "状态",
-      "expiryDate": "到期日",
-      "orderNumber": "订单号",
-      "piNumber": "PI 号",
-      "orderType": "类型",
-      "createdAt": "创建时间",
-      "receivedAt": "到账时间",
-      "currency": "币种",
-      "method": "方式",
-      "time": "时间",
-      "content": "内容",
-      "recorder": "记录人",
-      "campaignCode": "活动编号",
-      "campaignName": "活动名称",
-      "convertedAmount": "转化金额",
-      "fileName": "文件名",
-      "uploadDate": "上传日期"
+      "name": "Name",
+      "title": "Title",
+      "email": "Email",
+      "phone": "Phone",
+      "primaryContact": "Primary contact",
+      "yes": "Yes",
+      "oppName": "Opportunity name",
+      "amount": "Amount",
+      "stage": "Stage",
+      "winRate": "Win rate",
+      "expectedClose": "Expected close",
+      "contractNumber": "Contract No",
+      "type": "Type",
+      "status": "Status",
+      "expiryDate": "Expiry date",
+      "orderNumber": "Order No",
+      "piNumber": "PI No",
+      "orderType": "Type",
+      "createdAt": "Created at",
+      "receivedAt": "Received at",
+      "currency": "Currency",
+      "method": "Method",
+      "time": "Time",
+      "content": "Content",
+      "recorder": "Recorder",
+      "campaignCode": "Campaign code",
+      "campaignName": "Campaign name",
+      "convertedAmount": "Converted amount",
+      "fileName": "File name",
+      "uploadDate": "Upload date"
     },
     "docType": {
-      "po": "采购订单",
-      "receipt": "收款确认书"
+      "po": "Purchase Order",
+      "receipt": "Payment Confirmation"
     },
     "stage": {
-      "prospect": "初步接触",
-      "qualify": "需求确认",
-      "proposal": "方案报价",
-      "negotiate": "谈判中"
+      "prospect": "Prospect",
+      "qualify": "Qualify",
+      "proposal": "Proposal",
+      "negotiate": "Negotiate"
     }
   },
   "contacts": {
@@ -749,9 +761,9 @@
       "supply": "Supply Chain",
       "supplyDesc": "Orders waiting for outbound or customs clearance.",
       "paymentVerification": "Finance - Payment Verification",
-      "paymentVerificationDesc": "Payments pending finance confirmation.",
+      "paymentVerificationDesc": "Payments pending finance confirmation and receipts not yet issued.",
       "collectionTracking": "Finance - Collection Tracking",
-      "collectionTrackingDesc": "Receivables due within 14 days or overdue."
+      "collectionTrackingDesc": "Collection plans due within 14 days or overdue."
     },
     "table": {
       "orderNo": "Order No",
@@ -766,7 +778,9 @@
       "dueDate": "Due Date",
       "planAmount": "Planned",
       "open": "Open",
-      "noData": "All clear, no pending items."
+      "noData": "All clear, no pending items.",
+      "confirmPayment": "Confirm Payment",
+      "remindCustomer": "Remind Customer"
     }
   },
   "pool": {
@@ -795,7 +809,7 @@
     "lastService": "Last Service"
   },
   "team": {
-    "title": "Team",
+    "title": "Team Management",
     "subtitle": "Manage team members, departments, roles and status.",
     "invite": "Invite Member",
     "searchPlaceholder": "Search by name or email...",
@@ -816,7 +830,11 @@
     "monthlyTarget": "Monthly Target",
     "kpi": "KPI",
     "actualReceipt": "Actual Receipt",
-    "progress": "Progress"
+    "progress": "Progress",
+    "periodYear": "Year",
+    "periodQ2": "Q2",
+    "periodJune": "June",
+    "periodWeek": "This Week"
   },
   "executiveReport": {
     "title": "Executive Report",
@@ -911,12 +929,12 @@
     "contentPlaceholder": "Enter activity details..."
   },
   "invoices": {
-    "title": "Invoices",
+    "title": "Invoice Management",
     "subtitle": "Manage invoice applications, review and issue status.",
     "pendingReview": "Pending review",
     "pendingIssue": "Pending issue",
     "issuedThisMonth": "Issued this month",
-    "no": "Invoice no.",
+    "no": "Application No",
     "account": "Account",
     "order": "Order",
     "amount": "Amount",
@@ -931,41 +949,168 @@
     "statusRejected": "Rejected"
   },
   "dailyReport": {
-    "title": "今日日报",
-    "hint": "保持简短 – 3 分钟搞定。让经理了解你今天做了什么、明天准备做什么。",
-    "workTitle": "今日工作(逐条记录,每条一件事) *",
-    "workPlaceholder": "例如:拜访 Marina Bay,推进到方案报价阶段",
-    "planTitle": "明日计划(逐条记录,每条一件事) *",
-    "planPlaceholder": "例如:跟进 Raffles 报价",
-    "paymentTitle": "回款进展(可选,可加多条)",
-    "paymentPlaceholder": "例如:Marina Bay 第二期款 $50k 已到账",
-    "problemTitle": "遇到的问题(可选,可加多条 – 会通知上级)",
-    "problemPlaceholder": "例如:客户卡在采购审批,需要协助加速",
-    "addRow": "再加一条",
-    "delete": "删除",
-    "followupTitle": "今日客户跟进",
-    "followupDesc": "在这里登记你今天接触过的客户 —— 不用再单独到每条商机里逐一录入，系统会自动把它们写入对应商机的跟进记录。",
-    "followupEmpty": "今天还没登记客户跟进。点击下方「+ 添加跟进」记录一次电话/微信/拜访/方案。",
-    "followupPlaceholder": "例如:电话拜访 Marina Bay,确认方案需求",
-    "followupAdd": "+ + 添加一条客户跟进",
-    "issueTitle": "重大事项 / 需协助跟进(可加多条)",
-    "issueDesc": "今天有什么需要领导或其他部门关注、拍板、协调的事项？一天可能有多件 —— 例如：大单卡审批 / 客户高层投诉 / 跨部门资源调度 / 集团政策征询。填写后会同步显示在 Today 页面，相关方可立即看到并跟进。",
-    "issueEmpty": "今天没有需要上报的事项。如有，点击下方「+ 添加」",
-    "issuePlaceholder": "例如:HK Hospitality 15% discount 需 CSO 拍板",
-    "issueAdd": "+ + 新增一条事项",
-    "moodTitle": "今日心情",
+    "title": "Daily Report",
+    "hint": "Keep it short — done in 3 minutes. Let your manager know what you did today and what you plan to do tomorrow.",
+    "workTitle": "Today's work (one item per line) *",
+    "workPlaceholder": "E.g., visited Marina Bay and moved to proposal stage",
+    "planTitle": "Tomorrow's plan (one item per line) *",
+    "planPlaceholder": "E.g., follow up on Raffles quotation",
+    "paymentTitle": "Collection progress (optional, multiple entries allowed)",
+    "paymentPlaceholder": "E.g., Marina Bay second installment $50k received",
+    "problemTitle": "Problems encountered (optional, multiple entries allowed – will notify supervisor)",
+    "problemPlaceholder": "E.g., customer stuck in procurement approval, need help to expedite",
+    "addRow": "Add another",
+    "delete": "Delete",
+    "followupTitle": "Today's customer follow-up",
+    "followupDesc": "Register customers you touched today here — no need to log them one by one under each opportunity; the system will automatically write them to the corresponding opportunity activity records.",
+    "followupEmpty": "No customer follow-up logged today. Tap \"+ Add Follow-up\" to record a call/WeChat/visit/proposal.",
+    "followupPlaceholder": "E.g., called Marina Bay to confirm requirements",
+    "followupAdd": "+ Add a customer follow-up",
+    "issueTitle": "Major issues / Escalations (multiple entries allowed)",
+    "issueDesc": "Anything today that needs leadership or another department's attention, decision, or coordination? There may be several a day — e.g., large order stuck in approval / executive complaint / cross-department resource scheduling / group policy consultation. Entries will sync to the Today page so relevant parties can see and follow up immediately.",
+    "issueEmpty": "No issues to report today. If any, tap \"+ Add\".",
+    "issuePlaceholder": "E.g., HK Hospitality 15% discount needs CSO decision",
+    "issueAdd": "+ Add a new issue",
+    "moodTitle": "Mood today",
     "mood": {
-      "sad": "难过/生气",
-      "upset": "委屈",
-      "neutral": "平淡",
-      "happy": "开心",
-      "excited": "大笑/兴奋"
+      "sad": "Sad/Angry",
+      "upset": "Upset",
+      "neutral": "Neutral",
+      "happy": "Happy",
+      "excited": "Excited/Laughing"
     },
-    "cancel": "取消",
-    "save": "保存日报",
+    "cancel": "Cancel",
+    "save": "Save Report",
     "error": {
-      "workRequired": "请至少填写一项今日工作",
-      "planRequired": "请至少填写一项明日计划"
+      "workRequired": "Please enter at least one work item",
+      "planRequired": "Please enter at least one plan item"
     }
-  }
+  },
+  "labels": {
+    "orderStatus": {
+      "pendingPI": "Pending PI",
+      "piIssued": "PI Issued",
+      "shipped": "Shipped",
+      "completed": "Completed"
+    },
+    "orderType": {
+      "preWin": "Pre-win",
+      "firstOrder": "First Order",
+      "reorder": "Reorder"
+    },
+    "orderKind": {
+      "bulk": "Bulk Order",
+      "sample": "Sample Order",
+      "reorder": "Reorder"
+    },
+    "poStatus": {
+      "received": "PO ✓",
+      "pending": "PO Pending"
+    },
+    "contractStatus": {
+      "signed": "Signed",
+      "active": "Active",
+      "expiring": "Expiring",
+      "expired": "Expired"
+    },
+    "contractType": {
+      "annualFramework": "Annual Framework",
+      "supplyAgreement": "Supply Agreement",
+      "distributionAgreement": "Distribution Agreement"
+    },
+    "paymentStatus": {
+      "confirmed": "Confirmed",
+      "receivable": "Receivable",
+      "partial": "Partially Received",
+      "normal": "Normal",
+      "overdueRisk": "Overdue Risk"
+    },
+    "oppStage": {
+      "prospect": "Prospect",
+      "qualify": "Qualify",
+      "proposal": "Proposal",
+      "negotiate": "Negotiate",
+      "closedWon": "Closed Won"
+    },
+    "campaignType": {
+      "tradeshow": "Tradeshow",
+      "paidAds": "Paid Ads",
+      "webinar": "Webinar",
+      "referral": "Referral"
+    },
+    "campaignStatus": {
+      "active": "Active",
+      "completed": "Completed"
+    },
+    "leadSource": {
+      "campaign": "Campaign",
+      "offlineEvent": "Offline Event",
+      "website": "Website",
+      "referral": "Referral",
+      "tradeshow": "Tradeshow",
+      "social": "Social Media",
+      "other": "Other"
+    },
+    "leadStatus": {
+      "new": "New",
+      "contacted": "Contacted",
+      "qualified": "Qualified",
+      "converted": "Converted"
+    },
+    "productCategory": {
+      "commercial": "Commercial",
+      "residential": "Residential",
+      "industrial": "Industrial",
+      "strategic": "Strategic"
+    },
+    "productStatus": {
+      "onSale": "On Sale",
+      "discontinued": "Discontinued",
+      "rnd": "In R&D"
+    },
+    "activityType": {
+      "finance": "Finance",
+      "email": "Email",
+      "phone": "Phone",
+      "meeting": "Meeting",
+      "visit": "Visit",
+      "wechat": "WeChat",
+      "other": "Other"
+    },
+    "projectStage": {
+      "survey": "Site Survey",
+      "install": "Installation",
+      "commissioning": "Commissioning & Acceptance"
+    },
+    "paymentMethod": {
+      "wire": "Wire Transfer",
+      "lc": "Letter of Credit",
+      "check": "Check",
+      "paypal": "PayPal",
+      "stripe": "Stripe"
+    },
+    "collectionStatus": {
+      "due": "Due",
+      "overdue": "Overdue"
+    },
+    "productLine": {
+      "commercial": "Commercial",
+      "retail": "Retail",
+      "industrial": "Industrial",
+      "public": "Public"
+    },
+    "readWrite": "Read/Write",
+    "businessType": {
+      "commercial": "Commercial",
+      "retail": "Retail",
+      "industrial": "Industrial",
+      "public": "Public"
+    }
+  },
+  "placeholderPage": {
+    "subtitle": "This page is being improved continuously.",
+    "comingSoon": "Coming soon",
+    "description": "This is currently a high-fidelity replica transition page; full interactions and data will be added later."
+  },
+  "adminAvatar": "Admin"
 }

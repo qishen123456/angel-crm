@@ -14,14 +14,20 @@ const viewOptions = (t: (k: string) => string) => [
   { key: 'supply', label: `🚚 ${t('orders.viewSupply')}` },
 ]
 
-const statusList = (t: (k: string) => string) => [t('orders.statusAll'), '待开具 PI', 'PI 已开具', '已发货', '已完成']
+const statusList = (t: (k: string) => string) => [
+  { key: 'all', label: t('common.all') },
+  { key: 'pendingPI', label: t('labels.orderStatus.pendingPI') },
+  { key: 'piIssued', label: t('labels.orderStatus.piIssued') },
+  { key: 'shipped', label: t('labels.orderStatus.shipped') },
+  { key: 'completed', label: t('labels.orderStatus.completed') },
+]
 
 export function OrdersPage() {
   const { t } = useI18n()
   const { success } = useGlobalMessage()
   const [search, setSearch] = useState('')
   const [view, setView] = useState('business')
-  const [statusFilter, setStatusFilter] = useState('全部')
+  const [statusFilter, setStatusFilter] = useState('all')
   const [selected, setSelected] = useState<Order | null>(null)
   const [createOpen, setCreateOpen] = useState(false)
   const clearCreateParam = useAutoCreate(setCreateOpen)
@@ -31,7 +37,7 @@ export function OrdersPage() {
       const matchesSearch =
         o.orderNumber.toLowerCase().includes(search.toLowerCase()) ||
         o.piNumber.toLowerCase().includes(search.toLowerCase())
-      const matchesStatus = statusFilter === '全部' || o.status === statusFilter
+      const matchesStatus = statusFilter === 'all' || o.status === statusFilter
       return matchesSearch && matchesStatus
     })
   }, [search, statusFilter])
@@ -71,11 +77,11 @@ export function OrdersPage() {
           <div className="filter-group">
             {statusList(t).map((s) => (
               <button
-                key={s}
-                className={`filter-chip ${statusFilter === s ? 'active' : ''}`}
-                onClick={() => setStatusFilter(s)}
+                key={s.key}
+                className={`filter-chip ${statusFilter === s.key ? 'active' : ''}`}
+                onClick={() => setStatusFilter(s.key)}
               >
-                {s}
+                {s.label}
               </button>
             ))}
           </div>
@@ -93,16 +99,16 @@ export function OrdersPage() {
             { title: t('orders.colRequester'), dataIndex: 'requestedById', render: (id) => getUserById(id)?.name ?? id, width: 100 },
             { title: t('orders.colItems'), dataIndex: 'items', render: (items) => items.length, width: 60 },
             { title: t('orders.colSubtotal'), dataIndex: 'subtotalUsd', render: (v) => `$${v.toLocaleString()}`, width: 100 },
-            { title: t('orders.colType'), dataIndex: 'orderType', width: 80 },
-            { title: t('orders.colKind'), dataIndex: 'orderKind', width: 90 },
-            { title: t('orders.colPo'), dataIndex: 'poStatus', width: 80 },
+            { title: t('orders.colType'), dataIndex: 'orderType', render: (v) => t(`labels.orderType.${v}`), width: 80 },
+            { title: t('orders.colKind'), dataIndex: 'orderKind', render: (v) => t(`labels.orderKind.${v}`), width: 90 },
+            { title: t('orders.colPo'), dataIndex: 'poStatus', render: (v) => t(`labels.poStatus.${v}`), width: 80 },
             {
               title: t('orders.colStatus'),
               dataIndex: 'status',
               width: 120,
               render: (v) => {
                 const tone = statusTone(v)
-                return <span className={`pill pill-${tone}`}>{v}</span>
+                return <span className={`pill pill-${tone}`}>{t(`labels.orderStatus.${v}`)}</span>
               },
             },
             { title: t('orders.colCreated'), dataIndex: 'createdAt', width: 100 },
@@ -121,7 +127,7 @@ export function OrdersPage() {
       </Card>
 
       <Drawer
-        title={`订单 ${selected?.orderNumber}`}
+        title={`${t('orders.colOrderNo')} ${selected?.orderNumber}`}
         width={560}
         open={!!selected}
         onClose={() => setSelected(null)}
@@ -175,7 +181,7 @@ function OrderDetail({ order }: { order: Order }) {
           </div>
           <div>
             <Text className="text-muted">{t('orders.colStatus')}</Text>
-            <div><span className={`pill pill-${statusTone(order.status)}`}>{order.status}</span></div>
+            <div><span className={`pill pill-${statusTone(order.status)}`}>{t(`labels.orderStatus.${order.status}`)}</span></div>
           </div>
         </div>
       </div>
@@ -184,11 +190,11 @@ function OrderDetail({ order }: { order: Order }) {
         <table className="order-lines-table">
           <thead>
             <tr>
-              <th>SKU</th>
-              <th>Product</th>
-              <th>Qty</th>
-              <th>Unit</th>
-              <th>Line total</th>
+              <th>{t('orders.drawerSku')}</th>
+              <th>{t('orders.drawerProduct')}</th>
+              <th>{t('orders.drawerQty')}</th>
+              <th>{t('orders.drawerUnit')}</th>
+              <th>{t('orders.drawerLineTotal')}</th>
             </tr>
           </thead>
           <tbody>
@@ -204,7 +210,7 @@ function OrderDetail({ order }: { order: Order }) {
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan={4} style={{ textAlign: 'right', fontWeight: 700 }}>小计</td>
+              <td colSpan={4} style={{ textAlign: 'right', fontWeight: 700 }}>{t('orders.drawerSubtotal')}</td>
               <td style={{ fontWeight: 700 }}>${order.subtotalUsd.toLocaleString()}</td>
             </tr>
           </tfoot>
@@ -253,15 +259,15 @@ function CreateOrderForm() {
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label={t('orders.colType')} name="orderType" initialValue="正常订单">
-            <Select options={['正常订单', '补货订单', '样品订单', '促销订单'].map(v => ({ label: v, value: v }))} />
+          <Form.Item label={t('orders.colType')} name="orderType" initialValue="preWin">
+            <Select options={['preWin', 'firstOrder', 'reorder'].map(v => ({ label: t(`labels.orderType.${v}`), value: v }))} />
           </Form.Item>
         </Col>
       </Row>
       <Row gutter={16}>
         <Col span={12}>
-          <Form.Item label={t('orders.colKind')} name="orderKind" initialValue="批发">
-            <Select options={['批发', '零售', '团购', '电商'].map(v => ({ label: v, value: v }))} />
+          <Form.Item label={t('orders.colKind')} name="orderKind" initialValue="bulk">
+            <Select options={['bulk', 'sample', 'reorder'].map(v => ({ label: t(`labels.orderKind.${v}`), value: v }))} />
           </Form.Item>
         </Col>
         <Col span={12}>
@@ -276,13 +282,13 @@ function CreateOrderForm() {
             {fields.map(field => (
               <Row gutter={12} key={field.key} align="middle" style={{ marginBottom: 8 }}>
                 <Col flex="1 1 auto">
-                  <Form.Item noStyle {...field} name={[field.name, 'productId']} rules={[{ required: true, message: '选产品' }]}>
+                  <Form.Item noStyle {...field} name={[field.name, 'productId']} rules={[{ required: true, message: t('common.selectProduct') }]}>
                     <Select placeholder={t('common.required')} options={products.map(p => ({ label: p.name, value: p.id }))} />
                   </Form.Item>
                 </Col>
                 <Col flex="0 0 80px">
                   <Form.Item noStyle {...field} name={[field.name, 'quantity']}>
-                    <Input type="number" placeholder="数量" />
+                    <Input type="number" placeholder={t('common.qty')} />
                   </Form.Item>
                 </Col>
                 <Col flex="0 0 32px">

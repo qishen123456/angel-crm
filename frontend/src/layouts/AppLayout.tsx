@@ -22,6 +22,7 @@ import {
   SettingOutlined,
   ShopOutlined,
   TeamOutlined,
+  TranslationOutlined,
   UserAddOutlined,
   UserOutlined,
   UsergroupAddOutlined,
@@ -109,7 +110,7 @@ export function AppLayout() {
   const navigate = useNavigate()
   const locale = useUiStore((state) => state.locale)
   const setLocale = useUiStore((state) => state.setLocale)
-  const { bundle } = useI18n()
+  const { t, bundle } = useI18n()
   const selectedKey = location.pathname.startsWith('/app/account')
     ? '/app/accounts'
     : location.pathname
@@ -171,7 +172,7 @@ export function AppLayout() {
         <div className="crm-sider-footer">
           <div className="crm-profile">
             <Avatar size={36} className="crm-profile-avatar">
-              {locale.startsWith('zh') ? '管理' : 'A'}
+              {locale.startsWith('zh') ? t('adminAvatar') : 'A'}
             </Avatar>
             <div className="crm-profile-meta">
               <Typography.Text className="crm-profile-name">{bundle.systemAdmin}</Typography.Text>
@@ -183,12 +184,12 @@ export function AppLayout() {
 
           <div className="crm-sider-actions">
             <Select
-              variant="borderless"
               value={locale}
               onChange={(value) => setLocale(value as LocaleKey)}
               options={Object.entries(localeNames).map(([value, label]) => ({ label, value }))}
               className="crm-locale-select"
               popupMatchSelectWidth={false}
+              suffixIcon={<TranslationOutlined />}
             />
             <Button type="text" className="crm-logout-btn" onClick={() => navigate('/login')}>
               {bundle.logout}
@@ -200,7 +201,7 @@ export function AppLayout() {
       <Layout className="crm-main-layout">
         <Header className="crm-header">
           <Typography.Title level={4} className="crm-header-page">
-            {bundle.pages[pageKey] ?? '今日'}
+            {bundle.pages[pageKey] ?? t('pages.today')}
           </Typography.Title>
 
           <Space size={12}>

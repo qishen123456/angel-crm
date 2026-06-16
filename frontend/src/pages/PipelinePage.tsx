@@ -5,7 +5,7 @@ import { getAccountById, getUserById, opportunities } from '../mocks/crmData'
 
 const { Text, Title } = Typography
 
-const stages = ['初步接触', '需求确认', '方案报价', '谈判中', '已赢单']
+const stages = ['prospect', 'qualify', 'proposal', 'negotiate', 'closedWon']
 
 export function PipelinePage() {
   const { t } = useI18n()
@@ -26,7 +26,7 @@ export function PipelinePage() {
           return (
             <div className="pipeline-column" key={stage}>
               <div className="pipeline-column-header">
-                <Title level={5}>{stage}</Title>
+                <Title level={5}>{t(`labels.oppStage.${stage}`)}</Title>
                 <div className="pipeline-column-meta">
                   <span className="pipeline-count">{items.length}</span>
                   <span className="pipeline-total">${(total / 1000).toFixed(0)}k</span>

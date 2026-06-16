@@ -16,14 +16,14 @@ import { DailyReportModal } from '../components/DailyReportModal'
 import type { DailyReportData } from '../components/DailyReportModal'
 import { useGlobalMessage } from '../hooks/useGlobalMessage'
 import { useI18n } from '../hooks/useI18n'
-import { annualTargets } from '../mocks/crmData'
+import { annualTargets, getUserById } from '../mocks/crmData'
 
 const { Title, Text } = Typography
 
 const todayAlerts = [
   {
     tone: 'red' as const,
-    owner: '杨森',
+    ownerId: 'u4',
     date: '2026-06-16',
     levelKey: 'urgent',
     account: 'HK Hospitality Corp',
@@ -31,7 +31,7 @@ const todayAlerts = [
   },
   {
     tone: 'orange' as const,
-    owner: '杨文',
+    ownerId: 'u2',
     date: '2026-06-16',
     levelKey: 'high',
     account: 'Marina Bay Sands',
@@ -49,8 +49,8 @@ const todayTodo = [
 ]
 
 const followUps = [
-  { account: 'MGM Macau', stageKey: 'proposal', taskKey: 'mgmPricingPushback', time: '11:30', owner: '杨森' },
-  { account: 'Raffles Hospitality', stageKey: 'contact', taskKey: 'rafflesCatalogue', time: '15:00', owner: '杨文' },
+  { account: 'MGM Macau', stageKey: 'proposal', taskKey: 'mgmPricingPushback', time: '11:30', ownerId: 'u4' },
+  { account: 'Raffles Hospitality', stageKey: 'contact', taskKey: 'rafflesCatalogue', time: '15:00', ownerId: 'u2' },
 ]
 
 function dailyReportKey() {
@@ -191,7 +191,7 @@ export function TodayPage() {
               <article className={`alert-card tone-${item.tone}`} key={item.textKey}>
                 <div className="alert-meta">
                   <span className={`alert-dot tone-${item.tone}`} />
-                  <strong>{item.owner}</strong>
+                  <strong>{getUserById(item.ownerId)?.name}</strong>
                   <span>· {item.date}</span>
                   <Tag color={item.tone === 'red' ? 'error' : 'warning'} className="alert-level">
                     {t(`today.alertLevel.${item.levelKey}`)}
@@ -239,7 +239,7 @@ export function TodayPage() {
                   <Text className="followup-task">{t(`today.followUpTask.${f.taskKey}`)}</Text>
                 </div>
                 <div className="followup-meta">
-                  {f.time} · {f.owner}
+                  {f.time} · {getUserById(f.ownerId)?.name}
                 </div>
               </article>
             ))}

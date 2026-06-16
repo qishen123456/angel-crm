@@ -8,8 +8,8 @@ import { campaigns, formatCurrency, getUserById, leads, markets, statusTone, typ
 
 const { Text } = Typography
 
-const campaignTypes = ['线上广告', '线下展会', '邮件营销', '内容营销', '联合活动']
-const campaignStatuses = ['进行中', '已完成']
+const campaignTypes = ['tradeshow', 'paidAds', 'webinar', 'referral']
+const campaignStatuses = ['active', 'completed']
 
 export function CampaignsPage() {
   const { t } = useI18n()
@@ -81,8 +81,8 @@ export function CampaignsPage() {
           columns={[
             { title: t('campaigns.code'), dataIndex: 'code' },
             { title: t('campaigns.name'), dataIndex: 'name' },
-            { title: t('campaigns.type'), dataIndex: 'type' },
-            { title: t('campaigns.status'), dataIndex: 'status', render: (v) => <span className={`pill pill-${statusTone(v)}`}>{v === 'completed' ? '已完成' : '进行中'}</span> },
+            { title: t('campaigns.type'), dataIndex: 'type', render: (v) => t(`labels.campaignType.${v}`) },
+            { title: t('campaigns.status'), dataIndex: 'status', render: (v) => <span className={`pill pill-${statusTone(v)}`}>{t(`labels.campaignStatus.${v}`)}</span> },
             { title: t('campaigns.budget'), dataIndex: 'budgetUsd', render: (v) => formatCurrency(v) },
             { title: t('campaigns.leads'), dataIndex: 'leadCount' },
             { title: t('campaigns.convertedCount'), dataIndex: 'convertedCount' },
@@ -111,8 +111,8 @@ export function CampaignsPage() {
           <div>
             <div className="campaign-modal-meta">
               <div><Text className="text-muted">{t('campaigns.code')}</Text><div><Text strong>{selected.code}</Text></div></div>
-              <div><Text className="text-muted">{t('campaigns.type')}</Text><div><Text strong>{selected.type}</Text></div></div>
-              <div><Text className="text-muted">{t('campaigns.status')}</Text><div><span className={`pill pill-${statusTone(selected.status)}`}>{selected.status === 'completed' ? '已完成' : '进行中'}</span></div></div>
+              <div><Text className="text-muted">{t('campaigns.type')}</Text><div><Text strong>{t(`labels.campaignType.${selected.type}`)}</Text></div></div>
+              <div><Text className="text-muted">{t('campaigns.status')}</Text><div><span className={`pill pill-${statusTone(selected.status)}`}>{t(`labels.campaignStatus.${selected.status}`)}</span></div></div>
               <div><Text className="text-muted">{t('pages.countryReports')}</Text><div><Text strong>{selected.market}</Text></div></div>
             </div>
             <Card title={t('campaigns.leadsTitle')} style={{ marginTop: 16 }}>
@@ -123,7 +123,7 @@ export function CampaignsPage() {
                 columns={[
                   { title: t('campaigns.contactName'), dataIndex: 'name' },
                   { title: t('campaigns.company'), dataIndex: 'companyName' },
-                  { title: t('campaigns.status'), dataIndex: 'status', render: (v) => <span className={`pill pill-${statusTone(v)}`}>{v}</span> },
+                  { title: t('campaigns.status'), dataIndex: 'status', render: (v) => <span className={`pill pill-${statusTone(v)}`}>{t(`labels.leadStatus.${v}`)}</span> },
                   { title: t('campaigns.estValue'), dataIndex: 'estimatedValueUsd', render: (v) => formatCurrency(v) },
                 ]}
               />
@@ -142,10 +142,10 @@ export function CampaignsPage() {
         <Form layout="vertical">
           <Form.Item label={t('campaigns.name')}><Input /></Form.Item>
           <Form.Item label={t('campaigns.type')}>
-            <Select options={campaignTypes.map((v) => ({ value: v, label: v }))} />
+            <Select options={campaignTypes.map((v) => ({ value: v, label: t(`labels.campaignType.${v}`) }))} />
           </Form.Item>
           <Form.Item label={t('campaigns.status')}>
-            <Select options={campaignStatuses.map((v) => ({ value: v, label: v }))} />
+            <Select options={campaignStatuses.map((v) => ({ value: v, label: t(`labels.campaignStatus.${v}`) }))} />
           </Form.Item>
           <Form.Item label={t('pages.countryReports')}>
             <Select options={markets.map((m) => ({ value: m.code, label: `${m.flag} ${m.code}` }))} />

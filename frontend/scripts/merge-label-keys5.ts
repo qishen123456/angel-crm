@@ -24,10 +24,16 @@ function setPath(obj: any, path: string, value: any) {
 }
 
 const additions: Record<string, string> = {
-  'accountDetail.stage.prospect': '初步接触',
-  'accountDetail.stage.qualify': '需求确认',
-  'accountDetail.stage.proposal': '方案报价',
-  'accountDetail.stage.negotiate': '谈判中',
+  'accounts.expiresOn': '到期 {{date}}',
+  'labels.businessType.commercial': '商用',
+  'labels.businessType.retail': '零售',
+  'labels.businessType.industrial': '工业',
+  'labels.businessType.public': '公共场景',
+  'countryReports.periodYear': '年度',
+  'countryReports.periodQ2': 'Q2',
+  'countryReports.periodJune': '6月',
+  'countryReports.periodWeek': '本周',
+  'adminAvatar': '管理',
 }
 
 const locales = ['zh-CN.json', 'zh-HK.json', 'en-US.json', 'th-TH.json', 'id-ID.json', 'vi-VN.json']

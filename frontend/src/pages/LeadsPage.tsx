@@ -6,10 +6,10 @@ import { useGlobalMessage } from '../hooks/useGlobalMessage'
 import { useI18n } from '../hooks/useI18n'
 import { campaigns, formatCurrency, getUserById, leads, markets, statusTone } from '../mocks/crmData'
 
-const leadSources = ['市场活动', '官网', '转介绍', '展会', '社交媒体', '其他']
+const leadSources = ['campaign', 'website', 'referral', 'tradeshow', 'social', 'other']
 const leadRatings = ['A', 'B', 'C']
-const productLines = ['商用', '零售', '工业', '公共场景']
-const oppStages = ['初步接触', '需求确认', '方案报价', '谈判中']
+const productLines = ['commercial', 'retail', 'industrial', 'public']
+const oppStages = ['prospect', 'qualify', 'proposal', 'negotiate']
 
 export function LeadsPage() {
   const { t } = useI18n()
@@ -72,11 +72,11 @@ export function LeadsPage() {
             { title: t('leads.name'), dataIndex: 'name' },
             { title: t('leads.jobTitle'), dataIndex: 'title' },
             { title: t('leads.company'), dataIndex: 'companyName' },
-            { title: t('leads.source'), dataIndex: 'source' },
+            { title: t('leads.source'), dataIndex: 'source', render: (v) => t(`labels.leadSource.${v}`) },
             { title: t('leads.campaign'), dataIndex: 'campaignId', render: (id) => campaigns.find((c) => c.id === id)?.code },
             { title: t('leads.rating'), dataIndex: 'rating' },
             { title: t('leads.estValue'), dataIndex: 'estimatedValueUsd', render: (v) => formatCurrency(v) },
-            { title: t('leads.status'), dataIndex: 'status', render: (v) => <span className={`pill pill-${statusTone(v)}`}>{v}</span> },
+            { title: t('leads.status'), dataIndex: 'status', render: (v) => <span className={`pill pill-${statusTone(v)}`}>{t(`labels.leadStatus.${v}`)}</span> },
             { title: t('leads.owner'), dataIndex: 'ownerId', render: (id) => getUserById(id)?.name },
             { title: t('leads.lastContact'), dataIndex: 'lastContactedAt' },
             {
@@ -111,10 +111,10 @@ export function LeadsPage() {
             <Select options={markets.map((m) => ({ value: m.code, label: `${m.flag} ${m.code}` }))} />
           </Form.Item>
           <Form.Item label={t('leads.productLine')}>
-            <Select options={productLines.map((m) => ({ value: m, label: m }))} />
+            <Select options={productLines.map((m) => ({ value: m, label: t(`labels.productLine.${m}`) }))} />
           </Form.Item>
           <Form.Item label={t('leads.oppStage')}>
-            <Select options={oppStages.map((m) => ({ value: m, label: m }))} />
+            <Select options={oppStages.map((m) => ({ value: m, label: t(`labels.oppStage.${m}`) }))} />
           </Form.Item>
         </Form>
       </Modal>
@@ -130,7 +130,7 @@ export function LeadsPage() {
           <Form.Item label={t('leads.name')}><Input /></Form.Item>
           <Form.Item label={t('leads.company')}><Input /></Form.Item>
           <Form.Item label={t('leads.source')}>
-            <Select options={leadSources.map((v) => ({ value: v, label: v }))} />
+            <Select options={leadSources.map((v) => ({ value: v, label: t(`labels.leadSource.${v}`) }))} />
           </Form.Item>
           <Form.Item label={t('leads.campaign')}>
             <Select options={campaigns.map((c) => ({ value: c.id, label: c.code }))} />
