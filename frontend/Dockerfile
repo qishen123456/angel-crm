@@ -1,20 +1,19 @@
-# Build stage
-FROM docker.io/library/node:20-slim AS builder
+FROM registry.cn-hangzhou.aliyuncs.com/library/node:20-slim AS builder
 
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
-    NODE_ENV=production
+    NODE_ENV=production \
+    NPM_REGISTRY=https://registry.npmmirror.com
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --include=dev
+RUN npm config set registry $NPM_REGISTRY && npm ci --include=dev
 
 COPY . .
 RUN npm run build
 
-# Serve stage
-FROM docker.io/library/nginx:alpine
+FROM registry.cn-hangzhou.aliyuncs.com/library/nginx:alpine
 
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8

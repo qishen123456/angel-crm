@@ -1,17 +1,19 @@
-FROM docker.io/library/node:20-slim
+FROM registry.cn-hangzhou.aliyuncs.com/library/node:20-slim
 
-RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
+RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list && \
+    apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
     NODE_ENV=production \
     PORT=3001 \
-    DATA_DIR=/app/data
+    DATA_DIR=/app/data \
+    NPM_REGISTRY=https://registry.npmmirror.com
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --include=dev
+RUN npm config set registry $NPM_REGISTRY && npm ci --include=dev
 
 COPY tsconfig.json ./
 COPY src ./src

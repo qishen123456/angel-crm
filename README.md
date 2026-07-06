@@ -223,17 +223,48 @@ Content-Type: application/json
 
 ## 🐛 常见问题
 
-### Docker 镜像源问题
+### Docker 镜像加速
 
-如果构建时出现认证失败，修改 Docker 配置文件：
+本项目已默认使用阿里云镜像源，构建速度更快：
+
+- **Node.js**: `registry.cn-hangzhou.aliyuncs.com/library/node:20-slim`
+- **Nginx**: `registry.cn-hangzhou.aliyuncs.com/library/nginx:alpine`
+- **npm**: `https://registry.npmmirror.com`
+
+如需手动配置 Docker 镜像源：
 
 ```json
 {
   "registry-mirrors": [
-    "https://hub-mirror.c.163.com",
-    "https://docker.mirrors.ustc.edu.cn"
+    "https://registry.cn-hangzhou.aliyuncs.com",
+    "https://hub-mirror.c.163.com"
   ]
 }
+```
+
+### 宝塔服务器部署
+
+```bash
+# 1. 进入项目目录
+cd /www/wwwroot/angel-crm
+
+# 2. 清除代理（服务器不需要代理）
+unset ALL_PROXY http_proxy https_proxy
+
+# 3. 拉取最新代码
+git pull origin main
+
+# 4. 启动服务
+chmod +x start.sh update.sh
+bash start.sh
+```
+
+### 更新代码
+
+```bash
+cd /www/wwwroot/angel-crm
+unset ALL_PROXY http_proxy https_proxy
+bash update.sh
 ```
 
 ### 端口冲突
@@ -250,6 +281,18 @@ services:
 ### 数据丢失
 
 确保 `backend/data/` 目录存在且有写入权限。
+
+### 日志查看
+
+```bash
+# 查看脚本日志
+ls -la ./logs/
+cat ./logs/start-*.log
+
+# 查看 Docker 日志
+docker logs angel-crm-backend
+docker logs angel-crm-frontend
+```
 
 ---
 
