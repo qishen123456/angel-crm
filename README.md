@@ -25,6 +25,28 @@ cd angel-crm
 start.bat
 ```
 
+### 一键更新
+
+当代码有更新时，无需手动操作，执行以下脚本即可自动拉取最新代码并重建容器：
+
+```bash
+# 一键更新（Linux/Mac）
+./update.sh
+
+# 或一键更新（Windows PowerShell）
+.\update.ps1
+
+# 或一键更新（Windows CMD）
+update.bat
+```
+
+**更新流程**:
+1. 从 GitHub 拉取最新代码
+2. 停止现有容器
+3. 清理旧镜像
+4. 重新构建并启动容器
+5. 测试服务是否正常
+
 ### 访问地址
 
 - **前端页面**: http://localhost:8080
