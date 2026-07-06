@@ -4,7 +4,10 @@ import { useMemo, useState } from 'react'
 import { useAutoCreate } from '../hooks/useAutoCreate'
 import { useGlobalMessage } from '../hooks/useGlobalMessage'
 import { useI18n } from '../hooks/useI18n'
-import { accounts, flagForMarket, getAccountById, getUserById, orders, products, statusTone, type Order } from '../mocks/crmData'
+import { flagForMarket, getUserById, statusTone, type Account, type Order, type Product } from '../mocks/crmData'
+import { storageService } from '../services/storageService'
+import { useAuthStore } from '../store/useAuthStore'
+import { useDataStore } from '../store/useDataStore'
 
 const { Text } = Typography
 
@@ -25,11 +28,17 @@ const statusList = (t: (k: string) => string) => [
 export function OrdersPage() {
   const { t } = useI18n()
   const { success } = useGlobalMessage()
+  const accounts = useDataStore((state) => state.accounts)
+  const orders = useDataStore((state) => state.orders)
+  const products = useDataStore((state) => state.products)
+  const refresh = useDataStore((state) => state.refresh)
+  const user = useAuthStore((state) => state.user)
   const [search, setSearch] = useState('')
   const [view, setView] = useState('business')
   const [statusFilter, setStatusFilter] = useState('all')
   const [selected, setSelected] = useState<Order | null>(null)
   const [createOpen, setCreateOpen] = useState(false)
+  const [form] = Form.useForm()
   const clearCreateParam = useAutoCreate(setCreateOpen)
 
   const filtered = useMemo(() => {
@@ -95,7 +104,7 @@ export function OrdersPage() {
           columns={[
             { title: t('orders.colOrderNo'), dataIndex: 'orderNumber', width: 120 },
             { title: t('orders.colPiNo'), dataIndex: 'piNumber', width: 110 },
-            { title: t('orders.colAccount'), dataIndex: 'accountId', render: (id) => getAccountById(id)?.name ?? id, width: 150 },
+            { title: t('orders.colAccount'), dataIndex: 'accountId', render: (id) => accounts.find((account) => account.id === id)?.name ?? id, width: 150 },
             { title: t('orders.colRequester'), dataIndex: 'requestedById', render: (id) => getUserById(id)?.name ?? id, width: 100 },
             { title: t('orders.colItems'), dataIndex: 'items', render: (items) => items.length, width: 60 },
             { title: t('orders.colSubtotal'), dataIndex: 'subtotalUsd', render: (v) => `$${v.toLocaleString()}`, width: 100 },
@@ -132,23 +141,52 @@ export function OrdersPage() {
         open={!!selected}
         onClose={() => setSelected(null)}
       >
-        {selected && <OrderDetail order={selected} />}
+        {selected && <OrderDetail order={selected} accounts={accounts} />}
       </Drawer>
 
       <Modal
         title={t('orders.createTitle')}
         open={createOpen}
-        onCancel={() => { setCreateOpen(false); clearCreateParam() }}
+        onCancel={() => { setCreateOpen(false); clearCreateParam(); form.resetFields() }}
         width={640}
         okText={t('orders.createTitle')}
         cancelText={t('common.cancel')}
         onOk={() => {
-          success(t('common.successCreate'))
-          setCreateOpen(false)
-          clearCreateParam()
+          form.validateFields().then(async (values) => {
+            const lineItems: Order['items'] = (values.items ?? []).map((line: { productId: string; quantity?: string }) => {
+              const product = products.find((item) => item.id === line.productId)
+              const qty = Number(line.quantity ?? 1)
+              return {
+                sku: product?.sku ?? line.productId,
+                name: product?.name ?? line.productId,
+                qty,
+                unitPrice: product?.unitPrice ?? 0,
+              }
+            })
+            const subtotalUsd = lineItems.reduce((sum: number, item) => sum + item.qty * item.unitPrice, 0)
+            const nextNo = `AHT-ORD-2026-${String(orders.length + 1).padStart(4, '0')}`
+            await storageService.orders.create({
+              orderNumber: nextNo,
+              piNumber: '-',
+              accountId: values.accountId,
+              requestedById: user?.id ?? 'u1',
+              items: lineItems,
+              subtotalUsd,
+              status: 'pendingPI',
+              orderType: values.orderType,
+              orderKind: values.orderKind,
+              poStatus: 'pending',
+              createdAt: new Date().toISOString().slice(0, 10),
+            })
+            await refresh()
+            form.resetFields()
+            success(t('common.successCreate'))
+            setCreateOpen(false)
+            clearCreateParam()
+          })
         }}
       >
-        <CreateOrderForm />
+        <CreateOrderForm form={form} accounts={accounts} products={products} />
       </Modal>
 
       <style>{`
@@ -158,9 +196,9 @@ export function OrdersPage() {
   )
 }
 
-function OrderDetail({ order }: { order: Order }) {
+function OrderDetail({ order, accounts }: { order: Order; accounts: Account[] }) {
   const { t } = useI18n()
-  const account = getAccountById(order.accountId)
+  const account = accounts.find((item) => item.id === order.accountId)
   const applicant = getUserById(order.requestedById)
 
   return (
@@ -248,10 +286,10 @@ function OrderDetail({ order }: { order: Order }) {
   )
 }
 
-function CreateOrderForm() {
+function CreateOrderForm({ form, accounts, products }: { form: ReturnType<typeof Form.useForm>[0]; accounts: Account[]; products: Product[] }) {
   const { t } = useI18n()
   return (
-    <Form layout="vertical">
+    <Form form={form} layout="vertical">
       <Row gutter={16}>
         <Col span={12}>
           <Form.Item label={t('orders.colAccount')} name="accountId" rules={[{ required: true, message: t('common.required') }]}>

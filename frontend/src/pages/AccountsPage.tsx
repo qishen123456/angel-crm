@@ -1,12 +1,11 @@
 import { EditOutlined, EllipsisOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons'
-import { Avatar, Button, Card, Col, Form, Input, Modal, Progress, Row, Select, Typography } from 'antd'
+import { Avatar, Button, Card, Col, Dropdown, Form, Input, Modal, Progress, Row, Select, Typography } from 'antd'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAutoCreate } from '../hooks/useAutoCreate'
 import { useGlobalMessage } from '../hooks/useGlobalMessage'
 import { useI18n } from '../hooks/useI18n'
 import {
-  accounts,
   flagForMarket,
   getUserById,
   markets,
@@ -14,6 +13,8 @@ import {
   type Account,
   type MarketCode,
 } from '../mocks/crmData'
+import { storageService } from '../services/storageService'
+import { useDataStore } from '../store/useDataStore'
 
 const { Text, Title } = Typography
 
@@ -27,10 +28,15 @@ const statusFilters = (t: (k: string) => string) => [
 export function AccountsPage() {
   const { t } = useI18n()
   const { success } = useGlobalMessage()
+  const accounts = useDataStore((state) => state.accounts)
+  const refresh = useDataStore((state) => state.refresh)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [marketFilter, setMarketFilter] = useState<MarketCode | 'all'>('all')
   const [createOpen, setCreateOpen] = useState(false)
+  const [editing, setEditing] = useState<Account | null>(null)
+  const [form] = Form.useForm()
+  const [editForm] = Form.useForm()
   const clearCreateParam = useAutoCreate(setCreateOpen)
 
   const filtered = useMemo(() => {
@@ -101,7 +107,19 @@ export function AccountsPage() {
 
         <div className="accounts-grid">
           {filtered.map((a) => (
-            <AccountCard key={a.id} account={a} />
+            <AccountCard
+              key={a.id}
+              account={a}
+              onEdit={() => {
+                setEditing(a)
+                editForm.setFieldsValue(a)
+              }}
+              onDelete={async () => {
+                await storageService.accounts.delete(a.id)
+                await refresh()
+                success(t('common.successDelete') === 'common.successDelete' ? '已删除' : t('common.successDelete'))
+              }}
+            />
           ))}
         </div>
       </Card>
@@ -110,23 +128,76 @@ export function AccountsPage() {
         title={t('accounts.createTitle')}
         open={createOpen}
         onCancel={() => { setCreateOpen(false); clearCreateParam() }}
-        onOk={() => { setCreateOpen(false); clearCreateParam(); success(t('common.successCreate')) }}
+        onOk={() => {
+          form.validateFields().then(async (values) => {
+            await storageService.accounts.create({
+              code: values.code,
+              name: values.name,
+              market: values.market,
+              ownerId: values.ownerId,
+              annualTargetUsd: Number(values.annualTargetUsd ?? 0),
+              yearToDateUsd: 0,
+              contractStatus: 'active',
+              businessType: values.businessType,
+              opportunityNotes: values.opportunityNotes ?? '',
+              customerResources: '',
+              nextDigDirections: '',
+            })
+            await refresh()
+            form.resetFields()
+            setCreateOpen(false)
+            clearCreateParam()
+            success(t('common.successCreate'))
+          })
+        }}
         width={600}
       >
-        <Form layout="vertical">
+        <Form form={form} layout="vertical">
           <Row gutter={16}>
-            <Col span={12}><Form.Item label={t('accounts.formName')}><Input placeholder="Raffles Hospitality" /></Form.Item></Col>
-            <Col span={12}><Form.Item label={t('accounts.formCode')}><Input placeholder="RAFF" /></Form.Item></Col>
+            <Col span={12}><Form.Item label={t('accounts.formName')} name="name" rules={[{ required: true }]}><Input placeholder="Raffles Hospitality" /></Form.Item></Col>
+            <Col span={12}><Form.Item label={t('accounts.formCode')} name="code" rules={[{ required: true }]}><Input placeholder="RAFF" /></Form.Item></Col>
           </Row>
           <Row gutter={16}>
-            <Col span={12}><Form.Item label={t('accounts.formMarket')}><Select options={markets.map(m => ({value:m.code, label:`${m.flag} ${m.code}`}))} /></Form.Item></Col>
-            <Col span={12}><Form.Item label={t('accounts.formOwner')}><Select options={['u2','u3','u4','u5'].map(id => ({value:id, label:getUserById(id)?.name}))} /></Form.Item></Col>
+            <Col span={12}><Form.Item label={t('accounts.formMarket')} name="market" rules={[{ required: true }]}><Select options={markets.map(m => ({value:m.code, label:`${m.flag} ${m.code}`}))} /></Form.Item></Col>
+            <Col span={12}><Form.Item label={t('accounts.formOwner')} name="ownerId" rules={[{ required: true }]}><Select options={['u2','u3','u4','u5'].map(id => ({value:id, label:getUserById(id)?.name}))} /></Form.Item></Col>
           </Row>
           <Row gutter={16}>
-            <Col span={12}><Form.Item label={t('accounts.formType')}><Select options={['commercial','retail','industrial','public'].map(v => ({value:v, label:t(`labels.businessType.${v}`)}))} /></Form.Item></Col>
-            <Col span={12}><Form.Item label={t('accounts.formTarget')}><Input prefix="$" placeholder="800000" /></Form.Item></Col>
+            <Col span={12}><Form.Item label={t('accounts.formType')} name="businessType" initialValue="commercial"><Select options={['commercial','retail','industrial','public'].map(v => ({value:v, label:t(`labels.businessType.${v}`)}))} /></Form.Item></Col>
+            <Col span={12}><Form.Item label={t('accounts.formTarget')} name="annualTargetUsd"><Input prefix="$" placeholder="800000" /></Form.Item></Col>
           </Row>
-          <Form.Item label={t('accounts.formNotes')}><Input.TextArea rows={4} /></Form.Item>
+          <Form.Item label={t('accounts.formNotes')} name="opportunityNotes"><Input.TextArea rows={4} /></Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title={t('accountDetail.edit')}
+        open={!!editing}
+        onCancel={() => setEditing(null)}
+        onOk={() => {
+          editForm.validateFields().then(async (values) => {
+            if (!editing) return
+            await storageService.accounts.update(editing.id, {
+              ...values,
+              annualTargetUsd: Number(values.annualTargetUsd ?? editing.annualTargetUsd),
+            })
+            await refresh()
+            setEditing(null)
+            success(t('common.successUpdate'))
+          })
+        }}
+        width={600}
+      >
+        <Form form={editForm} layout="vertical">
+          <Row gutter={16}>
+            <Col span={12}><Form.Item label={t('accounts.formName')} name="name" rules={[{ required: true }]}><Input /></Form.Item></Col>
+            <Col span={12}><Form.Item label={t('accounts.formCode')} name="code" rules={[{ required: true }]}><Input /></Form.Item></Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={12}><Form.Item label={t('accounts.formMarket')} name="market"><Select options={markets.map(m => ({value:m.code, label:`${m.flag} ${m.code}`}))} /></Form.Item></Col>
+            <Col span={12}><Form.Item label={t('accounts.formOwner')} name="ownerId"><Select options={['u2','u3','u4','u5'].map(id => ({value:id, label:getUserById(id)?.name}))} /></Form.Item></Col>
+          </Row>
+          <Form.Item label={t('accounts.formTarget')} name="annualTargetUsd"><Input prefix="$" /></Form.Item>
+          <Form.Item label={t('accounts.formNotes')} name="opportunityNotes"><Input.TextArea rows={4} /></Form.Item>
         </Form>
       </Modal>
 
@@ -139,7 +210,7 @@ export function AccountsPage() {
   )
 }
 
-function AccountCard({ account }: { account: Account }) {
+function AccountCard({ account, onEdit, onDelete }: { account: Account; onEdit: () => void; onDelete: () => void }) {
   const { t } = useI18n()
   const owner = getUserById(account.ownerId)
   const progress = Math.round((account.yearToDateUsd / account.annualTargetUsd) * 100)
@@ -162,9 +233,14 @@ function AccountCard({ account }: { account: Account }) {
             </div>
           </div>
           <div className="account-card-actions">
-            <Button type="text" icon={<UserOutlined />} size="small" />
-            <Button type="text" icon={<EditOutlined />} size="small" />
-            <Button type="text" icon={<EllipsisOutlined />} size="small" />
+            <Button type="text" icon={<UserOutlined />} size="small" onClick={(event) => event.preventDefault()} />
+            <Button type="text" icon={<EditOutlined />} size="small" onClick={(event) => { event.preventDefault(); onEdit() }} />
+            <Dropdown
+              menu={{ items: [{ key: 'delete', label: t('common.delete') }], onClick: () => onDelete() }}
+              trigger={['click']}
+            >
+              <Button type="text" icon={<EllipsisOutlined />} size="small" onClick={(event) => event.preventDefault()} />
+            </Dropdown>
           </div>
         </div>
 

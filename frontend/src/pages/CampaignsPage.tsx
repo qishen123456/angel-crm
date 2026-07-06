@@ -4,7 +4,9 @@ import { useMemo, useState } from 'react'
 import { useAutoCreate } from '../hooks/useAutoCreate'
 import { useGlobalMessage } from '../hooks/useGlobalMessage'
 import { useI18n } from '../hooks/useI18n'
-import { campaigns, formatCurrency, getUserById, leads, markets, statusTone, type Campaign } from '../mocks/crmData'
+import { formatCurrency, getUserById, markets, statusTone, type Campaign } from '../mocks/crmData'
+import { storageService } from '../services/storageService'
+import { useDataStore } from '../store/useDataStore'
 
 const { Text } = Typography
 
@@ -14,9 +16,14 @@ const campaignStatuses = ['active', 'completed']
 export function CampaignsPage() {
   const { t } = useI18n()
   const { success } = useGlobalMessage()
+  const campaigns = useDataStore((state) => state.campaigns)
+  const leads = useDataStore((state) => state.leads)
+
+  const addCampaign = useDataStore((state) => state.addCampaign)
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState<Campaign | null>(null)
   const [createOpen, setCreateOpen] = useState(false)
+  const [form] = Form.useForm()
   const clearCreateParam = useAutoCreate(setCreateOpen)
 
   const filtered = useMemo(() => {
@@ -24,7 +31,7 @@ export function CampaignsPage() {
       c.name.toLowerCase().includes(search.toLowerCase()) ||
       c.code.toLowerCase().includes(search.toLowerCase())
     )
-  }, [search])
+  }, [campaigns, search])
 
   const kpi = {
     totalBudget: campaigns.reduce((s, c) => s + c.budgetUsd, 0),
@@ -135,24 +142,48 @@ export function CampaignsPage() {
       <Modal
         title={t('campaigns.create')}
         open={createOpen}
-        onCancel={() => { setCreateOpen(false); clearCreateParam() }}
-        onOk={() => { setCreateOpen(false); clearCreateParam(); success(t('common.successCreate')) }}
+        onCancel={() => { setCreateOpen(false); clearCreateParam(); form.resetFields() }}
+        onOk={() => {
+          form.validateFields().then(async (values) => {
+            const newCampaign = await storageService.campaigns.create({
+              code: values.code ?? '',
+              name: values.name,
+              type: values.type ?? 'paidAds',
+              status: values.status ?? 'active',
+              market: values.market ?? 'SG',
+              budgetUsd: Number(values.budgetUsd ?? 0),
+              actualSpendUsd: 0,
+              leadCount: 0,
+              convertedCount: 0,
+              opportunityValueUsd: 0,
+              ownerId: 'u1',
+              startDate: new Date().toISOString().split('T')[0],
+              endDate: '',
+            })
+            addCampaign(newCampaign)
+            form.resetFields()
+            setCreateOpen(false)
+            clearCreateParam()
+            success(t('common.successCreate'))
+          })
+        }}
         width={560}
       >
-        <Form layout="vertical">
-          <Form.Item label={t('campaigns.name')}><Input /></Form.Item>
-          <Form.Item label={t('campaigns.type')}>
+        <Form form={form} layout="vertical">
+          <Form.Item label={t('campaigns.name')} name="name" rules={[{ required: true }]}><Input /></Form.Item>
+          <Form.Item label={t('campaigns.code')} name="code"><Input /></Form.Item>
+          <Form.Item label={t('campaigns.type')} name="type">
             <Select options={campaignTypes.map((v) => ({ value: v, label: t(`labels.campaignType.${v}`) }))} />
           </Form.Item>
-          <Form.Item label={t('campaigns.status')}>
+          <Form.Item label={t('campaigns.status')} name="status">
             <Select options={campaignStatuses.map((v) => ({ value: v, label: t(`labels.campaignStatus.${v}`) }))} />
           </Form.Item>
-          <Form.Item label={t('pages.countryReports')}>
+          <Form.Item label={t('pages.countryReports')} name="market">
             <Select options={markets.map((m) => ({ value: m.code, label: `${m.flag} ${m.code}` }))} />
           </Form.Item>
           <Row gutter={16}>
-            <Col span={12}><Form.Item label={t('campaigns.budget')}><Input prefix="$" /></Form.Item></Col>
-            <Col span={12}><Form.Item label={t('common.date')}><DatePicker style={{ width: '100%' }} /></Form.Item></Col>
+            <Col span={12}><Form.Item label={t('campaigns.budget')} name="budgetUsd"><Input prefix="$" /></Form.Item></Col>
+            <Col span={12}><Form.Item label={t('common.date')} name="date"><DatePicker style={{ width: '100%' }} /></Form.Item></Col>
           </Row>
         </Form>
       </Modal>

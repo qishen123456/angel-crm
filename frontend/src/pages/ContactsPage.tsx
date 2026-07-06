@@ -4,23 +4,30 @@ import { useMemo, useState } from 'react'
 import { useAutoCreate } from '../hooks/useAutoCreate'
 import { useGlobalMessage } from '../hooks/useGlobalMessage'
 import { useI18n } from '../hooks/useI18n'
-import { contacts, getAccountById } from '../mocks/crmData'
+import { getAccountById, type Contact } from '../mocks/crmData'
+import { storageService } from '../services/storageService'
+import { useDataStore } from '../store/useDataStore'
 
 export function ContactsPage() {
   const { t } = useI18n()
   const { success } = useGlobalMessage()
+  const contacts = useDataStore((state) => state.contacts)
+  const addContact = useDataStore((state) => state.addContact)
   const [search, setSearch] = useState('')
   const [createOpen, setCreateOpen] = useState(false)
-  const clearCreateParam = useAutoCreate(setCreateOpen)
   const [detailOpen, setDetailOpen] = useState(false)
-  const [selected, setSelected] = useState<typeof contacts[0] | null>(null)
+  const [selected, setSelected] = useState<Contact | null>(null)
+  const [form] = Form.useForm()
+  const clearCreateParam = useAutoCreate(setCreateOpen)
 
   const filtered = useMemo(() => {
     return contacts.filter((c) =>
       c.name.toLowerCase().includes(search.toLowerCase()) ||
       c.companyName?.toLowerCase().includes(search.toLowerCase())
     )
-  }, [search])
+  }, [contacts, search])
+
+
 
   return (
     <div className="crm-page">
@@ -54,7 +61,7 @@ export function ContactsPage() {
             {
               title: t('common.actions'),
               key: 'action',
-              render: (_: any, record: typeof contacts[0]) => (
+              render: (_: any, record: Contact) => (
                 <Button type="text" icon={<EyeOutlined />} onClick={() => { setSelected(record); setDetailOpen(true) }} />
               ),
             },
@@ -65,15 +72,32 @@ export function ContactsPage() {
       <Modal
         title={t('contacts.create')}
         open={createOpen}
-        onCancel={() => { setCreateOpen(false); clearCreateParam() }}
-        onOk={() => { setCreateOpen(false); clearCreateParam(); success(t('common.successCreate')) }}
+        onCancel={() => { setCreateOpen(false); clearCreateParam(); form.resetFields() }}
+        onOk={() => {
+          form.validateFields().then(async (values) => {
+            const newContact = await storageService.contacts.create({
+              name: values.name,
+              title: values.title ?? '',
+              accountId: values.accountId ?? '',
+              email: values.email ?? '',
+              phone: values.phone ?? '',
+              isPrimary: false,
+            })
+            addContact(newContact)
+            form.resetFields()
+            setCreateOpen(false)
+            clearCreateParam()
+            success(t('common.successCreate'))
+          })
+        }}
         width={560}
       >
-        <Form layout="vertical">
-          <Form.Item label={t('contacts.name')}><Input /></Form.Item>
-          <Form.Item label={t('contacts.jobTitle')}><Input /></Form.Item>
-          <Form.Item label={t('contacts.email')}><Input /></Form.Item>
-          <Form.Item label={t('contacts.phone')}><Input /></Form.Item>
+        <Form form={form} layout="vertical">
+          <Form.Item label={t('contacts.name')} name="name" rules={[{ required: true }]}><Input /></Form.Item>
+          <Form.Item label={t('contacts.jobTitle')} name="title"><Input /></Form.Item>
+          <Form.Item label={t('contacts.account')} name="accountId"><Input /></Form.Item>
+          <Form.Item label={t('contacts.email')} name="email"><Input /></Form.Item>
+          <Form.Item label={t('contacts.phone')} name="phone"><Input /></Form.Item>
         </Form>
       </Modal>
 

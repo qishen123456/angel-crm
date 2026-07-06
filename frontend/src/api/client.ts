@@ -12,10 +12,25 @@ export const apiClient = axios.create({
 apiClient.interceptors.request.use((config) => {
   config.headers = config.headers || {}
   config.headers['Accept-Language'] = i18n.language
+  const token = localStorage.getItem('angelcrm_auth_token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
   return config
 })
 
-// Re-export common HTTP methods for convenience
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('angelcrm_auth_token')
+      localStorage.removeItem('angelcrm_auth_user')
+      window.location.href = '/login'
+    }
+    return Promise.reject(error)
+  }
+)
+
 export const api = {
   get: apiClient.get,
   post: apiClient.post,

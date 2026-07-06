@@ -32,17 +32,24 @@ import {
   Avatar,
   Badge,
   Button,
+  Drawer,
   Dropdown,
   Layout,
+  List,
   Menu,
   Select,
   Space,
   Typography,
 } from 'antd'
+import { useEffect, useState } from 'react'
 import type { MenuProps } from 'antd'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useI18n } from '../hooks/useI18n'
+import type { Notification } from '../mocks/crmData'
 import { localeNames, type LocaleKey } from '../locales'
+import { storageService } from '../services/storageService'
+import { useAuthStore } from '../store/useAuthStore'
+import { useDataStore } from '../store/useDataStore'
 import { useUiStore } from '../store/useUiStore'
 
 const { Header, Sider, Content } = Layout
@@ -108,15 +115,32 @@ export function AppLayout() {
   App.useApp()
   const location = useLocation()
   const navigate = useNavigate()
+  const [noticeOpen, setNoticeOpen] = useState(false)
+  const [notifications, setNotifications] = useState<Notification[] | null>(null)
   const locale = useUiStore((state) => state.locale)
   const setLocale = useUiStore((state) => state.setLocale)
+  const user = useAuthStore((state) => state.user)
+  const logout = useAuthStore((state) => state.logout)
   const { t, bundle } = useI18n()
+  useEffect(() => {
+    storageService.notifications.getAll().then((items) => setNotifications(items))
+  }, [])
+  const notificationList = notifications ?? []
+  const unreadCount = notificationList.filter((item) => !item.read).length
   const selectedKey = location.pathname.startsWith('/app/account')
     ? '/app/accounts'
     : location.pathname
   const pageKey = location.pathname.startsWith('/app/account')
     ? 'accountDetail'
     : (routeToPageKey[location.pathname] ?? routeToPageKey[selectedKey] ?? 'today')
+
+  const loadData = useDataStore((state) => state.load)
+
+  useEffect(() => {
+    loadData().catch(() => {
+      // Data loading errors are handled by the API interceptor (401 redirect)
+    })
+  }, [loadData])
 
   const menuItems: MenuProps['items'] = bundle.menu.map((group) => ({
     key: `grp-${group.key}`,
@@ -172,12 +196,12 @@ export function AppLayout() {
         <div className="crm-sider-footer">
           <div className="crm-profile">
             <Avatar size={36} className="crm-profile-avatar">
-              {locale.startsWith('zh') ? t('adminAvatar') : 'A'}
+              {user?.avatar ?? (locale.startsWith('zh') ? t('adminAvatar') : 'A')}
             </Avatar>
             <div className="crm-profile-meta">
-              <Typography.Text className="crm-profile-name">{bundle.systemAdmin}</Typography.Text>
+              <Typography.Text className="crm-profile-name">{user?.name ?? bundle.systemAdmin}</Typography.Text>
               <Typography.Text className="crm-profile-sub">
-                {bundle.systemAdmin}
+                {user?.role ?? bundle.systemAdmin}
               </Typography.Text>
             </div>
           </div>
@@ -191,7 +215,14 @@ export function AppLayout() {
               popupMatchSelectWidth={false}
               suffixIcon={<TranslationOutlined />}
             />
-            <Button type="text" className="crm-logout-btn" onClick={() => navigate('/login')}>
+            <Button
+              type="text"
+              className="crm-logout-btn"
+              onClick={() => {
+                logout()
+                navigate('/login', { replace: true })
+              }}
+            >
               {bundle.logout}
             </Button>
           </div>
@@ -235,11 +266,11 @@ export function AppLayout() {
             </Dropdown>
 
             <Button className="crm-header-user" icon={<UserOutlined />}>
-              {bundle.systemAdmin}
+              {user?.name ?? bundle.systemAdmin}
             </Button>
 
-            <Badge dot>
-              <Button className="crm-header-icon" icon={<BellOutlined />} />
+            <Badge count={unreadCount} size="small">
+              <Button className="crm-header-icon" icon={<BellOutlined />} onClick={() => setNoticeOpen(true)} />
             </Badge>
 
             <Button className="crm-date-chip">{bundle.currentDate}</Button>
@@ -250,6 +281,36 @@ export function AppLayout() {
           <Outlet />
         </Content>
       </Layout>
+
+      <Drawer
+        title="通知中心"
+        open={noticeOpen}
+        onClose={() => setNoticeOpen(false)}
+        width={420}
+      >
+        <List
+          dataSource={notificationList}
+          locale={{ emptyText: t('common.noData') }}
+          renderItem={(item) => (
+            <List.Item>
+              <List.Item.Meta
+                title={
+                  <Space>
+                    {!item.read ? <Badge status="error" /> : <Badge status="default" />}
+                    <span>{item.title}</span>
+                  </Space>
+                }
+                description={
+                  <div>
+                    <div>{item.content}</div>
+                    <Typography.Text type="secondary">{item.createdAt}</Typography.Text>
+                  </div>
+                }
+              />
+            </List.Item>
+          )}
+        />
+      </Drawer>
     </Layout>
   )
 }

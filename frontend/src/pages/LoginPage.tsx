@@ -1,17 +1,31 @@
 import { GlobalOutlined, LockOutlined, MailOutlined } from '@ant-design/icons'
-import { Button, Card, Form, Input, Select, Typography } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { App, Button, Card, Form, Input, Select, Typography } from 'antd'
+import { useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useI18n } from '../hooks/useI18n'
 import { localeNames, type LocaleKey } from '../locales'
+import { useAuthStore } from '../store/useAuthStore'
 import { useUiStore } from '../store/useUiStore'
 
 const { Title, Paragraph } = Typography
 
 export function LoginPage() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const { message } = App.useApp()
   const { t } = useI18n()
   const locale = useUiStore((s) => s.locale)
   const setLocale = useUiStore((s) => s.setLocale)
+  const login = useAuthStore((s) => s.login)
+  const isLoggedIn = useAuthStore((s) => s.isLoggedIn)
+  const from = (location.state as { from?: { pathname?: string; search?: string } } | null)?.from
+  const targetPath = `${from?.pathname ?? '/app/today'}${from?.search ?? ''}`
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/app/today', { replace: true })
+    }
+  }, [isLoggedIn, navigate])
 
   return (
     <div className="angel-login-page">
@@ -50,9 +64,16 @@ export function LoginPage() {
             layout="vertical"
             className="angel-login-form"
             initialValues={{ email: 'admin@angel.cn', password: 'demo2026' }}
-            onFinish={() => navigate('/app/today')}
+            onFinish={async (values) => {
+              const ok = await login(values.email, values.password)
+              if (!ok) {
+                message.error(t('login.invalid') === 'login.invalid' ? '邮箱或密码错误' : t('login.invalid'))
+                return
+              }
+              navigate(targetPath, { replace: true })
+            }}
           >
-            <Form.Item label={t('login.email')} name="email">
+            <Form.Item label={t('login.email')} name="email" rules={[{ required: true, type: 'email' }]}>
               <Input
                 size="large"
                 prefix={<MailOutlined />}
@@ -61,7 +82,7 @@ export function LoginPage() {
               />
             </Form.Item>
 
-            <Form.Item label={t('login.password')} name="password">
+            <Form.Item label={t('login.password')} name="password" rules={[{ required: true }]}>
               <Input.Password
                 size="large"
                 prefix={<LockOutlined />}

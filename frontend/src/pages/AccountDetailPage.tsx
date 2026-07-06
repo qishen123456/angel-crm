@@ -16,7 +16,6 @@ import {
   contracts,
   flagForMarket,
   formatCurrency,
-  getAccountById,
   getActivitiesByAccount,
   getContactsByAccount,
   getOpportunitiesByAccount,
@@ -27,6 +26,8 @@ import {
   payments,
   statusTone,
 } from '../mocks/crmData'
+import { storageService } from '../services/storageService'
+import { useDataStore } from '../store/useDataStore'
 
 const { Title, Text } = Typography
 
@@ -44,12 +45,16 @@ const tabKeys = [
 
 export function AccountDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const account = getAccountById(id)
+  const accounts = useDataStore((state) => state.accounts)
+  const refresh = useDataStore((state) => state.refresh)
+  const account = accounts.find((item) => item.id === id)
   const { t } = useI18n()
   const { success } = useGlobalMessage()
   const [activeTab, setActiveTab] = useState('overview')
   const [editOpen, setEditOpen] = useState(false)
   const [oppOpen, setOppOpen] = useState(false)
+  const [editForm] = Form.useForm()
+  const [oppForm] = Form.useForm()
 
   if (!account) {
     return (
@@ -125,7 +130,18 @@ export function AccountDetailPage() {
           </div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <Button icon={<EditOutlined />} onClick={() => setEditOpen(true)}>{t('accountDetail.edit')}</Button>
+          <Button
+            icon={<EditOutlined />}
+            onClick={() => {
+              editForm.setFieldsValue({
+                ...account,
+                annualTarget: account.annualTargetUsd,
+              })
+              setEditOpen(true)
+            }}
+          >
+            {t('accountDetail.edit')}
+          </Button>
           <Button type="primary" icon={<PlusOutlined />} onClick={() => setOppOpen(true)}>{t('accountDetail.newOpp')}</Button>
         </div>
       </div>
@@ -154,10 +170,24 @@ export function AccountDetailPage() {
         title={t('accountDetail.edit')}
         open={editOpen}
         onCancel={() => setEditOpen(false)}
-        onOk={() => { setEditOpen(false); success(t('common.successUpdate')) }}
+        onOk={() => {
+          editForm.validateFields().then(async (values) => {
+            await storageService.accounts.update(account.id, {
+              name: values.name,
+              code: values.code,
+              market: values.market,
+              ownerId: values.ownerId,
+              annualTargetUsd: Number(values.annualTarget ?? account.annualTargetUsd),
+              opportunityNotes: values.opportunityNotes ?? account.opportunityNotes,
+            })
+            await refresh()
+            setEditOpen(false)
+            success(t('common.successUpdate'))
+          })
+        }}
         width={600}
       >
-        <Form layout="vertical" initialValues={{ name: account.name, code: account.code, market: account.market, ownerId: account.ownerId }}>
+        <Form form={editForm} layout="vertical" initialValues={{ name: account.name, code: account.code, market: account.market, ownerId: account.ownerId }}>
           <Row gutter={16}>
             <Col span={12}><Form.Item label={t('accountDetail.form.name')} name="name"><Input /></Form.Item></Col>
             <Col span={12}><Form.Item label={t('accountDetail.form.code')} name="code"><Input /></Form.Item></Col>
@@ -175,18 +205,34 @@ export function AccountDetailPage() {
         title={t('accountDetail.newOpp')}
         open={oppOpen}
         onCancel={() => setOppOpen(false)}
-        onOk={() => { setOppOpen(false); success(t('common.successCreate')) }}
+        onOk={() => {
+          oppForm.validateFields().then(async (values) => {
+            await storageService.opportunities.create({
+              accountId: account.id,
+              name: values.name,
+              amountUsd: Number(values.amountUsd ?? 0),
+              probability: Number(values.probability ?? 20),
+              stage: values.stage,
+              expectedCloseDate: values.expectedCloseDate,
+              ownerId: account.ownerId,
+            })
+            await refresh()
+            oppForm.resetFields()
+            setOppOpen(false)
+            success(t('common.successCreate'))
+          })
+        }}
         width={560}
       >
-        <Form layout="vertical">
-          <Form.Item label={t('accountDetail.form.oppName')}><Input placeholder={t('accountDetail.form.oppNamePlaceholder')} /></Form.Item>
+        <Form form={oppForm} layout="vertical" initialValues={{ stage: 'prospect', probability: '20' }}>
+          <Form.Item label={t('accountDetail.form.oppName')} name="name" rules={[{ required: true }]}><Input placeholder={t('accountDetail.form.oppNamePlaceholder')} /></Form.Item>
           <Row gutter={16}>
-            <Col span={12}><Form.Item label={t('accountDetail.form.estimatedAmount')}><Input prefix="$" /></Form.Item></Col>
-            <Col span={12}><Form.Item label={t('accountDetail.form.winRate')}><Select options={['20','40','60','80','100'].map(v => ({value:v, label:v+'%'}))} /></Form.Item></Col>
+            <Col span={12}><Form.Item label={t('accountDetail.form.estimatedAmount')} name="amountUsd"><Input prefix="$" /></Form.Item></Col>
+            <Col span={12}><Form.Item label={t('accountDetail.form.winRate')} name="probability"><Select options={['20','40','60','80','100'].map(v => ({value:v, label:v+'%'}))} /></Form.Item></Col>
           </Row>
           <Row gutter={16}>
-            <Col span={12}><Form.Item label={t('accountDetail.form.stage')}><Select options={['prospect','qualify','proposal','negotiate'].map(v => ({value:v, label:t(`accountDetail.stage.${v}`)}))} /></Form.Item></Col>
-            <Col span={12}><Form.Item label={t('accountDetail.form.expectedClose')}><Input placeholder={t('accountDetail.form.expectedClosePlaceholder')} /></Form.Item></Col>
+            <Col span={12}><Form.Item label={t('accountDetail.form.stage')} name="stage"><Select options={['prospect','qualify','proposal','negotiate'].map(v => ({value:v, label:t(`accountDetail.stage.${v}`)}))} /></Form.Item></Col>
+            <Col span={12}><Form.Item label={t('accountDetail.form.expectedClose')} name="expectedCloseDate"><Input placeholder={t('accountDetail.form.expectedClosePlaceholder')} /></Form.Item></Col>
           </Row>
         </Form>
       </Modal>
