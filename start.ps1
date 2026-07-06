@@ -10,7 +10,6 @@ Write-Host "     Angel CRM 一键启动脚本" -ForegroundColor Cyan
 Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host ""
 
-# 检查 Docker 是否安装
 try {
     docker --version | Out-Null
     Write-Host "✅ Docker 已安装" -ForegroundColor Green
@@ -23,28 +22,23 @@ try {
 
 Write-Host ""
 
-# 停止现有容器
 Write-Host "正在停止现有容器..." -ForegroundColor Yellow
 docker compose down 2>$null | Out-Null
 Write-Host ""
 
-# 构建并启动
 Write-Host "正在构建并启动服务..." -ForegroundColor Yellow
 docker compose up -d --build
 Write-Host ""
 
-# 等待服务启动
 Write-Host "正在等待服务启动..." -ForegroundColor Yellow
 Start-Sleep -Seconds 5
 
-# 检查状态
 Write-Host ""
 Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host "           服务状态" -ForegroundColor Cyan
 Write-Host "==========================================" -ForegroundColor Cyan
 docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
-# 测试登录
 Write-Host ""
 Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host "           测试连接" -ForegroundColor Cyan

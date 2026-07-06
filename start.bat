@@ -9,7 +9,6 @@ echo      Angel CRM 一键启动脚本
 echo ==========================================
 echo.
 
-:: 检查 Docker 是否安装
 docker --version >nul 2>&1
 if %errorlevel% neq 0 (
     echo ❌ Docker 未安装，请先安装 Docker
@@ -21,28 +20,23 @@ if %errorlevel% neq 0 (
 echo ✅ Docker 已安装
 echo.
 
-:: 停止现有容器
 echo 正在停止现有容器...
 docker compose down 2>nul || true
 echo.
 
-:: 构建并启动
 echo 正在构建并启动服务...
 docker compose up -d --build
 echo.
 
-:: 等待服务启动
 echo 正在等待服务启动...
 timeout /t 5 /nobreak >nul
 
-:: 检查状态
 echo.
 echo ==========================================
 echo            服务状态
 echo ==========================================
 docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
-:: 测试登录
 echo.
 echo ==========================================
 echo            测试连接

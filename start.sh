@@ -10,14 +10,12 @@ echo "     Angel CRM 一键启动脚本"
 echo "=========================================="
 echo ""
 
-# 检查 Docker 是否安装
 if ! command -v docker &> /dev/null; then
     echo "❌ Docker 未安装，请先安装 Docker"
     echo "   下载地址: https://www.docker.com/get-started"
     exit 1
 fi
 
-# 检查 Docker Compose 是否安装
 if ! command -v docker-compose &> /dev/null && ! docker compose version &> /dev/null; then
     echo "❌ Docker Compose 未安装"
     exit 1
@@ -26,28 +24,23 @@ fi
 echo "✅ Docker 已安装"
 echo ""
 
-# 停止现有容器
 echo "正在停止现有容器..."
 docker compose down 2>/dev/null || true
 echo ""
 
-# 构建并启动
 echo "正在构建并启动服务..."
 docker compose up -d --build
 echo ""
 
-# 等待服务启动
 echo "正在等待服务启动..."
 sleep 5
 
-# 检查状态
 echo ""
 echo "=========================================="
 echo "           服务状态"
 echo "=========================================="
 docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
-# 测试登录
 echo ""
 echo "=========================================="
 echo "           测试连接"
