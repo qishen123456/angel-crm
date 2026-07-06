@@ -1,6 +1,8 @@
-import { Card, Form, Input, Switch, Table, Tabs, Typography } from 'antd'
+import { Button, Card, Form, Input, message, Switch, Table, Tabs, Typography } from 'antd'
 import { useMemo, useState } from 'react'
+import { DownloadOutlined, UploadOutlined } from '@ant-design/icons'
 import { useI18n } from '../hooks/useI18n'
+import { useDataStore } from '../store/useDataStore'
 import {
   annualTargets,
   auditLogs,
@@ -21,6 +23,7 @@ const tabKeys = [
   'notifications',
   'audit',
   'account',
+  'data',
 ]
 
 const roleModules = ['accounts', 'orders', 'contracts', 'reports', 'settings']
@@ -68,6 +71,8 @@ function renderTabContent(tab: string, t: (k: string) => string) {
       return <AuditLogsTab t={t} />
     case 'account':
       return <AccountTab t={t} />
+    case 'data':
+      return <DataTab t={t} />
     default:
       return null
   }
@@ -237,5 +242,121 @@ function AccountTab({ t }: { t: (k: string) => string }) {
       <Form.Item label={t('settings.account.currentPassword')}><Input.Password /></Form.Item>
       <Form.Item label={t('settings.account.newPassword')}><Input.Password /></Form.Item>
     </Form>
+  )
+}
+
+function DataTab({}: { t: (k: string) => string }) {
+  const refresh = useDataStore((s) => s.refresh)
+  const [loading, setLoading] = useState(false)
+  const [importLoading, setImportLoading] = useState(false)
+
+  const handleExport = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch('/api/data/export')
+      if (!response.ok) throw new Error('导出失败')
+      
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `angel-crm-backup-${Date.now()}.json`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
+      
+      message.success('数据导出成功')
+    } catch (error) {
+      message.error('数据导出失败')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setImportLoading(true)
+    try {
+      const text = await file.text()
+      const data = JSON.parse(text)
+      
+      const response = await fetch('/api/data/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      
+      if (!response.ok) throw new Error('导入失败')
+      
+      await refresh()
+      message.success('数据导入成功，页面已刷新')
+    } catch (error) {
+      message.error('数据导入失败，请检查文件格式')
+    } finally {
+      setImportLoading(false)
+      e.target.value = ''
+    }
+  }
+
+  return (
+    <div style={{ maxWidth: 600 }}>
+      <Title level={5}>数据备份与恢复</Title>
+      <Text style={{ color: '#ff4d4f' }}>
+        ⚠️ 警告：导入数据将覆盖现有所有数据，请先导出备份！
+      </Text>
+      
+      <Card style={{ marginTop: 16 }}>
+        <div style={{ display: 'flex', gap: 16, flexDirection: 'column' }}>
+          <div>
+            <div style={{ marginBottom: 8, fontWeight: 500 }}>导出数据</div>
+            <div style={{ fontSize: 13, color: '#666', marginBottom: 12 }}>
+              将所有数据导出为 JSON 文件，用于备份或迁移到其他环境。
+            </div>
+            <Button
+              type="primary"
+              icon={<DownloadOutlined />}
+              loading={loading}
+              onClick={handleExport}
+            >
+              导出数据
+            </Button>
+          </div>
+          
+          <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: 16 }}>
+            <div style={{ marginBottom: 8, fontWeight: 500 }}>导入数据</div>
+            <div style={{ fontSize: 13, color: '#666', marginBottom: 12 }}>
+              导入之前导出的 JSON 文件，覆盖现有数据。
+            </div>
+            <input
+              type="file"
+              accept=".json"
+              onChange={handleImport}
+              style={{ display: 'none' }}
+              id="data-import-file"
+            />
+            <Button
+              icon={<UploadOutlined />}
+              loading={importLoading}
+              onClick={() => document.getElementById('data-import-file')?.click()}
+            >
+              选择文件导入
+            </Button>
+          </div>
+        </div>
+      </Card>
+      
+      <Card style={{ marginTop: 16 }}>
+        <Title level={5}>使用说明</Title>
+        <ul style={{ fontSize: 13, color: '#666', lineHeight: 2 }}>
+          <li><strong>更新系统前：</strong>点击「导出数据」备份当前数据</li>
+          <li><strong>更新系统后：</strong>点击「导入数据」恢复之前备份的数据</li>
+          <li><strong>文件格式：</strong>仅支持本系统导出的 JSON 文件</li>
+          <li><strong>数据范围：</strong>包含客户、联系人、合同、付款、活动等所有业务数据</li>
+        </ul>
+      </Card>
+    </div>
   )
 }

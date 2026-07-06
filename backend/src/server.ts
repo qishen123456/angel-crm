@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import express from 'express'
 import { seedAll } from './data/seed.js'
 import authRouter from './routes/auth.js'
+import dataRouter from './routes/data.js'
 import { createGenericRouter } from './routes/generic.js'
 
 dotenv.config()
@@ -22,6 +23,7 @@ app.get('/health', healthHandler)
 app.get('/api/health', healthHandler)
 
 app.use('/api/auth', authRouter)
+app.use('/api/data', dataRouter)
 
 const entities = [
   'users',
