@@ -22,7 +22,35 @@ echo "日志文件: $LOG_FILE"
 echo "备份目录: $BACKUP_DIR"
 echo ""
 
-echo "[1/7] 检查 Docker..."
+echo "[1/9] 配置 Docker 镜像加速..."
+DOCKER_CONFIG="/etc/docker/daemon.json"
+MIRROR_CONFIG='{
+  "registry-mirrors": [
+    "https://registry.cn-hangzhou.aliyuncs.com",
+    "https://hub-mirror.c.163.com",
+    "https://docker.mirrors.ustc.edu.cn"
+  ]
+}'
+
+if [ -f "$DOCKER_CONFIG" ]; then
+    if grep -q "registry-mirrors" "$DOCKER_CONFIG"; then
+        echo "✅ Docker 镜像加速已配置"
+    else
+        echo "⚠️  配置 Docker 镜像加速..."
+        echo "$MIRROR_CONFIG" > "$DOCKER_CONFIG"
+        systemctl restart docker 2>/dev/null || true
+        echo "✅ Docker 镜像加速配置完成"
+    fi
+else
+    echo "⚠️  创建 Docker 镜像加速配置..."
+    mkdir -p /etc/docker
+    echo "$MIRROR_CONFIG" > "$DOCKER_CONFIG"
+    systemctl restart docker 2>/dev/null || true
+    echo "✅ Docker 镜像加速配置完成"
+fi
+echo ""
+
+echo "[2/9] 检查 Docker..."
 if ! command -v docker &> /dev/null; then
     echo "❌ Docker 未安装"
     exit 1
@@ -30,7 +58,7 @@ fi
 echo "✅ Docker 版本: $(docker --version)"
 echo ""
 
-echo "[2/7] 备份数据..."
+echo "[3/9] 备份数据..."
 BACKUP_SUCCESS=0
 if docker ps --filter "name=angel-crm" --format "{{.Names}}" | grep -q .; then
     echo "✅ 检测到运行中的容器"
@@ -53,7 +81,7 @@ else
 fi
 echo ""
 
-echo "[3/7] 更新代码..."
+echo "[4/9] 更新代码..."
 echo "拉取最新代码..."
 if git fetch origin main 2>&1 && git reset --hard origin/main 2>&1; then
     echo "✅ 代码更新成功"
@@ -74,12 +102,13 @@ else
 fi
 echo ""
 
-echo "[4/7] 清理旧镜像..."
+echo "[5/9] 清理缓存..."
+docker builder prune -f 2>/dev/null || true
 docker image prune -f --filter "reference=crm-*" 2>/dev/null || true
-echo "✅ 清理完成"
+echo "✅ 缓存清理完成"
 echo ""
 
-echo "[5/7] 构建服务..."
+echo "[6/9] 构建服务..."
 if docker compose up -d --build 2>&1; then
     echo "✅ 服务构建成功"
 else
@@ -92,7 +121,7 @@ else
 fi
 echo ""
 
-echo "[6/7] 恢复数据..."
+echo "[7/9] 恢复数据..."
 sleep 5
 if [ $BACKUP_SUCCESS -eq 1 ] && [ -s "$BACKUP_DIR/$DATA_FILE" ]; then
     echo "正在恢复备份数据..."
@@ -111,7 +140,7 @@ else
 fi
 echo ""
 
-echo "[7/7] 测试服务..."
+echo "[8/9] 测试服务..."
 echo "健康检查..."
 HEALTH_RESULT=$(curl -s http://localhost:8080/api/health)
 echo "结果: $HEALTH_RESULT"
@@ -132,6 +161,8 @@ else
     exit 1
 fi
 
+echo ""
+echo "[9/9] 完成"
 echo ""
 echo "=========================================="
 echo "           更新完成"
