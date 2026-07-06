@@ -3,8 +3,6 @@
 # Angel CRM 一键启动脚本
 # 适用系统: Linux / macOS
 
-set -e
-
 echo "=========================================="
 echo "     Angel CRM 一键启动脚本"
 echo "=========================================="
@@ -24,12 +22,37 @@ fi
 echo "✅ Docker 已安装"
 echo ""
 
+echo "正在检查端口占用..."
+FRONTEND_PORT=8080
+BACKEND_PORT=3001
+
+FRONTEND_OCCUPIED=$(lsof -i :$FRONTEND_PORT | grep LISTEN | awk '{print $2}')
+BACKEND_OCCUPIED=$(lsof -i :$BACKEND_PORT | grep LISTEN | awk '{print $2}')
+
+if [ -n "$FRONTEND_OCCUPIED" ]; then
+    echo "⚠️  端口 $FRONTEND_PORT 被占用 (PID: $FRONTEND_OCCUPIED)，正在释放..."
+    kill -9 "$FRONTEND_OCCUPIED" 2>/dev/null || true
+    sleep 2
+fi
+
+if [ -n "$BACKEND_OCCUPIED" ]; then
+    echo "⚠️  端口 $BACKEND_PORT 被占用 (PID: $BACKEND_OCCUPIED)，正在释放..."
+    kill -9 "$BACKEND_OCCUPIED" 2>/dev/null || true
+    sleep 2
+fi
+
+echo ""
 echo "正在停止现有容器..."
 docker compose down 2>/dev/null || true
 echo ""
 
 echo "正在构建并启动服务..."
-docker compose up -d --build
+if docker compose up -d --build 2>&1; then
+    echo "✅ 服务启动成功"
+else
+    echo "❌ 服务启动失败，请检查 Docker 日志"
+    exit 1
+fi
 echo ""
 
 echo "正在等待服务启动..."
@@ -54,6 +77,10 @@ if echo "$LOGIN_RESULT" | grep -q '"success":true'; then
     echo "✅ 登录成功"
 else
     echo "❌ 登录失败: $LOGIN_RESULT"
+    echo ""
+    echo "查看后端日志:"
+    docker logs angel-crm-backend --tail 20
+    exit 1
 fi
 
 echo ""

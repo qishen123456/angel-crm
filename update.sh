@@ -4,8 +4,6 @@
 # 适用系统: Linux / macOS
 # 功能: 从GitHub拉取最新代码并重建Docker容器，自动备份和恢复数据
 
-set -e
-
 BACKUP_DIR="/tmp/angel-crm-backup-$(date +%Y%m%d-%H%M%S)"
 DATA_FILE="data-backup.json"
 
@@ -34,23 +32,40 @@ if docker ps --filter "name=angel-crm" --format "{{.Names}}" | grep -q .; then
     
     if [ -s "$BACKUP_DIR/$DATA_FILE" ]; then
         echo "✅ 数据备份成功: $BACKUP_DIR/$DATA_FILE"
-        echo ""
+        BACKUP_SUCCESS=1
     else
         echo "⚠️  数据备份失败，可能服务未正常运行"
-        echo ""
+        BACKUP_SUCCESS=0
     fi
+    echo ""
     
     echo "正在停止现有容器..."
     docker compose down 2>/dev/null || true
     echo ""
 else
     echo "ℹ️  未检测到运行中的容器"
+    BACKUP_SUCCESS=0
     echo ""
 fi
 
 echo "正在拉取最新代码..."
-git fetch origin main
-git reset --hard origin/main
+if git fetch origin main 2>&1 && git reset --hard origin/main 2>&1; then
+    echo "✅ 代码更新成功"
+else
+    echo "❌ 代码更新失败，请检查网络连接"
+    echo ""
+    echo "正在重新启动现有容器..."
+    docker compose up -d
+    if [ $BACKUP_SUCCESS -eq 1 ]; then
+        sleep 5
+        echo "正在恢复数据..."
+        curl -s -X POST http://localhost:8080/api/data/import \
+            -H "Content-Type: application/json" \
+            -d "@$BACKUP_DIR/$DATA_FILE"
+        echo "✅ 数据恢复完成"
+    fi
+    exit 1
+fi
 echo ""
 
 echo "正在清理旧镜像..."
@@ -58,7 +73,12 @@ docker image prune -f --filter "reference=crm-*" 2>/dev/null || true
 echo ""
 
 echo "正在构建并启动服务..."
-docker compose up -d --build
+if docker compose up -d --build 2>&1; then
+    echo "✅ 服务构建成功"
+else
+    echo "❌ 服务构建失败"
+    exit 1
+fi
 echo ""
 
 echo "正在等待服务启动..."
@@ -71,21 +91,18 @@ echo "=========================================="
 docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 echo ""
 
-if [ -s "$BACKUP_DIR/$DATA_FILE" ]; then
+if [ $BACKUP_SUCCESS -eq 1 ] && [ -s "$BACKUP_DIR/$DATA_FILE" ]; then
     echo "正在恢复之前备份的数据..."
-    curl -s -X POST http://localhost:8080/api/data/import \
+    if curl -s -X POST http://localhost:8080/api/data/import \
         -H "Content-Type: application/json" \
-        -d @"$BACKUP_DIR/$DATA_FILE"
-    
-    if [ $? -eq 0 ]; then
+        -d "@$BACKUP_DIR/$DATA_FILE"; then
         echo ""
         echo "✅ 数据恢复成功"
-        echo ""
     else
         echo ""
         echo "⚠️  数据恢复失败，请手动导入: $BACKUP_DIR/$DATA_FILE"
-        echo ""
     fi
+    echo ""
 fi
 
 echo "=========================================="
