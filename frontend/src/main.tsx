@@ -36,8 +36,7 @@ function Root() {
           fontSize: 13,
           colorBgLayout: settings.pageBackground,
           colorText: '#101828',
-          fontFamily:
-            "'Barlow', 'Gotham', 'PingFang SC', 'Noto Sans SC', system-ui, -apple-system, sans-serif",
+          fontFamily: settings.fontFamily,
         },
         components: {
           Menu: {

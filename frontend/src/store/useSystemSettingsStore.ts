@@ -11,6 +11,7 @@ interface SystemSettingsState {
   loading: boolean
   load: () => Promise<void>
   save: (patch: SystemSettingsPatch) => Promise<SystemSettings>
+  preview: (patch: SystemSettingsPatch) => void
   apply: (settings?: SystemSettings) => void
 }
 
@@ -23,12 +24,21 @@ function applySettings(settings: SystemSettings): void {
   root.style.setProperty('--surface-page', settings.pageBackground)
   root.style.setProperty('--surface-dark', settings.sidebarBackground)
   root.style.setProperty('--surface-dark-active', settings.sidebarActiveBackground)
+  root.style.setProperty('--font-base', settings.fontFamily)
 }
 
 export const useSystemSettingsStore = create<SystemSettingsState>((set, get) => ({
   settings: defaultSystemSettings,
   loading: false,
   apply: (settings) => applySettings(settings ?? get().settings),
+  preview: (patch) => {
+    const next = {
+      ...get().settings,
+      ...patch,
+    }
+    set({ settings: next })
+    applySettings(next)
+  },
   load: async () => {
     set({ loading: true })
     try {

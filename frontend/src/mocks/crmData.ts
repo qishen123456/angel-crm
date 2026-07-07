@@ -765,6 +765,8 @@ export interface SystemSettings {
   sidebarBackground: string
   sidebarActiveBackground: string
   headerBackground: string
+  fontPreset: string
+  fontFamily: string
   notificationSettings: {
     email: boolean
     contractExpiry: boolean
@@ -784,6 +786,8 @@ export const defaultSystemSettings: SystemSettings = {
   sidebarBackground: '#1f2024',
   sidebarActiveBackground: '#5a2429',
   headerBackground: '#ffffff',
+  fontPreset: 'barlow-pingfang',
+  fontFamily: "'Barlow', 'Gotham', 'PingFang SC', 'Noto Sans SC', system-ui, -apple-system, sans-serif",
   notificationSettings: {
     email: true,
     contractExpiry: true,

@@ -12,6 +12,7 @@ import {
   auditLogs,
   type DocumentTemplate,
   documentTemplates,
+  type SystemSettings,
   markets,
   users,
 } from '../mocks/crmData'
@@ -33,6 +34,105 @@ const tabKeys = [
 
 const roleModules = ['accounts', 'orders', 'contracts', 'reports', 'settings']
 const roles = ['SuperAdmin', 'Admin', 'Sales', 'Finance', 'Supply Chain', 'Orders', 'Legal', 'Marketing', 'Executive', 'Operations']
+
+const themePresets = [
+  {
+    id: 'angel-red',
+    name: 'ANGEL 红',
+    desc: '默认品牌主题，强调销售动作和关键提醒。',
+    primaryColor: '#ee2737',
+    dangerColor: '#a5001e',
+    pageBackground: '#eeeae4',
+    sidebarBackground: '#1f2024',
+    sidebarActiveBackground: '#5a2429',
+    headerBackground: '#ffffff',
+  },
+  {
+    id: 'ocean-blue',
+    name: '海洋蓝',
+    desc: '更冷静的经营后台观感，适合长时间看报表。',
+    primaryColor: '#2563eb',
+    dangerColor: '#1d4ed8',
+    pageBackground: '#eef4fb',
+    sidebarBackground: '#172033',
+    sidebarActiveBackground: '#1e3a8a',
+    headerBackground: '#ffffff',
+  },
+  {
+    id: 'forest-green',
+    name: '森林绿',
+    desc: '稳健、柔和，适合运营和供应链场景。',
+    primaryColor: '#0f9f6e',
+    dangerColor: '#047857',
+    pageBackground: '#eef6f1',
+    sidebarBackground: '#16251f',
+    sidebarActiveBackground: '#14532d',
+    headerBackground: '#ffffff',
+  },
+  {
+    id: 'executive-dark',
+    name: '商务黑',
+    desc: '对比更强，适合会议投屏和管理层看板。',
+    primaryColor: '#f43f5e',
+    dangerColor: '#be123c',
+    pageBackground: '#f4f4f5',
+    sidebarBackground: '#111113',
+    sidebarActiveBackground: '#3f1d2b',
+    headerBackground: '#ffffff',
+  },
+  {
+    id: 'clean-light',
+    name: '明亮白',
+    desc: '弱化背景色，界面更轻，适合日常录入。',
+    primaryColor: '#dc2626',
+    dangerColor: '#991b1b',
+    pageBackground: '#f8fafc',
+    sidebarBackground: '#20242c',
+    sidebarActiveBackground: '#4c1d1d',
+    headerBackground: '#ffffff',
+  },
+] satisfies Array<
+  Pick<
+    SystemSettings,
+    | 'primaryColor'
+    | 'dangerColor'
+    | 'pageBackground'
+    | 'sidebarBackground'
+    | 'sidebarActiveBackground'
+    | 'headerBackground'
+  > & { id: string; name: string; desc: string }
+>
+
+const fontPresets = [
+  {
+    id: 'barlow-pingfang',
+    name: '现代销售',
+    desc: '当前默认字体，数字清楚，适合 CRM 表格和销售看板。',
+    fontFamily: "'Barlow', 'Gotham', 'PingFang SC', 'Noto Sans SC', system-ui, -apple-system, sans-serif",
+    sample: 'ANGEL Sales 2026 / 安吉尔全球销售',
+  },
+  {
+    id: 'system-ui',
+    name: '系统默认',
+    desc: '跟随操作系统字体，加载快，兼容性最好。',
+    fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif",
+    sample: 'Global CRM 123 / 系统管理后台',
+  },
+  {
+    id: 'inter-noto',
+    name: '国际商务',
+    desc: '英文和多语言阅读更均衡，适合海外团队。',
+    fontFamily: "'Inter', 'Noto Sans SC', 'PingFang SC', system-ui, -apple-system, sans-serif",
+    sample: 'Pipeline Review / 市场与订单跟进',
+  },
+  {
+    id: 'compact-table',
+    name: '紧凑表格',
+    desc: '偏向数据密集页面，数字和英文更利落。',
+    fontFamily: "'Arial', 'Helvetica Neue', 'Microsoft YaHei', 'PingFang SC', sans-serif",
+    sample: 'AR Aging 30/60/90 / 回款与订单',
+  },
+] satisfies Array<Pick<SystemSettings, 'fontFamily'> & { id: string; name: string; desc: string; sample: string }>
 
 export function SettingsPage() {
   const { t } = useI18n()
@@ -92,35 +192,49 @@ function renderTabContent(tab: string, t: (k: string) => string) {
 function BrandTab({ t }: { t: (k: string) => string }) {
   const settings = useSystemSettingsStore((s) => s.settings)
   const saveSettings = useSystemSettingsStore((s) => s.save)
+  const previewSettings = useSystemSettingsStore((s) => s.preview)
+  const reloadSettings = useSystemSettingsStore((s) => s.load)
   const [saving, setSaving] = useState(false)
-  const [form] = Form.useForm()
+  const [draft, setDraft] = useState(settings)
 
   useEffect(() => {
-    form.setFieldsValue(settings)
-  }, [form, settings])
+    setDraft(settings)
+  }, [settings.updatedAt])
 
-  const colors = [
-    { field: 'primaryColor', name: '主品牌色', hex: settings.primaryColor, desc: '按钮、Tabs、高亮、重点操作' },
-    { field: 'dangerColor', name: '深色强调', hex: settings.dangerColor, desc: '按钮 hover、深红强调' },
-    { field: 'pageBackground', name: '页面背景', hex: settings.pageBackground, desc: '系统主内容区背景' },
-    { field: 'sidebarBackground', name: '侧栏背景', hex: settings.sidebarBackground, desc: '左侧导航背景' },
-    { field: 'sidebarActiveBackground', name: '侧栏选中', hex: settings.sidebarActiveBackground, desc: '当前菜单高亮背景' },
-    { field: 'headerBackground', name: '顶栏背景', hex: settings.headerBackground, desc: '顶部区域背景' },
-  ] as const
+  const selectedPreset = themePresets.find((preset) =>
+    preset.primaryColor.toLowerCase() === draft.primaryColor.toLowerCase() &&
+    preset.sidebarBackground.toLowerCase() === draft.sidebarBackground.toLowerCase()
+  )
+  const selectedFontPreset = fontPresets.find((preset) => preset.id === draft.fontPreset)
 
-  const handleSave = async (values: {
-    brandName: string
-    brandSubtitle: string
-    primaryColor: string
-    dangerColor: string
-    pageBackground: string
-    sidebarBackground: string
-    sidebarActiveBackground: string
-    headerBackground: string
-  }) => {
+  const previewDraft = (patch: Partial<SystemSettings>) => {
+    const next = { ...draft, ...patch }
+    setDraft(next)
+    previewSettings(next)
+  }
+
+  const handlePresetClick = (preset: (typeof themePresets)[number]) => {
+    previewDraft({
+      primaryColor: preset.primaryColor,
+      dangerColor: preset.dangerColor,
+      pageBackground: preset.pageBackground,
+      sidebarBackground: preset.sidebarBackground,
+      sidebarActiveBackground: preset.sidebarActiveBackground,
+      headerBackground: preset.headerBackground,
+    })
+  }
+
+  const handleFontPresetClick = (preset: (typeof fontPresets)[number]) => {
+    previewDraft({
+      fontPreset: preset.id,
+      fontFamily: preset.fontFamily,
+    })
+  }
+
+  const handleSave = async () => {
     setSaving(true)
     try {
-      await saveSettings(values)
+      await saveSettings(draft)
       message.success('品牌主题已保存')
     } catch {
       message.error('品牌主题保存失败，请确认当前账号有权限')
@@ -134,67 +248,102 @@ function BrandTab({ t }: { t: (k: string) => string }) {
       <Title level={5}>{t('settings.brand.logoRules')}</Title>
       <Text className="text-secondary">{t('settings.brand.vi')}</Text>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, margin: '16px 0' }}>
-        <Card title={t('settings.brand.sidebar')} headStyle={{ color: '#fff' }} style={{ background: settings.sidebarBackground, color: '#fff' }}>
+        <Card title={t('settings.brand.sidebar')} headStyle={{ color: '#fff' }} style={{ background: draft.sidebarBackground, color: '#fff' }}>
           <div style={{ fontSize: 24, fontWeight: 800, color: '#fff' }}>
-            <span style={{ color: settings.primaryColor }}>{settings.brandName.slice(0, 1)}</span>
-            {settings.brandName.slice(1)}
+            <span style={{ color: draft.primaryColor }}>{draft.brandName.slice(0, 1)}</span>
+            {draft.brandName.slice(1)}
           </div>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', marginTop: 4 }}>{settings.brandSubtitle}</div>
+          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', marginTop: 4 }}>{draft.brandSubtitle}</div>
         </Card>
-        <Card title={t('settings.brand.headerLogin')} style={{ background: settings.headerBackground }}>
+        <Card title={t('settings.brand.headerLogin')} style={{ background: draft.headerBackground }}>
           <div style={{ fontSize: 24, fontWeight: 800 }}>
-            <span style={{ color: settings.primaryColor }}>{settings.brandName.slice(0, 1)}</span>
-            {settings.brandName.slice(1)}
+            <span style={{ color: draft.primaryColor }}>{draft.brandName.slice(0, 1)}</span>
+            {draft.brandName.slice(1)}
           </div>
-          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>{settings.brandSubtitle}</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>{draft.brandSubtitle}</div>
         </Card>
       </div>
 
-      <Title level={5} style={{ marginTop: 24 }}>品牌主题配置</Title>
-      <Form form={form} layout="vertical" onFinish={handleSave}>
+      <Title level={5} style={{ marginTop: 24 }}>品牌文字</Title>
+      <Form layout="vertical">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          <Form.Item label="品牌名称" name="brandName" rules={[{ required: true }]}>
-            <Input />
+          <Form.Item label="品牌名称">
+            <Input value={draft.brandName} onChange={(e) => previewDraft({ brandName: e.target.value })} />
           </Form.Item>
-          <Form.Item label="品牌副标题" name="brandSubtitle" rules={[{ required: true }]}>
-            <Input />
+          <Form.Item label="品牌副标题">
+            <Input value={draft.brandSubtitle} onChange={(e) => previewDraft({ brandSubtitle: e.target.value })} />
           </Form.Item>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
-          {colors.map((c) => (
-            <Form.Item key={c.field} label={c.name} name={c.field} rules={[{ required: true, pattern: /^#[0-9a-fA-F]{6}$/ }]}>
-              <Input type="color" style={{ height: 40, padding: 4 }} />
-            </Form.Item>
-          ))}
-        </div>
-        <Button type="primary" htmlType="submit" loading={saving}>
-          保存品牌主题
-        </Button>
       </Form>
 
-      <Title level={5} style={{ marginTop: 24 }}>{t('settings.brand.brandColors')}</Title>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 12 }}>
-        {colors.map((c) => (
-          <Card key={c.name} bodyStyle={{ padding: 12 }}>
-            <div style={{ height: 48, background: c.hex, border: '1px solid #ddd', borderRadius: 6, marginBottom: 8 }} />
-            <Text strong>{c.name}</Text>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{c.hex} · {c.desc}</div>
+      <Title level={5} style={{ marginTop: 16 }}>预设主题</Title>
+      <Text className="text-secondary">点击主题立即预览，确认后再保存。</Text>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: 12, marginTop: 12 }}>
+        {themePresets.map((preset) => (
+          <Card
+            key={preset.id}
+            hoverable
+            onClick={() => handlePresetClick(preset)}
+            bodyStyle={{ padding: 14 }}
+            style={{
+              borderColor: selectedPreset?.id === preset.id ? draft.primaryColor : undefined,
+              borderWidth: selectedPreset?.id === preset.id ? 2 : 1,
+            }}
+          >
+            <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
+              {[preset.primaryColor, preset.dangerColor, preset.pageBackground, preset.sidebarBackground].map((color) => (
+                <span
+                  key={color}
+                  style={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: 6,
+                    background: color,
+                    border: '1px solid var(--border)',
+                  }}
+                />
+              ))}
+            </div>
+            <Text strong>{preset.name}</Text>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 6, lineHeight: 1.5 }}>{preset.desc}</div>
           </Card>
         ))}
       </div>
 
+      <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
+        <Button type="primary" loading={saving} onClick={handleSave}>
+          保存当前主题与字体
+        </Button>
+        <Button
+          onClick={() => {
+            void reloadSettings()
+            message.info('已恢复为上次保存的主题')
+          }}
+        >
+          取消预览
+        </Button>
+      </div>
+
       <Title level={5} style={{ marginTop: 24 }}>{t('settings.brand.typography')}</Title>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-        <Card>
-          <Text strong>{t('settings.brand.en')}</Text>
-          <div style={{ fontSize: 18, fontFamily: "'Barlow', sans-serif", marginTop: 8 }}>Gotham / Barlow</div>
-          <div style={{ fontSize: 14, fontFamily: "'Barlow', sans-serif" }}>Aa Bb Cc 0123 → ANGEL Health Technology</div>
-        </Card>
-        <Card>
-          <Text strong>{t('settings.brand.zh')}</Text>
-          <div style={{ fontSize: 18, marginTop: 8 }}>{t('settings.brand.zhFont')}</div>
-          <div style={{ fontSize: 14 }}>{t('settings.brand.zhSample')}</div>
-        </Card>
+      <Text className="text-secondary">点击字体方案立即预览，确认后和主题一起保存。</Text>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: 12, marginTop: 12 }}>
+        {fontPresets.map((preset) => (
+          <Card
+            key={preset.id}
+            hoverable
+            onClick={() => handleFontPresetClick(preset)}
+            bodyStyle={{ padding: 14 }}
+            style={{
+              borderColor: selectedFontPreset?.id === preset.id ? draft.primaryColor : undefined,
+              borderWidth: selectedFontPreset?.id === preset.id ? 2 : 1,
+              fontFamily: preset.fontFamily,
+            }}
+          >
+            <Text strong>{preset.name}</Text>
+            <div style={{ fontSize: 17, marginTop: 10, lineHeight: 1.4 }}>{preset.sample}</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 8, lineHeight: 1.5 }}>{preset.desc}</div>
+          </Card>
+        ))}
       </div>
     </div>
   )
