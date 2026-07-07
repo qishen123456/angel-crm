@@ -29,11 +29,12 @@ cd /www/wwwroot/angel-crm && unset ALL_PROXY http_proxy https_proxy && chmod +x 
 
 当前 `update.sh` 已经包含：
 
-1. 备份容器内 `/app/data`
-2. 拉取远程最新代码
-3. 重建 Docker 容器
-4. 恢复数据目录
-5. 做健康检查和登录测试
+1. 先检查 GitHub 是否能连接，失败时不会停止容器。
+2. 备份容器内 `/app/data`。
+3. 切换到远程最新代码。
+4. 重建 Docker 容器。
+5. 恢复数据目录。
+6. 做健康检查和登录测试。
 
 ## 3. 宝塔机首次启动
 
@@ -147,6 +148,42 @@ docker compose logs -f
 ```
 
 再确认端口 `8888` 和 `3001` 是否被服务器防火墙或宝塔安全组拦住。
+
+### 8.4 GitHub 连接超时
+
+如果看到类似错误：
+
+```bash
+Failed to connect to github.com port 443: Connection timed out
+```
+
+说明宝塔服务器当前连不上 GitHub，不是 CRM 代码本身坏了。新版 `update.sh` 会先检查 GitHub 连接，连不上就直接退出，不会先停容器。
+
+先看服务是否还在：
+
+```bash
+cd /www/wwwroot/angel-crm
+docker compose ps
+```
+
+再做健康检查：
+
+```bash
+curl -s http://localhost:8888/api/health
+```
+
+如果服务正常，等网络恢复后重新执行：
+
+```bash
+cd /www/wwwroot/angel-crm && unset ALL_PROXY http_proxy https_proxy && bash update.sh
+```
+
+如果服务器一直连不上 GitHub，需要检查：
+
+- 服务器 DNS 是否能解析 `github.com`
+- 宝塔或服务器安全组是否拦截 443 出站
+- 云服务器所在网络是否屏蔽 GitHub
+- 是否需要给服务器配置可用代理
 
 ## 9. 推荐你以后这样用
 

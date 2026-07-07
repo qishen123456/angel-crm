@@ -22,7 +22,7 @@ echo "日志文件: $LOG_FILE"
 echo "备份目录: $BACKUP_DIR"
 echo ""
 
-echo "[1/9] 配置 Docker 镜像加速..."
+echo "[1/10] 配置 Docker 镜像加速..."
 DOCKER_CONFIG="/etc/docker/daemon.json"
 MIRROR_CONFIG='{
   "registry-mirrors": [
@@ -50,7 +50,7 @@ else
 fi
 echo ""
 
-echo "[2/9] 检查 Docker..."
+echo "[2/10] 检查 Docker..."
 if ! command -v docker &> /dev/null; then
     echo "❌ Docker 未安装"
     exit 1
@@ -58,7 +58,18 @@ fi
 echo "✅ Docker 版本: $(docker --version)"
 echo ""
 
-echo "[3/9] 备份数据..."
+echo "[3/10] 预检查 GitHub 连接..."
+echo "先拉取远程代码索引，确认网络可用后再停止容器..."
+if git -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=30 fetch origin main 2>&1; then
+    echo "✅ GitHub 连接正常，远程代码索引已更新"
+else
+    echo "❌ 无法连接 GitHub，已取消更新"
+    echo "服务未被停止，请稍后重试或检查服务器网络 / DNS / 代理 / 防火墙。"
+    exit 1
+fi
+echo ""
+
+echo "[4/10] 备份数据..."
 BACKUP_SUCCESS=0
 if docker ps --filter "name=angel-crm" --format "{{.Names}}" | grep -q .; then
     echo "✅ 检测到运行中的容器"
@@ -81,9 +92,9 @@ else
 fi
 echo ""
 
-echo "[4/9] 更新代码..."
-echo "拉取最新代码..."
-if git fetch origin main 2>&1 && git reset --hard origin/main 2>&1; then
+echo "[5/10] 更新代码..."
+echo "切换到远程最新代码..."
+if git reset --hard origin/main 2>&1; then
     echo "✅ 代码更新成功"
     echo "当前提交: $(git log --oneline -1)"
 else
@@ -100,13 +111,13 @@ else
 fi
 echo ""
 
-echo "[5/9] 清理缓存..."
+echo "[6/10] 清理缓存..."
 docker builder prune -f 2>/dev/null || true
 docker image prune -f --filter "reference=crm-*" 2>/dev/null || true
 echo "✅ 缓存清理完成"
 echo ""
 
-echo "[6/9] 构建服务..."
+echo "[7/10] 构建服务..."
 if docker compose up -d --build 2>&1; then
     echo "✅ 服务构建成功"
 else
@@ -119,7 +130,7 @@ else
 fi
 echo ""
 
-echo "[7/9] 恢复数据..."
+echo "[8/10] 恢复数据..."
 sleep 5
 if [ $BACKUP_SUCCESS -eq 1 ] && [ -d "$DATA_BACKUP_DIR" ]; then
     echo "正在恢复备份数据..."
@@ -135,7 +146,7 @@ else
 fi
 echo ""
 
-echo "[8/9] 测试服务..."
+echo "[9/10] 测试服务..."
 echo "健康检查..."
 HEALTH_RESULT=$(curl -s http://localhost:8888/api/health)
 echo "结果: $HEALTH_RESULT"
@@ -157,7 +168,7 @@ else
 fi
 
 echo ""
-echo "[9/9] 完成"
+echo "[10/10] 完成"
 echo ""
 echo "=========================================="
 echo "           更新完成"
