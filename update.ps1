@@ -35,7 +35,7 @@ if ($runningContainers) {
     New-Item -ItemType Directory -Path $BACKUP_DIR -Force | Out-Null
     
     Write-Host "正在从容器导出当前数据..." -ForegroundColor Yellow
-    curl -s http://localhost:8080/api/data/export -o $BACKUP_PATH
+    curl -s http://localhost:8888/api/data/export -o $BACKUP_PATH
     
     if (Test-Path $BACKUP_PATH -PathType Leaf) {
         $fileSize = (Get-Item $BACKUP_PATH).Length
@@ -85,7 +85,7 @@ Write-Host ""
 
 if (Test-Path $BACKUP_PATH -PathType Leaf) {
     Write-Host "正在恢复之前备份的数据..." -ForegroundColor Yellow
-    $response = curl -s -X POST http://localhost:8080/api/data/import `
+    $response = curl -s -X POST http://localhost:8888/api/data/import `
         -H "Content-Type: application/json" `
         -d "@$BACKUP_PATH"
     
@@ -104,7 +104,7 @@ Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host "           测试连接" -ForegroundColor Cyan
 Write-Host "==========================================" -ForegroundColor Cyan
 
-$response = curl -s -X POST http://localhost:8080/api/auth/login `
+$response = curl -s -X POST http://localhost:8888/api/auth/login `
     -H "Content-Type: application/json" `
     -d '{"email":"admin@angel.cn","password":"demo2026"}'
 
@@ -120,7 +120,7 @@ Write-Host ""
 Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host "           访问地址" -ForegroundColor Cyan
 Write-Host "==========================================" -ForegroundColor Cyan
-Write-Host "前端页面: http://localhost:8080" -ForegroundColor Green
+Write-Host "前端页面: http://localhost:8888" -ForegroundColor Green
 Write-Host "后端 API: http://localhost:3001" -ForegroundColor Green
 Write-Host ""
 Write-Host "默认登录:" -ForegroundColor Yellow

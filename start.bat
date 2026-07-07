@@ -42,7 +42,7 @@ echo ==========================================
 echo            测试连接
 echo ==========================================
 
-curl -s -X POST http://localhost:8080/api/auth/login ^
+curl -s -X POST http://localhost:8888/api/auth/login ^
     -H "Content-Type: application/json" ^
     -d "{\"email\":\"admin@angel.cn\",\"password\":\"demo2026\"}" | findstr "success" >nul
 
@@ -56,7 +56,7 @@ echo.
 echo ==========================================
 echo            访问地址
 echo ==========================================
-echo 前端页面: http://localhost:8080
+echo 前端页面: http://localhost:8888
 echo 后端 API: http://localhost:3001
 echo.
 echo 默认登录:

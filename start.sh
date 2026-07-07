@@ -104,12 +104,12 @@ echo "[8/8] 测试服务..."
 sleep 5
 
 echo "健康检查..."
-HEALTH_RESULT=$(curl -s http://localhost:8080/api/health)
+HEALTH_RESULT=$(curl -s http://localhost:8888/api/health)
 echo "结果: $HEALTH_RESULT"
 
 echo ""
 echo "登录测试..."
-LOGIN_RESULT=$(curl -s -X POST http://localhost:8080/api/auth/login \
+LOGIN_RESULT=$(curl -s -X POST http://localhost:8888/api/auth/login \
     -H "Content-Type: application/json" \
     -d '{"email":"admin@angel.cn","password":"demo2026"}')
 
@@ -127,7 +127,7 @@ echo ""
 echo "=========================================="
 echo "           部署完成"
 echo "=========================================="
-echo "前端页面: http://localhost:8080"
+echo "前端页面: http://localhost:8888"
 echo "后端 API: http://localhost:3001"
 echo "默认登录: admin@angel.cn / demo2026"
 echo "日志文件: $LOG_FILE"

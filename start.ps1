@@ -44,7 +44,7 @@ Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host "           测试连接" -ForegroundColor Cyan
 Write-Host "==========================================" -ForegroundColor Cyan
 
-$response = curl -s -X POST http://localhost:8080/api/auth/login `
+$response = curl -s -X POST http://localhost:8888/api/auth/login `
     -H "Content-Type: application/json" `
     -d '{"email":"admin@angel.cn","password":"demo2026"}'
 
@@ -58,7 +58,7 @@ Write-Host ""
 Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host "           访问地址" -ForegroundColor Cyan
 Write-Host "==========================================" -ForegroundColor Cyan
-Write-Host "前端页面: http://localhost:8080" -ForegroundColor Green
+Write-Host "前端页面: http://localhost:8888" -ForegroundColor Green
 Write-Host "后端 API: http://localhost:3001" -ForegroundColor Green
 Write-Host ""
 Write-Host "默认登录:" -ForegroundColor Yellow

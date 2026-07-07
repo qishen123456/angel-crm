@@ -32,7 +32,7 @@ if %errorlevel% equ 0 (
     mkdir "%BACKUP_DIR%"
     
     echo 正在从容器导出当前数据...
-    curl -s http://localhost:8080/api/data/export -o "%BACKUP_DIR%\%DATA_FILE%"
+    curl -s http://localhost:8888/api/data/export -o "%BACKUP_DIR%\%DATA_FILE%"
     
     if exist "%BACKUP_DIR%\%DATA_FILE%" (
         for %%F in ("%BACKUP_DIR%\%DATA_FILE%") do if %%~zF gtr 0 (
@@ -82,7 +82,7 @@ echo.
 if exist "%BACKUP_DIR%\%DATA_FILE%" (
     for %%F in ("%BACKUP_DIR%\%DATA_FILE%") do if %%~zF gtr 0 (
         echo 正在恢复之前备份的数据...
-        curl -s -X POST http://localhost:8080/api/data/import ^
+        curl -s -X POST http://localhost:8888/api/data/import ^
             -H "Content-Type: application/json" ^
             -d "@%BACKUP_DIR%\%DATA_FILE%"
         
@@ -102,7 +102,7 @@ echo ==========================================
 echo            测试连接
 echo ==========================================
 
-curl -s -X POST http://localhost:8080/api/auth/login ^
+curl -s -X POST http://localhost:8888/api/auth/login ^
     -H "Content-Type: application/json" ^
     -d "{\"email\":\"admin@angel.cn\",\"password\":\"demo2026\"}" | findstr "success" >nul
 
@@ -118,7 +118,7 @@ echo.
 echo ==========================================
 echo            访问地址
 echo ==========================================
-echo 前端页面: http://localhost:8080
+echo 前端页面: http://localhost:8888
 echo 后端 API: http://localhost:3001
 echo.
 echo 默认登录:

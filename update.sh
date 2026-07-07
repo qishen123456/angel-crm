@@ -65,7 +65,7 @@ if docker ps --filter "name=angel-crm" --format "{{.Names}}" | grep -q .; then
     mkdir -p "$BACKUP_DIR"
     
     echo "正在导出数据..."
-    curl -s http://localhost:8080/api/data/export -o "$BACKUP_DIR/$DATA_FILE"
+    curl -s http://localhost:8888/api/data/export -o "$BACKUP_DIR/$DATA_FILE"
     
     if [ -s "$BACKUP_DIR/$DATA_FILE" ]; then
         echo "✅ 数据备份成功"
@@ -93,7 +93,7 @@ else
     if [ $BACKUP_SUCCESS -eq 1 ]; then
         sleep 5
         echo "恢复数据..."
-        curl -s -X POST http://localhost:8080/api/data/import \
+        curl -s -X POST http://localhost:8888/api/data/import \
             -H "Content-Type: application/json" \
             -d "@$BACKUP_DIR/$DATA_FILE" 2>&1
         echo "✅ 数据恢复完成"
@@ -125,7 +125,7 @@ echo "[7/9] 恢复数据..."
 sleep 5
 if [ $BACKUP_SUCCESS -eq 1 ] && [ -s "$BACKUP_DIR/$DATA_FILE" ]; then
     echo "正在恢复备份数据..."
-    IMPORT_RESULT=$(curl -s -X POST http://localhost:8080/api/data/import \
+    IMPORT_RESULT=$(curl -s -X POST http://localhost:8888/api/data/import \
         -H "Content-Type: application/json" \
         -d "@$BACKUP_DIR/$DATA_FILE")
     echo "导入结果: $IMPORT_RESULT"
@@ -142,12 +142,12 @@ echo ""
 
 echo "[8/9] 测试服务..."
 echo "健康检查..."
-HEALTH_RESULT=$(curl -s http://localhost:8080/api/health)
+HEALTH_RESULT=$(curl -s http://localhost:8888/api/health)
 echo "结果: $HEALTH_RESULT"
 
 echo ""
 echo "登录测试..."
-LOGIN_RESULT=$(curl -s -X POST http://localhost:8080/api/auth/login \
+LOGIN_RESULT=$(curl -s -X POST http://localhost:8888/api/auth/login \
     -H "Content-Type: application/json" \
     -d '{"email":"admin@angel.cn","password":"demo2026"}')
 
@@ -167,7 +167,7 @@ echo ""
 echo "=========================================="
 echo "           更新完成"
 echo "=========================================="
-echo "前端页面: http://localhost:8080"
+echo "前端页面: http://localhost:8888"
 echo "后端 API: http://localhost:3001"
 echo "默认登录: admin@angel.cn / demo2026"
 echo "日志文件: $LOG_FILE"

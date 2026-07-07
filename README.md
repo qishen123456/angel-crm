@@ -49,7 +49,7 @@ update.bat
 
 ### 访问地址
 
-- **前端页面**: http://localhost:8080
+- **前端页面**: http://localhost:8888
 - **后端 API**: http://localhost:3001
 
 ### 默认登录
