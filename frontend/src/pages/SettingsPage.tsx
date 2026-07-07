@@ -249,6 +249,8 @@ function DataTab({}: { t: (k: string) => string }) {
   const refresh = useDataStore((s) => s.refresh)
   const [loading, setLoading] = useState(false)
   const [importLoading, setImportLoading] = useState(false)
+  const [importConfirm, setImportConfirm] = useState(false)
+  const [pendingFile, setPendingFile] = useState<File | null>(null)
 
   const handleExport = async () => {
     setLoading(true)
@@ -260,13 +262,14 @@ function DataTab({}: { t: (k: string) => string }) {
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `angel-crm-backup-${Date.now()}.json`
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+      a.download = `angel-crm-migration-${timestamp}.json`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
       window.URL.revokeObjectURL(url)
       
-      message.success('数据导出成功')
+      message.success('数据迁移包导出成功')
     } catch (error) {
       message.error('数据导出失败')
     } finally {
@@ -274,13 +277,25 @@ function DataTab({}: { t: (k: string) => string }) {
     }
   }
 
-  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
+    if (!file.name.endsWith('.json')) {
+      message.error('仅支持 JSON 文件')
+      return
+    }
+
+    setPendingFile(file)
+    setImportConfirm(true)
+  }
+
+  const handleImport = async () => {
+    if (!pendingFile) return
+
     setImportLoading(true)
     try {
-      const text = await file.text()
+      const text = await pendingFile.text()
       const data = JSON.parse(text)
       
       const response = await fetch('/api/data/import', {
@@ -292,69 +307,116 @@ function DataTab({}: { t: (k: string) => string }) {
       if (!response.ok) throw new Error('导入失败')
       
       await refresh()
-      message.success('数据导入成功，页面已刷新')
+      message.success('数据迁移包导入成功，页面已刷新')
     } catch (error) {
       message.error('数据导入失败，请检查文件格式')
     } finally {
       setImportLoading(false)
-      e.target.value = ''
+      setImportConfirm(false)
+      setPendingFile(null)
     }
   }
 
   return (
     <div style={{ maxWidth: 600 }}>
-      <Title level={5}>数据备份与恢复</Title>
+      <Title level={5}>数据迁移包</Title>
       <Text style={{ color: '#ff4d4f' }}>
-        ⚠️ 警告：导入数据将覆盖现有所有数据，请先导出备份！
+        ⚠️ 警告：导入迁移包将覆盖现有所有数据，请先导出备份！
       </Text>
       
-      <Card style={{ marginTop: 16 }}>
+      <Card style={{ marginTop: 16, borderColor: '#ee2737', borderWidth: 2, borderStyle: 'solid' }}>
         <div style={{ display: 'flex', gap: 16, flexDirection: 'column' }}>
           <div>
-            <div style={{ marginBottom: 8, fontWeight: 500 }}>导出数据</div>
+            <div style={{ marginBottom: 8, fontWeight: 600, fontSize: 16 }}>📦 导出迁移包</div>
             <div style={{ fontSize: 13, color: '#666', marginBottom: 12 }}>
-              将所有数据导出为 JSON 文件，用于备份或迁移到其他环境。
+              将后端所有业务数据打包成 JSON 文件，用于系统更新、环境迁移或数据备份。
+              <br/>
+              <span style={{ color: '#ee2737', fontWeight: 500 }}>包含：客户、联系人、合同、付款、活动、订单、商机等全部数据</span>
             </div>
             <Button
               type="primary"
               icon={<DownloadOutlined />}
               loading={loading}
               onClick={handleExport}
+              size="large"
             >
-              导出数据
+              导出迁移包
             </Button>
           </div>
           
           <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: 16 }}>
-            <div style={{ marginBottom: 8, fontWeight: 500 }}>导入数据</div>
+            <div style={{ marginBottom: 8, fontWeight: 600, fontSize: 16 }}>📥 导入迁移包</div>
             <div style={{ fontSize: 13, color: '#666', marginBottom: 12 }}>
-              导入之前导出的 JSON 文件，覆盖现有数据。
+              导入之前导出的迁移包文件，覆盖现有数据库。
+              <br/>
+              <span style={{ color: '#ee2737', fontWeight: 500 }}>导入后不可撤销，请务必先导出当前数据！</span>
             </div>
-            <input
-              type="file"
-              accept=".json"
-              onChange={handleImport}
-              style={{ display: 'none' }}
-              id="data-import-file"
-            />
-            <Button
-              icon={<UploadOutlined />}
-              loading={importLoading}
-              onClick={() => document.getElementById('data-import-file')?.click()}
-            >
-              选择文件导入
-            </Button>
+            
+            {!importConfirm ? (
+              <>
+                <input
+                  type="file"
+                  accept=".json"
+                  onChange={handleFileSelect}
+                  style={{ display: 'none' }}
+                  id="data-import-file"
+                />
+                <Button
+                  icon={<UploadOutlined />}
+                  loading={importLoading}
+                  onClick={() => document.getElementById('data-import-file')?.click()}
+                  size="large"
+                >
+                  选择迁移包导入
+                </Button>
+              </>
+            ) : (
+              <div>
+                <div style={{ padding: 12, background: '#fff7e6', borderRadius: 8, marginBottom: 12 }}>
+                  <Text strong>待导入文件：</Text>{pendingFile?.name}
+                </div>
+                <div style={{ display: 'flex', gap: 12 }}>
+                  <Button
+                    type="primary"
+                    danger
+                    loading={importLoading}
+                    onClick={handleImport}
+                    size="large"
+                  >
+                    确认导入（覆盖数据）
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setImportConfirm(false)
+                      setPendingFile(null)
+                    }}
+                  >
+                    取消
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </Card>
       
       <Card style={{ marginTop: 16 }}>
-        <Title level={5}>使用说明</Title>
-        <ul style={{ fontSize: 13, color: '#666', lineHeight: 2 }}>
-          <li><strong>更新系统前：</strong>点击「导出数据」备份当前数据</li>
-          <li><strong>更新系统后：</strong>点击「导入数据」恢复之前备份的数据</li>
-          <li><strong>文件格式：</strong>仅支持本系统导出的 JSON 文件</li>
-          <li><strong>数据范围：</strong>包含客户、联系人、合同、付款、活动等所有业务数据</li>
+        <Title level={5}>使用流程</Title>
+        <div style={{ fontSize: 13, color: '#666', lineHeight: 2 }}>
+          <ol>
+            <li><strong>更新系统前：</strong>登录系统 → 设置 → 数据迁移包 → 点击「导出迁移包」</li>
+            <li><strong>运行更新脚本：</strong>在服务器执行 <code>bash update.sh</code></li>
+            <li><strong>更新系统后：</strong>登录系统 → 设置 → 数据迁移包 → 点击「选择迁移包导入」</li>
+          </ol>
+        </div>
+      </Card>
+
+      <Card style={{ marginTop: 16, background: '#f6ffed', borderColor: '#b7eb8f' }}>
+        <Title level={5}>💡 提示</Title>
+        <ul style={{ fontSize: 13, color: '#52c41a', lineHeight: 2 }}>
+          <li>迁移包文件格式：<code>angel-crm-migration-YYYY-MM-DDTHH-mm-ss.json</code></li>
+          <li>文件大小取决于数据量，包含所有业务表的完整数据</li>
+          <li>仅支持本系统导出的迁移包文件，不支持 CSV/Excel 等其他格式</li>
         </ul>
       </Card>
     </div>
