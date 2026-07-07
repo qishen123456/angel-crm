@@ -11,7 +11,7 @@ services:
       - PORT=3001
       - DATA_DIR=/app/data
       - JWT_SECRET=${JWT_SECRET:-angel-crm-change-me-in-production}
-      - CLIENT_URL=http://localhost:8080
+      - CLIENT_URL=http://localhost:8888
     volumes:
       - angel-crm-data:/app/data
     restart: unless-stopped
@@ -28,7 +28,7 @@ services:
       dockerfile: Dockerfile
     container_name: angel-crm-frontend
     ports:
-      - "8080:80"
+      - "8888:80"
     depends_on:
       - backend
     restart: unless-stopped
