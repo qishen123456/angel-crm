@@ -3,12 +3,26 @@ import { Button, Card, Col, Form, Input, InputNumber, Modal, Row, Table } from '
 import { useState } from 'react'
 import { useGlobalMessage } from '../hooks/useGlobalMessage'
 import { useI18n } from '../hooks/useI18n'
-import { retailMonthly } from '../mocks/crmData'
+import { storageService } from '../services/storageService'
+import { useDataStore } from '../store/useDataStore'
 
 export function RetailPage() {
   const { t } = useI18n()
   const { success } = useGlobalMessage()
+  const retailMonthly = useDataStore((state) => state.retailMonthly)
+  const refresh = useDataStore((state) => state.refresh)
   const [formOpen, setFormOpen] = useState(false)
+  const [form] = Form.useForm()
+  const totals = retailMonthly.reduce(
+    (sum, item) => ({
+      soUnits: sum.soUnits + item.soUnits,
+      strategicUnits: sum.strategicUnits + item.strategicUnits,
+      netStoreAdds: sum.netStoreAdds + item.netStoreAdds,
+      sellThroughRate: sum.sellThroughRate + item.sellThroughRate,
+    }),
+    { soUnits: 0, strategicUnits: 0, netStoreAdds: 0, sellThroughRate: 0 },
+  )
+  const avgSellThrough = retailMonthly.length ? Math.round(totals.sellThroughRate / retailMonthly.length) : 0
 
   return (
     <div className="crm-page">
@@ -22,10 +36,10 @@ export function RetailPage() {
 
       <Row gutter={[16, 16]}>
         {[
-          { label: t('retail.ytdSo'), value: '939' },
-          { label: t('retail.strategic'), value: '278' },
-          { label: t('retail.netNew'), value: '+4' },
-          { label: t('retail.sellThrough'), value: '71%' },
+          { label: t('retail.ytdSo'), value: String(totals.soUnits) },
+          { label: t('retail.strategic'), value: String(totals.strategicUnits) },
+          { label: t('retail.netNew'), value: totals.netStoreAdds > 0 ? `+${totals.netStoreAdds}` : String(totals.netStoreAdds) },
+          { label: t('retail.sellThrough'), value: `${avgSellThrough}%` },
         ].map((k) => (
           <Col xs={12} md={6} key={k.label}>
             <Card>
@@ -56,17 +70,34 @@ export function RetailPage() {
       <Modal
         title={t('retail.entry')}
         open={formOpen}
-        onCancel={() => setFormOpen(false)}
-        onOk={() => { setFormOpen(false); success(t('common.successSave')) }}
+        onCancel={() => { setFormOpen(false); form.resetFields() }}
+        onOk={() => {
+          form.validateFields().then(async (values) => {
+            await storageService.retailMonthly.create({
+              month: values.month,
+              soUnits: Number(values.soUnits ?? 0),
+              strategicUnits: Number(values.strategicUnits ?? 0),
+              netStoreAdds: Number(values.netStoreAdds ?? 0),
+              sellThroughRate: Number(values.sellThroughRate ?? 0),
+              events: Number(values.events ?? 0),
+              notes: values.notes ?? '-',
+            })
+            await refresh()
+            form.resetFields()
+            setFormOpen(false)
+            success(t('common.successSave'))
+          })
+        }}
         width={560}
       >
-        <Form layout="vertical">
-          <Form.Item label={t('retail.month')}><Input placeholder="2026-06" /></Form.Item>
-          <Form.Item label={t('retail.overseasSo')}><InputNumber style={{ width: '100%' }} /></Form.Item>
-          <Form.Item label={t('retail.strategicUnits')}><InputNumber style={{ width: '100%' }} /></Form.Item>
-          <Form.Item label={t('retail.netNewStores')}><InputNumber style={{ width: '100%' }} /></Form.Item>
-          <Form.Item label={t('retail.sellThrough')}><InputNumber style={{ width: '100%' }} /></Form.Item>
-          <Form.Item label={t('retail.notes')}><Input.TextArea rows={3} /></Form.Item>
+        <Form form={form} layout="vertical">
+          <Form.Item label={t('retail.month')} name="month" rules={[{ required: true }]}><Input placeholder="2026-06" /></Form.Item>
+          <Form.Item label={t('retail.overseasSo')} name="soUnits"><InputNumber style={{ width: '100%' }} /></Form.Item>
+          <Form.Item label={t('retail.strategicUnits')} name="strategicUnits"><InputNumber style={{ width: '100%' }} /></Form.Item>
+          <Form.Item label={t('retail.netNewStores')} name="netStoreAdds"><InputNumber style={{ width: '100%' }} /></Form.Item>
+          <Form.Item label={t('retail.sellThrough')} name="sellThroughRate"><InputNumber style={{ width: '100%' }} /></Form.Item>
+          <Form.Item label={t('retail.activities')} name="events"><InputNumber style={{ width: '100%' }} /></Form.Item>
+          <Form.Item label={t('retail.notes')} name="notes"><Input.TextArea rows={3} /></Form.Item>
         </Form>
       </Modal>
     </div>

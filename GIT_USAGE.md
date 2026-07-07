@@ -1,44 +1,73 @@
-# Git Commands
+# AngelCRM Git 使用说明
 
-## Repository
+## 仓库信息
 
-`https://github.com/qishen123456/crm.git`
+- GitHub 仓库：`https://github.com/qishen123456/angel-crm.git`
+- 本地目录：`/Users/ltq/Desktop/ambitious/4.Lin_project/2.CRM系统/11.海外CRM/crm`
+- 默认分支：`main`
 
-## Local Repository Path
+## 进入项目目录
 
-```powershell
-cd "D:\CRMV1\10.海外CRM - 副本\10.海外CRM - 副本"
+```bash
+cd "/Users/ltq/Desktop/ambitious/4.Lin_project/2.CRM系统/11.海外CRM/crm"
 ```
 
-## Push Changes
+## 常用推送命令
 
-```powershell
-cd "D:\CRMV1\10.海外CRM - 副本\10.海外CRM - 副本"
-git add -A
-git commit -m "lin 1.0"
+先看改了什么：
+
+```bash
+git status
+```
+
+推送全部改动：
+
+```bash
+git add .
+git commit -m "feat: 本次修改说明"
 git push origin main
 ```
 
-## First-Time Clone
+只推送指定文件：
 
-```powershell
-git clone https://github.com/qishen123456/crm.git
-cd crm
+```bash
+git add backend/src frontend/src docs
+git commit -m "feat: 本次修改说明"
+git push origin main
 ```
 
-## Pull Latest Changes
+## 推送前先同步远程
 
-```powershell
-cd "D:\CRMV1\10.海外CRM - 副本\10.海外CRM - 副本"
-git pull origin main
+如果远程也有人改过，建议先执行：
+
+```bash
+git pull --rebase origin main
 ```
 
-## Alternative
+如果你已经提交了本地代码，推荐顺序：
 
-If you stay in `D:\CRMV1`, use:
-
-```powershell
-git -C "D:\CRMV1\10.海外CRM - 副本\10.海外CRM - 副本" add -A
-git -C "D:\CRMV1\10.海外CRM - 副本\10.海外CRM - 副本" commit -m "lin 1.0"
-git -C "D:\CRMV1\10.海外CRM - 副本\10.海外CRM - 副本" push origin main
+```bash
+git status
+git add .
+git commit -m "feat: 本次修改说明"
+git pull --rebase origin main
+git push origin main
 ```
+
+## 查看远程地址
+
+```bash
+git remote -v
+```
+
+当前 `origin`：
+
+```bash
+origin  https://github.com/qishen123456/angel-crm.git
+```
+
+## 补充
+
+- 如果提示 `nothing to commit`，说明当前没有新的文件改动。
+- 如果推送时报认证问题，先确认本机 GitHub 账号已登录。
+- 更完整的本地启动、更新、推送流程，请看 `docs/angelcrm_local_push_and_start.md`。

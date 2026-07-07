@@ -1,6 +1,7 @@
 import { Button, Card, Form, Input, message, Switch, Table, Tabs, Typography } from 'antd'
 import { useMemo, useState } from 'react'
 import { DownloadOutlined, UploadOutlined } from '@ant-design/icons'
+import { apiClient } from '../api/client'
 import { useI18n } from '../hooks/useI18n'
 import { useDataStore } from '../store/useDataStore'
 import {
@@ -27,7 +28,7 @@ const tabKeys = [
 ]
 
 const roleModules = ['accounts', 'orders', 'contracts', 'reports', 'settings']
-const roles = ['Admin', 'Sales', 'Finance', 'Supply Chain', 'Orders', 'Legal', 'Marketing', 'Executive', 'Operations']
+const roles = ['SuperAdmin', 'Admin', 'Sales', 'Finance', 'Supply Chain', 'Orders', 'Legal', 'Marketing', 'Executive', 'Operations']
 
 export function SettingsPage() {
   const { t } = useI18n()
@@ -255,10 +256,8 @@ function DataTab({}: { t: (k: string) => string }) {
   const handleExport = async () => {
     setLoading(true)
     try {
-      const response = await fetch('/api/data/export')
-      if (!response.ok) throw new Error('导出失败')
-      
-      const blob = await response.blob()
+      const response = await apiClient.get<Blob>('/data/export', { responseType: 'blob' })
+      const blob = response.data
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
@@ -298,13 +297,7 @@ function DataTab({}: { t: (k: string) => string }) {
       const text = await pendingFile.text()
       const data = JSON.parse(text)
       
-      const response = await fetch('/api/data/import', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      
-      if (!response.ok) throw new Error('导入失败')
+      await apiClient.post('/data/import', data)
       
       await refresh()
       message.success('数据迁移包导入成功，页面已刷新')

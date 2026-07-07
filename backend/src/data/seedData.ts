@@ -92,6 +92,7 @@ export const markets: { code: MarketCode; name: string; flag: string }[] = [
 ]
 
 export type UserRole =
+  | 'SuperAdmin'
   | 'Admin'
   | 'Sales'
   | 'Finance'
@@ -111,6 +112,7 @@ export interface User {
   market?: MarketCode
   avatar: string
   status: 'active' | 'inactive'
+  permissions?: string[]
 }
 
 export const users: User[] = [
@@ -548,6 +550,25 @@ export const payments: Payment[] = [
   { id: 'pay-4', receivedAt: '2026-06-12', accountId: 'a4', orderId: 'ord-1', amountUsd: 15720, currency: 'USD', registeredById: 'u9', method: 'wire', status: 'partial' },
 ]
 
+export interface Invoice {
+  id: string
+  no: string
+  orderId: string
+  accountId: string
+  amountUsd: number
+  status: 'pending_review' | 'pending_issue' | 'issued' | 'rejected'
+  applicantId: string
+  title: string
+  taxId: string
+  createdAt: string
+}
+
+export const invoices: Invoice[] = [
+  { id: 'inv1', no: 'INV-2026-0616-001', orderId: 'ord-1', accountId: 'a4', amountUsd: 12400, status: 'pending_review', applicantId: 'u3', title: 'Bangkok Mall Group', taxId: 'TH0105559000011', createdAt: '2026-06-16' },
+  { id: 'inv2', no: 'INV-2026-0615-002', orderId: 'ord-2', accountId: 'a1', amountUsd: 8750, status: 'pending_issue', applicantId: 'u2', title: 'Raffles Hospitality Pte Ltd', taxId: 'SG201312345A', createdAt: '2026-06-15' },
+  { id: 'inv3', no: 'INV-2026-0610-003', orderId: 'ord-4', accountId: 'a1', amountUsd: 32000, status: 'issued', applicantId: 'u2', title: 'Raffles Hospitality Pte Ltd', taxId: 'SG201312345A', createdAt: '2026-06-10' },
+]
+
 export interface Product {
   id: string
   sku: string
@@ -655,6 +676,19 @@ export const dailyReports: DailyReport[] = [
   { id: 'dr1', userId: 'u1', date: '2026-06-16', todaySummary: 'Reviewed Q2 pipeline with all 3 regions. Approved Westwind contract.', tomorrowPlan: 'Board prep + Westwind kickoff call.', customersContacted: ['a8'], revenueUpdateNote: 'No new bookings — focus is leadership.', moodRating: 4, submittedAt: '2026-06-16T09:30:00Z' },
   { id: 'dr2', userId: 'u2', date: '2026-06-15', todaySummary: 'Marina Bay Sands site visit — 12 dispenser positions confirmed.', tomorrowPlan: 'Push Raffles reorder PI to client. Lunch with Genting.', customersContacted: ['a2', 'a1'], revenueUpdateNote: 'Raffles 翻单 PI sent ($13,680).', moodRating: 5, submittedAt: '2026-06-15T18:10:00Z' },
   { id: 'dr3', userId: 'u3', date: '2026-06-15', todaySummary: 'Bangkok Mall installation site survey complete.', tomorrowPlan: 'Bangkok PO follow-up, Aerowisata lead nurture.', customersContacted: ['a4', 'a5'], revenueUpdateNote: 'Bangkok Mall PO confirmed receipt.', moodRating: 4, submittedAt: '2026-06-15T17:40:00Z' },
+]
+
+export interface AttendanceRecord {
+  id: string
+  userId: string
+  type: 'in' | 'out'
+  time: string
+  location: string
+  note?: string
+}
+
+export const attendanceRecords: AttendanceRecord[] = [
+  { id: 'att1', userId: 'u1', type: 'in', time: '2026-06-16 09:02', location: 'AHT Singapore Office', note: '' },
 ]
 
 export interface DocumentTemplate {

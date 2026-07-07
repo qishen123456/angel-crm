@@ -3,44 +3,38 @@ import { Button, Card, Form, Input, List, Tag, Typography } from 'antd'
 import { useState } from 'react'
 import { useGlobalMessage } from '../hooks/useGlobalMessage'
 import { useI18n } from '../hooks/useI18n'
+import { storageService } from '../services/storageService'
+import { useAuthStore } from '../store/useAuthStore'
+import { useDataStore } from '../store/useDataStore'
 
 const { Text, Title } = Typography
-
-type PunchRecord = {
-  id: string
-  type: 'in' | 'out'
-  time: string
-  location: string
-  note?: string
-}
-
-const initialRecords: PunchRecord[] = [
-  { id: 'p1', type: 'in', time: '2026-06-16 09:02', location: 'AHT Singapore Office', note: '' },
-]
-
-
 
 export function AttendancePage() {
   const { t, locale } = useI18n()
   const { success } = useGlobalMessage()
-  const [records, setRecords] = useState<PunchRecord[]>(initialRecords)
+  const currentUser = useAuthStore((state) => state.user)
+  const attendanceRecords = useDataStore((state) => state.attendanceRecords)
+  const refresh = useDataStore((state) => state.refresh)
+  const records = attendanceRecords
+    .filter((item) => !currentUser || item.userId === currentUser.id)
+    .sort((a, b) => b.time.localeCompare(a.time))
   const [location, setLocation] = useState('AHT Singapore Office')
   const [note, setNote] = useState('')
 
   const lastType = records[0]?.type ?? 'out'
   const nextType = lastType === 'in' ? 'out' : 'in'
 
-  function punch() {
+  async function punch() {
     const now = new Date()
     const time = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
-    const newRecord: PunchRecord = {
-      id: Math.random().toString(36).slice(2),
+    await storageService.attendanceRecords.create({
+      userId: currentUser?.id ?? 'u1',
       type: nextType,
       time,
       location,
       note,
-    }
-    setRecords((prev) => [newRecord, ...prev])
+    })
+    await refresh()
     setNote('')
     success(nextType === 'in' ? t('attendance.punchIn') + t('common.successCreate') : t('attendance.punchOut') + t('common.successCreate'))
   }

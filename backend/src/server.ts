@@ -35,6 +35,7 @@ const entities = [
   'orders',
   'contracts',
   'payments',
+  'invoices',
   'products',
   'endUsers',
   'projectUpdates',
@@ -43,6 +44,7 @@ const entities = [
   'documentTemplates',
   'retailMonthly',
   'dailyReports',
+  'attendanceRecords',
   'auditLogs',
   'annualTargets',
 ] as const

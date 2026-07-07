@@ -1,5 +1,8 @@
 import express from 'express'
 import { readJson, writeJson } from '../data/jsonStore.js'
+import { authMiddleware, requireSuperAdmin } from '../middleware/auth.js'
+import type { AuthRequest } from '../middleware/auth.js'
+import { appendAuditLog } from '../services/auditService.js'
 
 const router = express.Router()
 
@@ -13,6 +16,7 @@ const entities = [
   'orders',
   'contracts',
   'payments',
+  'invoices',
   'products',
   'endUsers',
   'projectUpdates',
@@ -21,11 +25,28 @@ const entities = [
   'documentTemplates',
   'retailMonthly',
   'dailyReports',
+  'attendanceRecords',
   'auditLogs',
   'annualTargets',
 ] as const
 
-router.get('/export', async (_req, res) => {
+type EntityName = (typeof entities)[number]
+
+interface MigrationPackage {
+  type?: string
+  version?: string
+  exportedAt?: string
+  exportedBy?: {
+    id: string
+    email: string
+  }
+  data?: Partial<Record<EntityName, unknown[]>>
+}
+
+router.use(authMiddleware)
+router.use(requireSuperAdmin)
+
+router.get('/export', async (req: AuthRequest, res) => {
   try {
     const data: Record<string, unknown[]> = {}
     for (const entity of entities) {
@@ -33,10 +54,19 @@ router.get('/export', async (_req, res) => {
     }
     
     const exportData = {
-      version: '1.0',
+      type: 'angel-crm-migration',
+      version: '1.0.0',
       exportedAt: new Date().toISOString(),
+      exportedBy: {
+        id: req.user!.id,
+        email: req.user!.email,
+      },
       data,
     }
+
+    await appendAuditLog(req, 'migration.export', 'data', {
+      entities: entities.length,
+    })
     
     res.setHeader('Content-Type', 'application/json')
     res.setHeader('Content-Disposition', `attachment; filename=angel-crm-backup-${Date.now()}.json`)
@@ -46,19 +76,36 @@ router.get('/export', async (_req, res) => {
   }
 })
 
-router.post('/import', async (req, res) => {
+router.post('/import', async (req: AuthRequest, res) => {
   try {
-    const { data } = req.body as { data?: Record<string, unknown[]> }
+    const payload = req.body as MigrationPackage
+    const { data } = payload
     
     if (!data) {
       return res.status(400).json({ error: '请提供数据' })
     }
+
+    const invalidEntities = Object.keys(data).filter((entity) => !entities.includes(entity as EntityName))
+    if (invalidEntities.length > 0) {
+      return res.status(400).json({ error: '迁移包包含未知数据表', invalidEntities })
+    }
+
+    const invalidArrays = Object.entries(data).filter(([, value]) => !Array.isArray(value)).map(([entity]) => entity)
+    if (invalidArrays.length > 0) {
+      return res.status(400).json({ error: '迁移包数据格式错误', invalidEntities: invalidArrays })
+    }
     
     for (const entity of entities) {
       if (data[entity] !== undefined) {
-        await writeJson(entity, Array.isArray(data[entity]) ? data[entity] : [])
+        await writeJson(entity, data[entity] ?? [])
       }
     }
+
+    await appendAuditLog(req, 'migration.import', 'data', {
+      version: payload.version ?? 'unknown',
+      exportedAt: payload.exportedAt ?? null,
+      importedEntities: Object.keys(data),
+    })
     
     res.json({ success: true, message: '数据导入成功' })
   } catch (error) {

@@ -4,7 +4,9 @@ import { useMemo, useState } from 'react'
 import { useAutoCreate } from '../hooks/useAutoCreate'
 import { useGlobalMessage } from '../hooks/useGlobalMessage'
 import { useI18n } from '../hooks/useI18n'
-import { products, statusTone } from '../mocks/crmData'
+import { statusTone, type Product } from '../mocks/crmData'
+import { storageService } from '../services/storageService'
+import { useDataStore } from '../store/useDataStore'
 
 const productCategories = ['commercial', 'residential', 'industrial', 'strategic']
 const productLines = ['commercial', 'retail', 'industrial', 'public']
@@ -13,11 +15,14 @@ const productStatuses = ['onSale', 'discontinued', 'rnd']
 export function ProductsPage() {
   const { t } = useI18n()
   const { success } = useGlobalMessage()
+  const products = useDataStore((state) => state.products)
+  const refresh = useDataStore((state) => state.refresh)
   const [search, setSearch] = useState('')
   const [createOpen, setCreateOpen] = useState(false)
   const clearCreateParam = useAutoCreate(setCreateOpen)
   const [detailOpen, setDetailOpen] = useState(false)
-  const [selected, setSelected] = useState<typeof products[0] | null>(null)
+  const [selected, setSelected] = useState<Product | null>(null)
+  const [form] = Form.useForm()
 
   const filtered = useMemo(() => {
     return products.filter((p) =>
@@ -61,7 +66,7 @@ export function ProductsPage() {
             {
               title: t('common.actions'),
               key: 'action',
-              render: (_: any, record: typeof products[0]) => (
+              render: (_: any, record: Product) => (
                 <Button type="text" icon={<EyeOutlined />} onClick={() => { setSelected(record); setDetailOpen(true) }} />
               ),
             },
@@ -72,22 +77,43 @@ export function ProductsPage() {
       <Modal
         title={t('products.create')}
         open={createOpen}
-        onCancel={() => { setCreateOpen(false); clearCreateParam() }}
-        onOk={() => { setCreateOpen(false); clearCreateParam(); success(t('common.successCreate')) }}
+        onCancel={() => { setCreateOpen(false); clearCreateParam(); form.resetFields() }}
+        onOk={() => {
+          form.validateFields().then(async (values) => {
+            await storageService.products.create({
+              sku: values.sku,
+              name: values.name,
+              category: values.category,
+              line: values.line,
+              spec: values.spec ?? '',
+              unitPrice: Number(values.unitPrice ?? 0),
+              leadTime: values.leadTime ?? '-',
+              stock: Number(values.stock ?? 0),
+              status: values.status,
+            })
+            await refresh()
+            form.resetFields()
+            setCreateOpen(false)
+            clearCreateParam()
+            success(t('common.successCreate'))
+          })
+        }}
         width={560}
       >
-        <Form layout="vertical">
-          <Form.Item label={t('products.sku')}><Input /></Form.Item>
-          <Form.Item label={t('products.name')}><Input /></Form.Item>
-          <Form.Item label={t('products.category')}>
+        <Form form={form} layout="vertical" initialValues={{ category: 'commercial', line: 'commercial', status: 'onSale' }}>
+          <Form.Item label={t('products.sku')} name="sku" rules={[{ required: true }]}><Input /></Form.Item>
+          <Form.Item label={t('products.name')} name="name" rules={[{ required: true }]}><Input /></Form.Item>
+          <Form.Item label={t('products.category')} name="category" rules={[{ required: true }]}>
             <Select options={productCategories.map((v) => ({ value: v, label: t(`labels.productCategory.${v}`) }))} />
           </Form.Item>
-          <Form.Item label={t('products.productLine')}>
+          <Form.Item label={t('products.productLine')} name="line" rules={[{ required: true }]}>
             <Select options={productLines.map((v) => ({ value: v, label: t(`labels.productLine.${v}`) }))} />
           </Form.Item>
-          <Form.Item label={t('products.spec')}><Input /></Form.Item>
-          <Form.Item label={t('products.unitPrice')}><Input prefix="$" /></Form.Item>
-          <Form.Item label={t('products.status')}>
+          <Form.Item label={t('products.spec')} name="spec"><Input /></Form.Item>
+          <Form.Item label={t('products.unitPrice')} name="unitPrice"><Input prefix="$" /></Form.Item>
+          <Form.Item label={t('products.leadTime')} name="leadTime"><Input /></Form.Item>
+          <Form.Item label={t('products.stock')} name="stock"><Input /></Form.Item>
+          <Form.Item label={t('products.status')} name="status" rules={[{ required: true }]}>
             <Select options={productStatuses.map((v) => ({ value: v, label: t(`labels.productStatus.${v}`) }))} />
           </Form.Item>
         </Form>

@@ -8,7 +8,7 @@
 LOG_DIR="./logs"
 LOG_FILE="$LOG_DIR/update-$(date +%Y%m%d-%H%M%S).log"
 BACKUP_DIR="/tmp/angel-crm-backup-$(date +%Y%m%d-%H%M%S)"
-DATA_FILE="data-backup.json"
+DATA_BACKUP_DIR="$BACKUP_DIR/data"
 
 mkdir -p "$LOG_DIR"
 
@@ -64,10 +64,10 @@ if docker ps --filter "name=angel-crm" --format "{{.Names}}" | grep -q .; then
     echo "✅ 检测到运行中的容器"
     mkdir -p "$BACKUP_DIR"
     
-    echo "正在导出数据..."
-    curl -s http://localhost:8888/api/data/export -o "$BACKUP_DIR/$DATA_FILE"
+    echo "正在备份后端数据目录..."
+    docker cp angel-crm-backend:/app/data "$DATA_BACKUP_DIR" 2>&1
     
-    if [ -s "$BACKUP_DIR/$DATA_FILE" ]; then
+    if [ -d "$DATA_BACKUP_DIR" ]; then
         echo "✅ 数据备份成功"
         BACKUP_SUCCESS=1
     else
@@ -92,10 +92,8 @@ else
     docker compose up -d 2>&1
     if [ $BACKUP_SUCCESS -eq 1 ]; then
         sleep 5
-        echo "恢复数据..."
-        curl -s -X POST http://localhost:8888/api/data/import \
-            -H "Content-Type: application/json" \
-            -d "@$BACKUP_DIR/$DATA_FILE" 2>&1
+        echo "恢复数据目录..."
+        docker cp "$DATA_BACKUP_DIR/." angel-crm-backend:/app/data 2>&1
         echo "✅ 数据恢复完成"
     fi
     exit 1
@@ -123,17 +121,14 @@ echo ""
 
 echo "[7/9] 恢复数据..."
 sleep 5
-if [ $BACKUP_SUCCESS -eq 1 ] && [ -s "$BACKUP_DIR/$DATA_FILE" ]; then
+if [ $BACKUP_SUCCESS -eq 1 ] && [ -d "$DATA_BACKUP_DIR" ]; then
     echo "正在恢复备份数据..."
-    IMPORT_RESULT=$(curl -s -X POST http://localhost:8888/api/data/import \
-        -H "Content-Type: application/json" \
-        -d "@$BACKUP_DIR/$DATA_FILE")
-    echo "导入结果: $IMPORT_RESULT"
+    docker cp "$DATA_BACKUP_DIR/." angel-crm-backend:/app/data 2>&1
     
-    if echo "$IMPORT_RESULT" | grep -q '"success":true'; then
+    if [ $? -eq 0 ]; then
         echo "✅ 数据恢复成功"
     else
-        echo "⚠️  数据恢复失败，请手动导入: $BACKUP_DIR/$DATA_FILE"
+        echo "⚠️  数据恢复失败，请手动恢复目录: $DATA_BACKUP_DIR"
     fi
 else
     echo "ℹ️  无需恢复数据"
@@ -171,7 +166,7 @@ echo "前端页面: http://localhost:8888"
 echo "后端 API: http://localhost:3001"
 echo "默认登录: admin@angel.cn / demo2026"
 echo "日志文件: $LOG_FILE"
-echo "备份文件: $BACKUP_DIR/$DATA_FILE"
+echo "备份目录: $DATA_BACKUP_DIR"
 echo "结束时间: $(date '+%Y-%m-%d %H:%M:%S')"
 echo ""
 echo "=========================================="

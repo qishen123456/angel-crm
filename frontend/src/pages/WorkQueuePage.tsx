@@ -2,7 +2,10 @@ import { ArrowRightOutlined, ContainerOutlined, DollarOutlined, ShoppingOutlined
 import { Button, Card, Empty, Row, Space, Table, Tag, Typography } from 'antd'
 import { useGlobalMessage } from '../hooks/useGlobalMessage'
 import { useI18n } from '../hooks/useI18n'
-import { formatCurrency, getAccountById, orders, payments, statusTone } from '../mocks/crmData'
+import { formatCurrency, statusTone, type Order, type Payment } from '../mocks/crmData'
+import { storageService } from '../services/storageService'
+import { useAuthStore } from '../store/useAuthStore'
+import { useDataStore } from '../store/useDataStore'
 
 const { Text, Title } = Typography
 
@@ -14,10 +17,45 @@ const collectionPlans = [
 export function WorkQueuePage() {
   const { t } = useI18n()
   const { success } = useGlobalMessage()
+  const currentUser = useAuthStore((state) => state.user)
+  const accounts = useDataStore((state) => state.accounts)
+  const orders = useDataStore((state) => state.orders)
+  const payments = useDataStore((state) => state.payments)
+  const refresh = useDataStore((state) => state.refresh)
 
   const orderOps = orders.filter((o) => o.status === 'pendingPI' || o.status === 'piIssued')
   const supply = orders.filter((o) => o.status === 'shipped')
   const paymentVerification = payments.filter((p) => p.status !== 'confirmed')
+
+  const accountName = (id: string) => accounts.find((account) => account.id === id)?.name ?? id
+
+  const advanceOrder = async (order: Order) => {
+    const nextStatus = order.status === 'pendingPI' ? 'piIssued' : order.status === 'piIssued' ? 'shipped' : 'completed'
+    await storageService.orders.update(order.id, {
+      status: nextStatus,
+      shippedAt: nextStatus === 'shipped' ? new Date().toISOString().slice(0, 10) : order.shippedAt,
+    })
+    await refresh()
+    success(t('common.successUpdate'))
+  }
+
+  const confirmPayment = async (payment: Payment) => {
+    await storageService.payments.update(payment.id, { status: 'confirmed' })
+    await refresh()
+    success(t('common.confirm'))
+  }
+
+  const remindCollection = async (item: { accountId: string; dueDate: string; planAmountUsd: number }) => {
+    await storageService.activities.create({
+      accountId: item.accountId,
+      createdAt: new Date().toISOString().slice(0, 10),
+      createdById: currentUser?.id ?? 'u1',
+      type: 'finance',
+      content: `催收提醒：计划收款 ${formatCurrency(item.planAmountUsd)}，到期日 ${item.dueDate}`,
+    })
+    await refresh()
+    success(t('common.successCreate'))
+  }
 
   const cards = [
     { key: 'orderOps', icon: <ShoppingOutlined /> },
@@ -27,7 +65,7 @@ export function WorkQueuePage() {
 
   const orderColumns = [
     { title: t('workqueue.table.orderNo'), dataIndex: 'orderNumber' },
-    { title: t('workqueue.table.account'), dataIndex: 'accountId', render: (id: string) => getAccountById(id)?.name },
+    { title: t('workqueue.table.account'), dataIndex: 'accountId', render: (id: string) => accountName(id) },
     { title: t('workqueue.table.subtotal'), dataIndex: 'subtotalUsd', render: (v: number) => formatCurrency(v) },
     { title: t('workqueue.table.status'), dataIndex: 'status', render: (v: string) => <Tag className={`pill pill-${statusTone(v)}`}>{t(`labels.orderStatus.${v}`)}</Tag> },
     { title: t('workqueue.table.action'), render: () => <Tag className="pill pill-amber">{t('workqueue.table.open')}</Tag> },
@@ -35,8 +73,8 @@ export function WorkQueuePage() {
     {
       title: '',
       key: 'open',
-      render: () => (
-        <Button type="primary" size="small" icon={<ArrowRightOutlined />} onClick={() => success(t('common.confirm'))}>
+      render: (_: unknown, record: Order) => (
+        <Button type="primary" size="small" icon={<ArrowRightOutlined />} onClick={() => advanceOrder(record)}>
           {t('workqueue.table.open')}
         </Button>
       ),
@@ -45,15 +83,15 @@ export function WorkQueuePage() {
 
   const paymentColumns = [
     { title: t('workqueue.table.receivedAt'), dataIndex: 'receivedAt' },
-    { title: t('workqueue.table.account'), dataIndex: 'accountId', render: (id: string) => getAccountById(id)?.name },
+    { title: t('workqueue.table.account'), dataIndex: 'accountId', render: (id: string) => accountName(id) },
     { title: t('workqueue.table.amount'), dataIndex: 'amountUsd', render: (v: number) => formatCurrency(v) },
     { title: t('workqueue.table.financeConfirm'), dataIndex: 'status', render: (v: string) => <Tag className={`pill pill-${statusTone(v)}`}>{t(`labels.paymentStatus.${v}`)}</Tag> },
     { title: t('workqueue.table.action'), render: () => <Tag className="pill pill-amber">{t('workqueue.table.confirmPayment')}</Tag> },
     {
       title: '',
       key: 'open',
-      render: () => (
-        <Button type="primary" size="small" icon={<ArrowRightOutlined />} onClick={() => success(t('common.confirm'))}>
+      render: (_: unknown, record: Payment) => (
+        <Button type="primary" size="small" icon={<ArrowRightOutlined />} onClick={() => confirmPayment(record)}>
           {t('workqueue.table.open')}
         </Button>
       ),
@@ -62,15 +100,15 @@ export function WorkQueuePage() {
 
   const collectionColumns = [
     { title: t('workqueue.table.dueDate'), dataIndex: 'dueDate' },
-    { title: t('workqueue.table.account'), dataIndex: 'accountId', render: (id: string) => getAccountById(id)?.name },
+    { title: t('workqueue.table.account'), dataIndex: 'accountId', render: (id: string) => accountName(id) },
     { title: t('workqueue.table.planAmount'), dataIndex: 'planAmountUsd', render: (v: number) => formatCurrency(v) },
     { title: t('workqueue.table.status'), dataIndex: 'status', render: (v: string) => <Tag className={`pill pill-${statusTone(v)}`}>{t(`labels.collectionStatus.${v}`)}</Tag> },
     { title: t('workqueue.table.action'), render: () => <Tag className="pill pill-amber">{t('workqueue.table.remindCustomer')}</Tag> },
     {
       title: '',
       key: 'open',
-      render: () => (
-        <Button type="primary" size="small" icon={<ArrowRightOutlined />} onClick={() => success(t('common.confirm'))}>
+      render: (_: unknown, record: { accountId: string; dueDate: string; planAmountUsd: number }) => (
+        <Button type="primary" size="small" icon={<ArrowRightOutlined />} onClick={() => remindCollection(record)}>
           {t('workqueue.table.open')}
         </Button>
       ),

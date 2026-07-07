@@ -3,6 +3,7 @@ import {
   accounts,
   activities,
   annualTargets,
+  attendanceRecords,
   auditLogs,
   campaigns,
   contacts,
@@ -10,6 +11,7 @@ import {
   dailyReports,
   documentTemplates,
   endUsers,
+  invoices,
   leads,
   notifications,
   opportunities,
@@ -31,6 +33,7 @@ export async function seedAll(): Promise<void> {
   await createStore('orders').seed(orders)
   await createStore('contracts').seed(contracts)
   await createStore('payments').seed(payments)
+  await createStore('invoices').seed(invoices)
   await createStore('products').seed(products)
   await createStore('endUsers').seed(endUsers)
   await createStore('projectUpdates').seed(projectUpdates)
@@ -39,6 +42,7 @@ export async function seedAll(): Promise<void> {
   await createStore('documentTemplates').seed(documentTemplates)
   await createStore('retailMonthly').seed(retailMonthly)
   await createStore('dailyReports').seed(dailyReports)
+  await createStore('attendanceRecords').seed(attendanceRecords)
   await createStore('auditLogs').seed(auditLogs)
   await createStore('annualTargets').seed(annualTargets)
 }

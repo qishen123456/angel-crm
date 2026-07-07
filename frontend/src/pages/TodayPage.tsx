@@ -17,6 +17,9 @@ import type { DailyReportData } from '../components/DailyReportModal'
 import { useGlobalMessage } from '../hooks/useGlobalMessage'
 import { useI18n } from '../hooks/useI18n'
 import { annualTargets, getUserById } from '../mocks/crmData'
+import { storageService } from '../services/storageService'
+import { useAuthStore } from '../store/useAuthStore'
+import { useDataStore } from '../store/useDataStore'
 
 const { Title, Text } = Typography
 
@@ -90,6 +93,8 @@ function useGreeting(t: (k: string) => string) {
 export function TodayPage() {
   const { t } = useI18n()
   const { success } = useGlobalMessage()
+  const currentUser = useAuthStore((state) => state.user)
+  const refresh = useDataStore((state) => state.refresh)
   const [reportOpen, setReportOpen] = useState(false)
   const [todayReport, setTodayReport] = useState<DailyReportData | undefined>(() => loadDailyReport())
   const greeting = useGreeting(t)
@@ -250,8 +255,19 @@ export function TodayPage() {
           open={reportOpen}
           initial={todayReport}
           onCancel={() => setReportOpen(false)}
-          onSubmit={(data) => {
+          onSubmit={async (data) => {
             saveDailyReport(data)
+            await storageService.dailyReports.create({
+              userId: currentUser?.id ?? 'u1',
+              date: new Date().toISOString().slice(0, 10),
+              todaySummary: data.work.filter(Boolean).join('\n'),
+              tomorrowPlan: data.plans.filter(Boolean).join('\n'),
+              customersContacted: data.followups,
+              revenueUpdateNote: data.payments.filter(Boolean).join('\n'),
+              moodRating: data.mood ?? 0,
+              submittedAt: new Date().toISOString(),
+            })
+            await refresh()
             setTodayReport(data)
             setReportOpen(false)
             success(t('today.reportSaveSuccess'))

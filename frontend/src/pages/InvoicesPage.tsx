@@ -4,97 +4,30 @@ import { useMemo, useState } from 'react'
 import { useAutoCreate } from '../hooks/useAutoCreate'
 import { useGlobalMessage } from '../hooks/useGlobalMessage'
 import { useI18n } from '../hooks/useI18n'
-import { accounts, getAccountById, getUserById, orders } from '../mocks/crmData'
+import { getAccountById, getUserById, type Invoice } from '../mocks/crmData'
+import { storageService } from '../services/storageService'
+import { useAuthStore } from '../store/useAuthStore'
+import { useDataStore } from '../store/useDataStore'
 
-type InvoiceStatus = 'pending_review' | 'pending_issue' | 'issued' | 'rejected'
-
-type Invoice = {
-  id: string
-  no: string
-  orderId: string
-  accountId: string
-  amountUsd: number
-  status: InvoiceStatus
-  applicantId: string
-  title: string
-  taxId: string
-  createdAt: string
-}
+type InvoiceStatus = Invoice['status']
 
 const invoiceStatuses: InvoiceStatus[] = ['pending_review', 'pending_issue', 'issued', 'rejected']
-
-const invoices: Invoice[] = [
-  {
-    id: 'inv1',
-    no: 'INV-2026-0616-001',
-    orderId: 'o1',
-    accountId: 'a1',
-    amountUsd: 12400,
-    status: 'pending_review',
-    applicantId: 'u3',
-    title: 'Raffles Hospitality Pte Ltd',
-    taxId: 'SG201312345A',
-    createdAt: '2026-06-16',
-  },
-  {
-    id: 'inv2',
-    no: 'INV-2026-0615-002',
-    orderId: 'o2',
-    accountId: 'a2',
-    amountUsd: 8750,
-    status: 'pending_issue',
-    applicantId: 'u2',
-    title: 'Marina Bay Sands Pte Ltd',
-    taxId: 'SG199801234B',
-    createdAt: '2026-06-15',
-  },
-  {
-    id: 'inv3',
-    no: 'INV-2026-0610-003',
-    orderId: 'o4',
-    accountId: 'a3',
-    amountUsd: 32000,
-    status: 'issued',
-    applicantId: 'u4',
-    title: 'MGM Macau S.A.',
-    taxId: 'MO1234567',
-    createdAt: '2026-06-10',
-  },
-  {
-    id: 'inv4',
-    no: 'INV-2026-0608-004',
-    orderId: 'o5',
-    accountId: 'a5',
-    amountUsd: 5600,
-    status: 'rejected',
-    applicantId: 'u3',
-    title: 'Westwind F&B Group',
-    taxId: 'US987654321',
-    createdAt: '2026-06-08',
-  },
-  {
-    id: 'inv5',
-    no: 'INV-2026-0605-005',
-    orderId: 'o6',
-    accountId: 'a6',
-    amountUsd: 18900,
-    status: 'issued',
-    applicantId: 'u2',
-    title: 'Soekarno Retail Distribution',
-    taxId: 'ID09.123.456.7-123.000',
-    createdAt: '2026-06-05',
-  },
-]
 
 export function InvoicesPage() {
   const { t } = useI18n()
   const { success } = useGlobalMessage()
+  const currentUser = useAuthStore((state) => state.user)
+  const accounts = useDataStore((state) => state.accounts)
+  const orders = useDataStore((state) => state.orders)
+  const invoices = useDataStore((state) => state.invoices)
+  const refresh = useDataStore((state) => state.refresh)
   const [open, setOpen] = useState(false)
   const clearCreateParam = useAutoCreate(setOpen)
   const [detailOpen, setDetailOpen] = useState(false)
-  const [selected, setSelected] = useState<typeof invoices[0] | null>(null)
+  const [selected, setSelected] = useState<Invoice | null>(null)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<InvoiceStatus | 'all'>('all')
+  const [form] = Form.useForm()
 
   const statusMeta: Record<InvoiceStatus, { label: string; color: string }> = {
     pending_review: { label: t('invoices.statusPendingReview'), color: 'warning' },
@@ -206,7 +139,7 @@ export function InvoicesPage() {
             {
               title: t('common.actions'),
               key: 'action',
-              render: (_: any, record: typeof invoices[0]) => (
+              render: (_: any, record: Invoice) => (
                 <Button type="text" icon={<EyeOutlined />} onClick={() => { setSelected(record); setDetailOpen(true) }} />
               ),
             },
@@ -217,28 +150,44 @@ export function InvoicesPage() {
       <Modal
         title={t('common.create')}
         open={open}
-        onCancel={() => { setOpen(false); clearCreateParam() }}
+        onCancel={() => { setOpen(false); clearCreateParam(); form.resetFields() }}
         onOk={() => {
-          setOpen(false)
-          clearCreateParam()
-          success(t('common.successCreate'))
+          form.validateFields().then(async (values) => {
+            const order = orders.find((item) => item.id === values.orderId)
+            await storageService.invoices.create({
+              no: `INV-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${String(invoices.length + 1).padStart(3, '0')}`,
+              orderId: values.orderId,
+              accountId: values.accountId ?? order?.accountId,
+              amountUsd: Number(values.amountUsd ?? order?.subtotalUsd ?? 0),
+              status: 'pending_review',
+              applicantId: currentUser?.id ?? 'u1',
+              title: values.title,
+              taxId: values.taxId ?? '',
+              createdAt: new Date().toISOString().slice(0, 10),
+            })
+            await refresh()
+            form.resetFields()
+            setOpen(false)
+            clearCreateParam()
+            success(t('common.successCreate'))
+          })
         }}
         width={560}
       >
-        <Form layout="vertical">
-          <Form.Item label={t('invoices.account')}>
+        <Form form={form} layout="vertical">
+          <Form.Item label={t('invoices.account')} name="accountId" rules={[{ required: true }]}>
             <Select options={accounts.map((a) => ({ value: a.id, label: a.name }))} />
           </Form.Item>
-          <Form.Item label={t('invoices.order')}>
+          <Form.Item label={t('invoices.order')} name="orderId" rules={[{ required: true }]}>
             <Select options={orders.map((o) => ({ value: o.id, label: o.orderNumber }))} />
           </Form.Item>
-          <Form.Item label={t('invoices.amount')}>
+          <Form.Item label={t('invoices.amount')} name="amountUsd">
             <Input prefix="$" />
           </Form.Item>
-          <Form.Item label={t('invoices.invoiceTitle')}>
+          <Form.Item label={t('invoices.invoiceTitle')} name="title" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item label={t('invoices.taxId')}>
+          <Form.Item label={t('invoices.taxId')} name="taxId">
             <Input />
           </Form.Item>
         </Form>

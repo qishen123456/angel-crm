@@ -2,15 +2,19 @@ import { create } from 'zustand'
 import type {
   Account,
   Activity,
+  AttendanceRecord,
   Campaign,
   Contact,
   Contract,
   EndUser,
+  Invoice,
   Lead,
   Opportunity,
   Order,
   Payment,
   Product,
+  ProjectUpdate,
+  RetailMonthly,
   User,
 } from '../mocks/crmData'
 import { storageService } from '../services/storageService'
@@ -23,6 +27,7 @@ interface DataState {
   orders: Order[]
   contacts: Contact[]
   payments: Payment[]
+  invoices: Invoice[]
   contracts: Contract[]
   campaigns: Campaign[]
   leads: Lead[]
@@ -30,6 +35,9 @@ interface DataState {
   users: User[]
   activities: Activity[]
   endUsers: EndUser[]
+  projectUpdates: ProjectUpdate[]
+  retailMonthly: RetailMonthly[]
+  attendanceRecords: AttendanceRecord[]
   load: () => Promise<void>
   refresh: () => Promise<void>
   addAccount: (account: Account) => void
@@ -52,6 +60,7 @@ export const useDataStore = create<DataState>((set, get) => ({
   orders: [],
   contacts: [],
   payments: [],
+  invoices: [],
   contracts: [],
   campaigns: [],
   leads: [],
@@ -59,14 +68,18 @@ export const useDataStore = create<DataState>((set, get) => ({
   users: [],
   activities: [],
   endUsers: [],
+  projectUpdates: [],
+  retailMonthly: [],
+  attendanceRecords: [],
   load: async () => {
-    const [accounts, opportunities, orders, contacts, payments, contracts, campaigns, leads, products, users, activities, endUsers] =
+    const [accounts, opportunities, orders, contacts, payments, invoices, contracts, campaigns, leads, products, users, activities, endUsers, projectUpdates, retailMonthly, attendanceRecords] =
       await Promise.all([
         storageService.accounts.getAll(),
         storageService.opportunities.getAll(),
         storageService.orders.getAll(),
         storageService.contacts.getAll(),
         storageService.payments.getAll(),
+        storageService.invoices.getAll(),
         storageService.contracts.getAll(),
         storageService.campaigns.getAll(),
         storageService.leads.getAll(),
@@ -74,6 +87,9 @@ export const useDataStore = create<DataState>((set, get) => ({
         storageService.users.getAll(),
         storageService.activities.getAll(),
         storageService.endUsers.getAll(),
+        storageService.projectUpdates.getAll(),
+        storageService.retailMonthly.getAll(),
+        storageService.attendanceRecords.getAll(),
       ])
     set({
       accounts,
@@ -81,6 +97,7 @@ export const useDataStore = create<DataState>((set, get) => ({
       orders,
       contacts,
       payments,
+      invoices,
       contracts,
       campaigns,
       leads,
@@ -88,6 +105,9 @@ export const useDataStore = create<DataState>((set, get) => ({
       users,
       activities,
       endUsers,
+      projectUpdates,
+      retailMonthly,
+      attendanceRecords,
       version: get().version + 1,
     })
   },

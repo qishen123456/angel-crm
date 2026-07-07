@@ -44,6 +44,7 @@ import {
 import { useEffect, useState } from 'react'
 import type { MenuProps } from 'antd'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { adminOnlyRoutes, canCreateEntity, isSuperAdmin } from '../auth/permissions'
 import { useI18n } from '../hooks/useI18n'
 import type { Notification } from '../mocks/crmData'
 import { localeNames, type LocaleKey } from '../locales'
@@ -122,6 +123,7 @@ export function AppLayout() {
   const user = useAuthStore((state) => state.user)
   const logout = useAuthStore((state) => state.logout)
   const { t, bundle } = useI18n()
+  const canUseAdmin = isSuperAdmin(user)
   useEffect(() => {
     storageService.notifications.getAll().then((items) => setNotifications(items))
   }, [])
@@ -142,7 +144,14 @@ export function AppLayout() {
     })
   }, [loadData])
 
-  const menuItems: MenuProps['items'] = bundle.menu.map((group) => ({
+  const visibleMenuGroups = bundle.menu
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => canUseAdmin || !adminOnlyRoutes.has(item.key)),
+    }))
+    .filter((group) => group.items.length > 0)
+
+  const menuItems: MenuProps['items'] = visibleMenuGroups.map((group) => ({
     key: `grp-${group.key}`,
     type: 'group',
     label: <span className="crm-menu-group-title">{group.label}</span>,
@@ -158,6 +167,15 @@ export function AppLayout() {
     })),
   }))
 
+  const createMenuEntities: Record<string, string> = {
+    account: 'accounts',
+    contact: 'contacts',
+    opportunity: 'opportunities',
+    order: 'orders',
+    lead: 'leads',
+    campaign: 'campaigns',
+    activity: 'activities',
+  }
   const createMenuItems: MenuProps['items'] = [
     { key: 'account', label: bundle.createMenu.account },
     { key: 'contact', label: bundle.createMenu.contact },
@@ -166,7 +184,7 @@ export function AppLayout() {
     { key: 'lead', label: bundle.createMenu.lead },
     { key: 'campaign', label: bundle.createMenu.campaign },
     { key: 'activity', label: bundle.createMenu.activity },
-  ]
+  ].filter((item) => canCreateEntity(user, createMenuEntities[String(item.key)]))
 
   return (
     <Layout className="crm-shell">
@@ -236,34 +254,36 @@ export function AppLayout() {
           </Typography.Title>
 
           <Space size={12}>
-            <Dropdown
-              menu={{
-                items: createMenuItems,
-                onClick: ({ key }) => {
-                  const createRouteMap: Record<string, string> = {
-                    account: '/app/accounts',
-                    contact: '/app/contacts',
-                    opportunity: '/app/pipeline',
-                    order: '/app/orders',
-                    lead: '/app/leads',
-                    campaign: '/app/campaigns',
-                  }
-                  if (key === 'activity') {
-                    navigate('/app/log-activity')
-                    return
-                  }
-                  const route = createRouteMap[key]
-                  if (route) {
-                    navigate(`${route}?create=1`)
-                  }
-                },
-              }}
-              placement="bottomRight"
-            >
-              <Button type="primary" className="crm-header-new">
-                {bundle.newButton} <DownOutlined style={{ fontSize: 10 }} />
-              </Button>
-            </Dropdown>
+            {createMenuItems.length > 0 ? (
+              <Dropdown
+                menu={{
+                  items: createMenuItems,
+                  onClick: ({ key }) => {
+                    const createRouteMap: Record<string, string> = {
+                      account: '/app/accounts',
+                      contact: '/app/contacts',
+                      opportunity: '/app/pipeline',
+                      order: '/app/orders',
+                      lead: '/app/leads',
+                      campaign: '/app/campaigns',
+                    }
+                    if (key === 'activity') {
+                      navigate('/app/log-activity')
+                      return
+                    }
+                    const route = createRouteMap[key]
+                    if (route) {
+                      navigate(`${route}?create=1`)
+                    }
+                  },
+                }}
+                placement="bottomRight"
+              >
+                <Button type="primary" className="crm-header-new">
+                  {bundle.newButton} <DownOutlined style={{ fontSize: 10 }} />
+                </Button>
+              </Dropdown>
+            ) : null}
 
             <Button className="crm-header-user" icon={<UserOutlined />}>
               {user?.name ?? bundle.systemAdmin}

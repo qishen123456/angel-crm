@@ -3,7 +3,10 @@ import { Button, Card, Form, Input, InputNumber, Modal, Select, Tag, Timeline, T
 import { useState } from 'react'
 import { useGlobalMessage } from '../hooks/useGlobalMessage'
 import { useI18n } from '../hooks/useI18n'
-import { accounts, getAccountById, getUserById, projectUpdates } from '../mocks/crmData'
+import { getAccountById, getUserById } from '../mocks/crmData'
+import { storageService } from '../services/storageService'
+import { useAuthStore } from '../store/useAuthStore'
+import { useDataStore } from '../store/useDataStore'
 
 const { Text } = Typography
 
@@ -12,7 +15,12 @@ const stages = ['survey', 'install', 'commissioning']
 export function ProjectUpdatesPage() {
   const { t } = useI18n()
   const { success } = useGlobalMessage()
+  const currentUser = useAuthStore((state) => state.user)
+  const accounts = useDataStore((state) => state.accounts)
+  const projectUpdates = useDataStore((state) => state.projectUpdates)
+  const refresh = useDataStore((state) => state.refresh)
   const [open, setOpen] = useState(false)
+  const [form] = Form.useForm()
 
   return (
     <div className="crm-page">
@@ -46,19 +54,34 @@ export function ProjectUpdatesPage() {
       <Modal
         title={t('projectUpdates.log')}
         open={open}
-        onCancel={() => setOpen(false)}
-        onOk={() => { setOpen(false); success(t('common.successSave')) }}
+        onCancel={() => { setOpen(false); form.resetFields() }}
+        onOk={() => {
+          form.validateFields().then(async (values) => {
+            await storageService.projectUpdates.create({
+              accountId: values.accountId,
+              postedById: currentUser?.id ?? 'u1',
+              stage: values.stage,
+              summary: values.summary,
+              unitsInstalled: values.unitsInstalled,
+              createdAt: new Date().toISOString().slice(0, 10),
+            })
+            await refresh()
+            form.resetFields()
+            setOpen(false)
+            success(t('common.successSave'))
+          })
+        }}
         width={560}
       >
-        <Form layout="vertical">
-          <Form.Item label={t('projectUpdates.account')}>
+        <Form form={form} layout="vertical" initialValues={{ stage: 'survey' }}>
+          <Form.Item label={t('projectUpdates.account')} name="accountId" rules={[{ required: true }]}>
             <Select options={accounts.map((a) => ({ value: a.id, label: a.name }))} />
           </Form.Item>
-          <Form.Item label={t('projectUpdates.stage')}>
+          <Form.Item label={t('projectUpdates.stage')} name="stage" rules={[{ required: true }]}>
             <Select options={stages.map((k) => ({ value: k, label: t(`labels.projectStage.${k}`) }))} />
           </Form.Item>
-          <Form.Item label={t('projectUpdates.installed')}><InputNumber style={{ width: '100%' }} /></Form.Item>
-          <Form.Item label={t('projectUpdates.notes')}><Input.TextArea rows={3} /></Form.Item>
+          <Form.Item label={t('projectUpdates.installed')} name="unitsInstalled"><InputNumber style={{ width: '100%' }} /></Form.Item>
+          <Form.Item label={t('projectUpdates.notes')} name="summary" rules={[{ required: true }]}><Input.TextArea rows={3} /></Form.Item>
         </Form>
       </Modal>
     </div>

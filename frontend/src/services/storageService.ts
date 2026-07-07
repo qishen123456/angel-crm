@@ -2,12 +2,14 @@ import { apiClient } from '../api/client'
 import type {
   Account,
   Activity,
+  AttendanceRecord,
   Campaign,
   Contact,
   Contract,
   DailyReport,
   DocumentTemplate,
   EndUser,
+  Invoice,
   Lead,
   Notification,
   Opportunity,
@@ -92,6 +94,7 @@ const orderRepo = createApiRepository<Order>('/orders')
 const contactRepo = createApiRepository<Contact>('/contacts')
 const activityRepo = createApiRepository<Activity>('/activities')
 const paymentRepo = createApiRepository<Payment>('/payments')
+const invoiceRepo = createApiRepository<Invoice>('/invoices')
 const contractRepo = createApiRepository<Contract>('/contracts')
 const campaignRepo = createApiRepository<Campaign>('/campaigns')
 const leadRepo = createApiRepository<Lead>('/leads')
@@ -103,6 +106,7 @@ const retailMonthlyRepo = createApiRepository<RetailMonthly>('/retailMonthly')
 const documentTemplateRepo = createApiRepository<DocumentTemplate>('/documentTemplates')
 const notificationRepo = createApiRepository<Notification>('/notifications')
 const dailyReportRepo = createApiRepository<DailyReport>('/dailyReports')
+const attendanceRecordRepo = createApiRepository<AttendanceRecord>('/attendanceRecords')
 
 export const storageService = {
   accounts: {
@@ -135,6 +139,7 @@ export const storageService = {
     getByAccount: (accountId: string) =>
       getAll<Payment>('/payments').then((items) => items.filter((item) => item.accountId === accountId)),
   },
+  invoices: invoiceRepo,
   contracts: {
     ...contractRepo,
     getByAccount: (accountId: string) =>
@@ -156,6 +161,7 @@ export const storageService = {
   documentTemplates: documentTemplateRepo,
   notifications: notificationRepo,
   dailyReports: dailyReportRepo,
+  attendanceRecords: attendanceRecordRepo,
   auth: {
     login: async (email: string, password: string) => {
       try {

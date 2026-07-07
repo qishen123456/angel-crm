@@ -233,7 +233,7 @@ function AccountCard({ account, onEdit, onDelete }: { account: Account; onEdit: 
             </div>
           </div>
           <div className="account-card-actions">
-            <Button type="text" icon={<UserOutlined />} size="small" onClick={(event) => event.preventDefault()} />
+            <Button type="text" icon={<UserOutlined />} size="small" onClick={(event) => { event.preventDefault(); onEdit() }} />
             <Button type="text" icon={<EditOutlined />} size="small" onClick={(event) => { event.preventDefault(); onEdit() }} />
             <Dropdown
               menu={{ items: [{ key: 'delete', label: t('common.delete') }], onClick: () => onDelete() }}

@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { createStore } from '../data/jsonStore.js'
 import { authMiddleware, signToken } from '../middleware/auth.js'
 import type { AuthRequest } from '../middleware/auth.js'
+import { getRolePermissions } from '../middleware/permission.js'
 import type { User } from '../data/seedData.js'
 
 const router = Router()
@@ -19,8 +20,17 @@ router.post('/login', async (req, res) => {
     res.status(401).json({ error: 'Invalid email or password' })
     return
   }
-  const token = signToken({ id: user.id, email: user.email, role: user.role, name: user.name })
-  res.json({ success: true, user: { id: user.id, email: user.email, name: user.name, role: user.role, department: user.department, market: user.market, avatar: user.avatar, status: user.status }, token })
+  const permissions = getRolePermissions(user.role)
+  const token = signToken({
+    id: user.id,
+    email: user.email,
+    role: user.role,
+    name: user.name,
+    department: user.department,
+    market: user.market,
+    permissions,
+  })
+  res.json({ success: true, user: { id: user.id, email: user.email, name: user.name, role: user.role, department: user.department, market: user.market, avatar: user.avatar, status: user.status, permissions }, token })
 })
 
 router.get('/me', authMiddleware, async (req: AuthRequest, res) => {
@@ -29,7 +39,7 @@ router.get('/me', authMiddleware, async (req: AuthRequest, res) => {
     res.status(404).json({ error: 'User not found' })
     return
   }
-  res.json({ user })
+  res.json({ user: { ...user, permissions: getRolePermissions(user.role) } })
 })
 
 export default router

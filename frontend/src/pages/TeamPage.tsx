@@ -1,13 +1,15 @@
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
 import { Avatar, Button, Card, Input, Table } from 'antd'
 import { useMemo, useState } from 'react'
-import { useGlobalMessage } from '../hooks/useGlobalMessage'
+import { useNavigate } from 'react-router-dom'
 import { useI18n } from '../hooks/useI18n'
-import { statusTone, users } from '../mocks/crmData'
+import { statusTone } from '../mocks/crmData'
+import { useDataStore } from '../store/useDataStore'
 
 export function TeamPage() {
   const { t } = useI18n()
-  const { info } = useGlobalMessage()
+  const navigate = useNavigate()
+  const users = useDataStore((state) => state.users)
   const [search, setSearch] = useState('')
   const filtered = useMemo(() => {
     return users.filter((u) =>
@@ -23,7 +25,7 @@ export function TeamPage() {
           <div className="crm-page-header-title">{t('team.title')}</div>
           <div className="crm-page-header-desc">{t('team.subtitle')}</div>
         </div>
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => info(t('common.devToast'))}>{t('team.invite')}</Button>
+        <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('/app/invite')}>{t('team.invite')}</Button>
       </div>
 
       <Card>
