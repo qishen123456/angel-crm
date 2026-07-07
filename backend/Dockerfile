@@ -1,4 +1,4 @@
-FROM registry.cn-hangzhou.aliyuncs.com/library/node:20-slim
+FROM node:20-slim
 
 RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list && \
     apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*

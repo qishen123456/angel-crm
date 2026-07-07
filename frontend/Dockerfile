@@ -1,4 +1,4 @@
-FROM registry.cn-hangzhou.aliyuncs.com/library/node:20-slim AS builder
+FROM node:20-slim AS builder
 
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \
@@ -13,7 +13,7 @@ RUN npm config set registry $NPM_REGISTRY && npm ci --include=dev
 COPY . .
 RUN npm run build
 
-FROM registry.cn-hangzhou.aliyuncs.com/library/nginx:alpine
+FROM nginx:alpine
 
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8
