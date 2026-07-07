@@ -369,7 +369,8 @@
       "templates": "文档模板",
       "notifications": "通知",
       "audit": "审计日志",
-      "account": "账户"
+      "account": "账户",
+      "data": "数据迁移"
     },
     "title": "设置",
     "subtitle": "管理品牌、市场、部门、权限与系统配置。",

@@ -75,6 +75,7 @@ export const settingsTabs = [
   'notifications',
   'audit',
   'account',
+  'data',
 ]
 
 // ---------------- Entities ----------------
@@ -753,6 +754,44 @@ export const annualTargets: AnnualTarget[] = [
   { id: 't6', market: 'MO', year: 2026, revenueTargetUsd: 900000, kpiTargetUsd: 380000, strategicTargetUnits: 70 },
   { id: 't7', market: 'US', year: 2026, revenueTargetUsd: 2500000, kpiTargetUsd: 980000, strategicTargetUnits: 200 },
 ]
+
+export interface SystemSettings {
+  id: string
+  brandName: string
+  brandSubtitle: string
+  primaryColor: string
+  dangerColor: string
+  pageBackground: string
+  sidebarBackground: string
+  sidebarActiveBackground: string
+  headerBackground: string
+  notificationSettings: {
+    email: boolean
+    contractExpiry: boolean
+    orderStatus: boolean
+    dailyReport: boolean
+  }
+  updatedAt: string
+}
+
+export const defaultSystemSettings: SystemSettings = {
+  id: 'global',
+  brandName: 'ANGEL',
+  brandSubtitle: 'GLOBAL SALES CRM',
+  primaryColor: '#ee2737',
+  dangerColor: '#a5001e',
+  pageBackground: '#eeeae4',
+  sidebarBackground: '#1f2024',
+  sidebarActiveBackground: '#5a2429',
+  headerBackground: '#ffffff',
+  notificationSettings: {
+    email: true,
+    contractExpiry: true,
+    orderStatus: true,
+    dailyReport: false,
+  },
+  updatedAt: '2026-07-07T00:00:00.000Z',
+}
 
 // ---------------- Helpers ----------------
 

@@ -50,6 +50,7 @@ import type { Notification } from '../mocks/crmData'
 import { localeNames, type LocaleKey } from '../locales'
 import { storageService } from '../services/storageService'
 import { useAuthStore } from '../store/useAuthStore'
+import { useSystemSettingsStore } from '../store/useSystemSettingsStore'
 import { useDataStore } from '../store/useDataStore'
 import { useUiStore } from '../store/useUiStore'
 
@@ -122,6 +123,7 @@ export function AppLayout() {
   const setLocale = useUiStore((state) => state.setLocale)
   const user = useAuthStore((state) => state.user)
   const logout = useAuthStore((state) => state.logout)
+  const systemSettings = useSystemSettingsStore((state) => state.settings)
   const { t, bundle } = useI18n()
   const canUseAdmin = isSuperAdmin(user)
   useEffect(() => {
@@ -196,9 +198,10 @@ export function AppLayout() {
       >
         <div className="crm-logo">
           <div className="crm-logo-wordmark">
-            <span className="crm-logo-wordmark-accent">A</span>NGEL
+            <span className="crm-logo-wordmark-accent">{systemSettings.brandName.slice(0, 1)}</span>
+            {systemSettings.brandName.slice(1)}
           </div>
-          <Typography.Text className="crm-logo-subtitle">GLOBAL SALES CRM</Typography.Text>
+          <Typography.Text className="crm-logo-subtitle">{systemSettings.brandSubtitle}</Typography.Text>
         </div>
 
         <Menu

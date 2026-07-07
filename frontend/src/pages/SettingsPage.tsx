@@ -1,12 +1,16 @@
 import { Button, Card, Form, Input, message, Switch, Table, Tabs, Typography } from 'antd'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { DownloadOutlined, UploadOutlined } from '@ant-design/icons'
 import { apiClient } from '../api/client'
 import { useI18n } from '../hooks/useI18n'
 import { useDataStore } from '../store/useDataStore'
+import { useAuthStore } from '../store/useAuthStore'
+import { useSystemSettingsStore } from '../store/useSystemSettingsStore'
+import { storageService } from '../services/storageService'
 import {
   annualTargets,
   auditLogs,
+  type DocumentTemplate,
   documentTemplates,
   markets,
   users,
@@ -32,8 +36,15 @@ const roles = ['SuperAdmin', 'Admin', 'Sales', 'Finance', 'Supply Chain', 'Order
 
 export function SettingsPage() {
   const { t } = useI18n()
-  const [activeTab, setActiveTab] = useState('brand')
-  const tabs = useMemo(() => tabKeys.map((k) => ({ key: k, label: t(`settings.tabs.${k}`) })), [t])
+  const tabs = useMemo(
+    () =>
+      tabKeys.map((k) => ({
+        key: k,
+        label: t(`settings.tabs.${k}`),
+        children: renderTabContent(k, t),
+      })),
+    [t]
+  )
 
   return (
     <div className="crm-page">
@@ -45,8 +56,7 @@ export function SettingsPage() {
       </div>
 
       <Card>
-        <Tabs activeKey={activeTab} onChange={setActiveTab} items={tabs} />
-        <div style={{ marginTop: 16 }}>{renderTabContent(activeTab, t)}</div>
+        <Tabs defaultActiveKey="brand" items={tabs} />
       </Card>
     </div>
   )
@@ -80,27 +90,87 @@ function renderTabContent(tab: string, t: (k: string) => string) {
 }
 
 function BrandTab({ t }: { t: (k: string) => string }) {
+  const settings = useSystemSettingsStore((s) => s.settings)
+  const saveSettings = useSystemSettingsStore((s) => s.save)
+  const [saving, setSaving] = useState(false)
+  const [form] = Form.useForm()
+
+  useEffect(() => {
+    form.setFieldsValue(settings)
+  }, [form, settings])
+
   const colors = [
-    { name: 'ANGEL Red', hex: '#EE2737', pantone: 'PANTONE 1788C' },
-    { name: 'Deep Red', hex: '#A5001E', pantone: 'PANTONE 3517C' },
-    { name: 'ANGEL Black', hex: '#000000', pantone: 'PANTONE Black 6C' },
-    { name: 'Grey', hex: '#BBC7D6', pantone: 'PANTONE 537C' },
-    { name: 'Mibai', hex: '#EEEAE4', pantone: 'PANTONE 427C' },
-    { name: 'White', hex: '#FFFFFF', pantone: '—' },
-  ]
+    { field: 'primaryColor', name: '主品牌色', hex: settings.primaryColor, desc: '按钮、Tabs、高亮、重点操作' },
+    { field: 'dangerColor', name: '深色强调', hex: settings.dangerColor, desc: '按钮 hover、深红强调' },
+    { field: 'pageBackground', name: '页面背景', hex: settings.pageBackground, desc: '系统主内容区背景' },
+    { field: 'sidebarBackground', name: '侧栏背景', hex: settings.sidebarBackground, desc: '左侧导航背景' },
+    { field: 'sidebarActiveBackground', name: '侧栏选中', hex: settings.sidebarActiveBackground, desc: '当前菜单高亮背景' },
+    { field: 'headerBackground', name: '顶栏背景', hex: settings.headerBackground, desc: '顶部区域背景' },
+  ] as const
+
+  const handleSave = async (values: {
+    brandName: string
+    brandSubtitle: string
+    primaryColor: string
+    dangerColor: string
+    pageBackground: string
+    sidebarBackground: string
+    sidebarActiveBackground: string
+    headerBackground: string
+  }) => {
+    setSaving(true)
+    try {
+      await saveSettings(values)
+      message.success('品牌主题已保存')
+    } catch {
+      message.error('品牌主题保存失败，请确认当前账号有权限')
+    } finally {
+      setSaving(false)
+    }
+  }
 
   return (
     <div>
       <Title level={5}>{t('settings.brand.logoRules')}</Title>
       <Text className="text-secondary">{t('settings.brand.vi')}</Text>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, margin: '16px 0' }}>
-        <Card title={t('settings.brand.sidebar')} headStyle={{ color: '#fff' }} style={{ background: '#1f2024', color: '#fff' }}>
-          <div style={{ fontSize: 24, fontWeight: 800, color: '#fff' }}><span style={{ color: '#ee2737' }}>A</span>NGEL</div>
+        <Card title={t('settings.brand.sidebar')} headStyle={{ color: '#fff' }} style={{ background: settings.sidebarBackground, color: '#fff' }}>
+          <div style={{ fontSize: 24, fontWeight: 800, color: '#fff' }}>
+            <span style={{ color: settings.primaryColor }}>{settings.brandName.slice(0, 1)}</span>
+            {settings.brandName.slice(1)}
+          </div>
+          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', marginTop: 4 }}>{settings.brandSubtitle}</div>
         </Card>
-        <Card title={t('settings.brand.headerLogin')}>
-          <div style={{ fontSize: 24, fontWeight: 800 }}><span style={{ color: '#ee2737' }}>A</span>NGEL</div>
+        <Card title={t('settings.brand.headerLogin')} style={{ background: settings.headerBackground }}>
+          <div style={{ fontSize: 24, fontWeight: 800 }}>
+            <span style={{ color: settings.primaryColor }}>{settings.brandName.slice(0, 1)}</span>
+            {settings.brandName.slice(1)}
+          </div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>{settings.brandSubtitle}</div>
         </Card>
       </div>
+
+      <Title level={5} style={{ marginTop: 24 }}>品牌主题配置</Title>
+      <Form form={form} layout="vertical" onFinish={handleSave}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <Form.Item label="品牌名称" name="brandName" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="品牌副标题" name="brandSubtitle" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
+          {colors.map((c) => (
+            <Form.Item key={c.field} label={c.name} name={c.field} rules={[{ required: true, pattern: /^#[0-9a-fA-F]{6}$/ }]}>
+              <Input type="color" style={{ height: 40, padding: 4 }} />
+            </Form.Item>
+          ))}
+        </div>
+        <Button type="primary" htmlType="submit" loading={saving}>
+          保存品牌主题
+        </Button>
+      </Form>
 
       <Title level={5} style={{ marginTop: 24 }}>{t('settings.brand.brandColors')}</Title>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 12 }}>
@@ -108,7 +178,7 @@ function BrandTab({ t }: { t: (k: string) => string }) {
           <Card key={c.name} bodyStyle={{ padding: 12 }}>
             <div style={{ height: 48, background: c.hex, border: '1px solid #ddd', borderRadius: 6, marginBottom: 8 }} />
             <Text strong>{c.name}</Text>
-            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{c.hex} · {c.pantone}</div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{c.hex} · {c.desc}</div>
           </Card>
         ))}
       </div>
@@ -192,9 +262,34 @@ function TargetsTab({ t }: { t: (k: string) => string }) {
 }
 
 function TemplatesTab({ t }: { t: (k: string) => string }) {
+  const [items, setItems] = useState<DocumentTemplate[]>(documentTemplates)
+  const [savingId, setSavingId] = useState<string | null>(null)
+
+  useEffect(() => {
+    storageService.documentTemplates
+      .getAll()
+      .then((data) => setItems(data.length ? data : documentTemplates))
+      .catch(() => setItems(documentTemplates))
+  }, [])
+
+  const handleToggle = async (record: DocumentTemplate, checked: boolean) => {
+    const previous = items
+    setSavingId(record.id)
+    setItems((current) => current.map((item) => (item.id === record.id ? { ...item, isActive: checked } : item)))
+    try {
+      await storageService.documentTemplates.update(record.id, { isActive: checked })
+      message.success(checked ? '模板已启用' : '模板已停用')
+    } catch {
+      setItems(previous)
+      message.error('模板状态保存失败，请确认当前账号有权限')
+    } finally {
+      setSavingId(null)
+    }
+  }
+
   return (
     <Table
-      dataSource={documentTemplates}
+      dataSource={items}
       rowKey="id"
       pagination={false}
       columns={[
@@ -202,19 +297,54 @@ function TemplatesTab({ t }: { t: (k: string) => string }) {
         { title: t('settings.templates.name'), dataIndex: 'name' },
         { title: t('settings.templates.description'), dataIndex: 'description' },
         { title: t('settings.templates.fileName'), dataIndex: 'fileName' },
-        { title: t('settings.templates.enabled'), dataIndex: 'isActive', render: (v) => <Switch checked={v} /> },
+        {
+          title: t('settings.templates.enabled'),
+          dataIndex: 'isActive',
+          render: (v, record) => (
+            <Switch checked={v} loading={savingId === record.id} onChange={(checked) => handleToggle(record, checked)} />
+          ),
+        },
       ]}
     />
   )
 }
 
 function NotificationsTab({ t }: { t: (k: string) => string }) {
+  const systemSettings = useSystemSettingsStore((s) => s.settings)
+  const saveSettings = useSystemSettingsStore((s) => s.save)
+  const [savingKey, setSavingKey] = useState<string | null>(null)
+
+  const updateSetting = async (key: keyof typeof systemSettings.notificationSettings, checked: boolean) => {
+    setSavingKey(key)
+    try {
+      await saveSettings({
+        notificationSettings: {
+          ...systemSettings.notificationSettings,
+          [key]: checked,
+        },
+      })
+      message.success('通知设置已保存')
+    } catch {
+      message.error('通知设置保存失败，请确认当前账号有权限')
+    } finally {
+      setSavingKey(null)
+    }
+  }
+
   return (
-    <Form layout="vertical">
-      <Form.Item label={t('settings.notifications.email')}><Switch defaultChecked /></Form.Item>
-      <Form.Item label={t('settings.notifications.contractExpiry')}><Switch defaultChecked /></Form.Item>
-      <Form.Item label={t('settings.notifications.orderStatus')}><Switch defaultChecked /></Form.Item>
-      <Form.Item label={t('settings.notifications.dailyReport')}><Switch /></Form.Item>
+    <Form layout="vertical" style={{ maxWidth: 520 }}>
+      <Form.Item label={t('settings.notifications.email')}>
+        <Switch checked={systemSettings.notificationSettings.email} loading={savingKey === 'email'} onChange={(checked) => updateSetting('email', checked)} />
+      </Form.Item>
+      <Form.Item label={t('settings.notifications.contractExpiry')}>
+        <Switch checked={systemSettings.notificationSettings.contractExpiry} loading={savingKey === 'contractExpiry'} onChange={(checked) => updateSetting('contractExpiry', checked)} />
+      </Form.Item>
+      <Form.Item label={t('settings.notifications.orderStatus')}>
+        <Switch checked={systemSettings.notificationSettings.orderStatus} loading={savingKey === 'orderStatus'} onChange={(checked) => updateSetting('orderStatus', checked)} />
+      </Form.Item>
+      <Form.Item label={t('settings.notifications.dailyReport')}>
+        <Switch checked={systemSettings.notificationSettings.dailyReport} loading={savingKey === 'dailyReport'} onChange={(checked) => updateSetting('dailyReport', checked)} />
+      </Form.Item>
     </Form>
   )
 }
@@ -236,12 +366,49 @@ function AuditLogsTab({ t }: { t: (k: string) => string }) {
 }
 
 function AccountTab({ t }: { t: (k: string) => string }) {
+  const user = useAuthStore((s) => s.user)
+  const [saving, setSaving] = useState(false)
+
+  const handleFinish = async (values: { displayName: string; email: string; currentPassword?: string; newPassword?: string }) => {
+    setSaving(true)
+    try {
+      if (user?.id) {
+        await storageService.users.update(user.id, { name: values.displayName, email: values.email })
+      }
+      if (values.newPassword) {
+        message.warning('账号资料已保存；独立密码修改接口还在后续计划中')
+      } else {
+        message.success('账号资料已保存')
+      }
+    } catch {
+      message.error('账号资料保存失败，请确认当前账号有权限')
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
-    <Form layout="vertical" style={{ maxWidth: 480 }}>
-      <Form.Item label={t('settings.account.displayName')}><Input defaultValue={t('systemAdmin')} /></Form.Item>
-      <Form.Item label={t('settings.account.email')}><Input defaultValue="admin@angel.cn" /></Form.Item>
-      <Form.Item label={t('settings.account.currentPassword')}><Input.Password /></Form.Item>
-      <Form.Item label={t('settings.account.newPassword')}><Input.Password /></Form.Item>
+    <Form
+      layout="vertical"
+      style={{ maxWidth: 480 }}
+      initialValues={{ displayName: user?.name ?? t('systemAdmin'), email: user?.email ?? 'admin@angel.cn' }}
+      onFinish={handleFinish}
+    >
+      <Form.Item label={t('settings.account.displayName')} name="displayName" rules={[{ required: true }]}>
+        <Input />
+      </Form.Item>
+      <Form.Item label={t('settings.account.email')} name="email" rules={[{ required: true, type: 'email' }]}>
+        <Input />
+      </Form.Item>
+      <Form.Item label={t('settings.account.currentPassword')} name="currentPassword">
+        <Input.Password />
+      </Form.Item>
+      <Form.Item label={t('settings.account.newPassword')} name="newPassword">
+        <Input.Password />
+      </Form.Item>
+      <Button type="primary" htmlType="submit" loading={saving}>
+        保存账户设置
+      </Button>
     </Form>
   )
 }

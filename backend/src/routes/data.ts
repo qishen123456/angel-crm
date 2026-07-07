@@ -28,6 +28,7 @@ const entities = [
   'attendanceRecords',
   'auditLogs',
   'annualTargets',
+  'systemSettings',
 ] as const
 
 type EntityName = (typeof entities)[number]

@@ -47,6 +47,7 @@ const entities = [
   'attendanceRecords',
   'auditLogs',
   'annualTargets',
+  'systemSettings',
 ] as const
 
 entities.forEach((name) => {

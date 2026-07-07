@@ -2,41 +2,54 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { App, ConfigProvider } from 'antd'
+import { useEffect } from 'react'
 import { AngelCrmApp } from './app/AngelCrmApp'
 import { useAntdLocale } from './locales/AntdLocaleProvider'
+import { useSystemSettingsStore } from './store/useSystemSettingsStore'
 import './locales'
 import './style.css'
 
 function Root() {
   const antdLocale = useAntdLocale()
+  const settings = useSystemSettingsStore((s) => s.settings)
+  const loadSettings = useSystemSettingsStore((s) => s.load)
+  const applySettings = useSystemSettingsStore((s) => s.apply)
+
+  useEffect(() => {
+    applySettings()
+    if (localStorage.getItem('angelcrm_auth_token')) {
+      void loadSettings()
+    }
+  }, [applySettings, loadSettings])
+
   return (
     <ConfigProvider
       locale={antdLocale}
       theme={{
         token: {
-          colorPrimary: '#ee2737',
+          colorPrimary: settings.primaryColor,
           colorInfo: '#3b82f6',
           colorSuccess: '#10b981',
           colorWarning: '#f59e0b',
-          colorError: '#ee2737',
+          colorError: settings.primaryColor,
           borderRadius: 6,
           fontSize: 13,
-          colorBgLayout: '#eeeae4',
+          colorBgLayout: settings.pageBackground,
           colorText: '#101828',
           fontFamily:
             "'Barlow', 'Gotham', 'PingFang SC', 'Noto Sans SC', system-ui, -apple-system, sans-serif",
         },
         components: {
           Menu: {
-            darkItemBg: '#1f2024',
-            darkSubMenuItemBg: '#1f2024',
-            darkItemSelectedBg: '#5a2429',
+            darkItemBg: settings.sidebarBackground,
+            darkSubMenuItemBg: settings.sidebarBackground,
+            darkItemSelectedBg: settings.sidebarActiveBackground,
             darkItemHoverBg: '#2a2b30',
           },
           Layout: {
-            siderBg: '#1f2024',
-            headerBg: '#ffffff',
-            bodyBg: '#eeeae4',
+            siderBg: settings.sidebarBackground,
+            headerBg: settings.headerBackground,
+            bodyBg: settings.pageBackground,
           },
         },
       }}

@@ -18,6 +18,7 @@ import type {
   Product,
   ProjectUpdate,
   RetailMonthly,
+  SystemSettings,
   User,
 } from '../mocks/crmData'
 
@@ -107,6 +108,7 @@ const documentTemplateRepo = createApiRepository<DocumentTemplate>('/documentTem
 const notificationRepo = createApiRepository<Notification>('/notifications')
 const dailyReportRepo = createApiRepository<DailyReport>('/dailyReports')
 const attendanceRecordRepo = createApiRepository<AttendanceRecord>('/attendanceRecords')
+const systemSettingsRepo = createApiRepository<SystemSettings>('/systemSettings')
 
 export const storageService = {
   accounts: {
@@ -162,6 +164,7 @@ export const storageService = {
   notifications: notificationRepo,
   dailyReports: dailyReportRepo,
   attendanceRecords: attendanceRecordRepo,
+  systemSettings: systemSettingsRepo,
   auth: {
     login: async (email: string, password: string) => {
       try {

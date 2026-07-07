@@ -26,6 +26,7 @@ const allWritableEntities = [
   'attendanceRecords',
   'auditLogs',
   'annualTargets',
+  'systemSettings',
 ]
 
 const roleWritableEntities: Record<string, Set<string>> = {

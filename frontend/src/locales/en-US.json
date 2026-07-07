@@ -369,7 +369,8 @@
       "templates": "Document Templates",
       "notifications": "Notifications",
       "audit": "Audit Logs",
-      "account": "Account"
+      "account": "Account",
+      "data": "Data Migration"
     },
     "title": "Settings",
     "subtitle": "Manage brand, markets, departments, roles and system configuration.",

@@ -20,6 +20,7 @@ import {
   products,
   projectUpdates,
   retailMonthly,
+  systemSettings,
   users,
 } from './seedData.js'
 
@@ -45,4 +46,5 @@ export async function seedAll(): Promise<void> {
   await createStore('attendanceRecords').seed(attendanceRecords)
   await createStore('auditLogs').seed(auditLogs)
   await createStore('annualTargets').seed(annualTargets)
+  await createStore('systemSettings').seed(systemSettings)
 }

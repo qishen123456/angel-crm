@@ -369,7 +369,8 @@
       "templates": "Mẫu tài liệu",
       "notifications": "Thông báo",
       "audit": "Nhật ký kiểm tra",
-      "account": "Tài khoản"
+      "account": "Tài khoản",
+      "data": "Di chuyển dữ liệu"
     },
     "title": "Cài đặt",
     "subtitle": "Quản lý thương hiệu, thị trường, phòng ban, quyền hạn và cấu hình hệ thống.",

@@ -369,7 +369,8 @@
       "templates": "Template Dokumen",
       "notifications": "Notifikasi",
       "audit": "Log Audit",
-      "account": "Akun"
+      "account": "Akun",
+      "data": "Migrasi Data"
     },
     "title": "Pengaturan",
     "subtitle": "Kelola merek, pasar, departemen, izin, dan konfigurasi sistem.",

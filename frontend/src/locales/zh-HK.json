@@ -369,7 +369,8 @@
       "templates": "文件範本",
       "notifications": "通知",
       "audit": "審計日誌",
-      "account": "帳戶"
+      "account": "帳戶",
+      "data": "資料遷移"
     },
     "title": "設定",
     "subtitle": "管理品牌、市場、部門、權限與系統配置。",
